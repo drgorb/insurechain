@@ -29,7 +29,7 @@ contract Epam {
 	}
 
 	modifier noWarranty(string serial) {
-		if(products[serial].warrantyEndDate > now) {
+		if(!isWarrantyValid(serial)) {
 			throw;
 		}
 		_;
@@ -47,6 +47,10 @@ contract Epam {
 		products[serial].owner = owner;
 		products[serial].warrantyEndDate = endDate;
 
+	}
+
+	function isWarrantyValid(uint serial) constant returns (bool) {
+		return products[serial].warrantyEndDate < now;
 	}
 
 }
