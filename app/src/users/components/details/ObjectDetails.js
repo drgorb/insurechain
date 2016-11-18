@@ -1,10 +1,10 @@
 
 export default {
-  name : 'userDetails',
+  name : 'objectDetails',
   config : {
     bindings         : {  selected: '<' },
-    templateUrl      : 'src/users/components/details/UserDetails.html',
-    controller       : [ '$mdBottomSheet', '$log', class UserDetailsController  {
+    templateUrl      : 'src/users/components/details/ObjectDetails.html',
+    controller       : [ '$mdBottomSheet', '$log', class ObjectDetailsController  {
 
       /**
        * Constructor
