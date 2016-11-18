@@ -6,6 +6,7 @@ import 'angular-aria';
 import 'angular-material';
 
 import AppController from 'src/AppController';
+import EthereumService from 'src/EthereumService';
 import Users from 'src/users/Users';
 
 export default angular.module('starter-app', ['ngMaterial', Users.name])
@@ -24,4 +25,5 @@ export default angular.module('starter-app', ['ngMaterial', Users.name])
             .primaryPalette('brown')
             .accentPalette('red');
     })
-    .controller('AppController', AppController);
+    .controller('AppController', AppController)
+    .factory('EthereumService', EthereumService);

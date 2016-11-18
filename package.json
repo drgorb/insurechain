@@ -33,6 +33,5 @@
   "scripts": {
     "postinstall": "jspm install"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
