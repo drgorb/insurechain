@@ -29,7 +29,10 @@ function EthereumService($q) {
     });
 
     function prepareForTransaction() {
+      var account = self.walletBar.getCurrentAccount(); // get account selected in wallet bar
+      if (!account) return alert("You must log in to transact");
       self.walletBar.createSecureSigner();
+      return account;
     }
 
     self.getInfo = function(serial) {
@@ -86,8 +89,8 @@ function EthereumService($q) {
 
     self.requestWarranty = function(serial, owner, endDate) {
       var defer = $q.defer();
-      prepareForTransaction();
-      self.WarrantyContract.requestWarranty(serial, owner, endDate.getTime(), function(err, result){
+      var account = prepareForTransaction();
+      self.WarrantyContract.requestWarranty(serial, owner, endDate.getTime(),{from:account}, function(err, result){
         if(err) {
           defer.reject(err);
         }else {
