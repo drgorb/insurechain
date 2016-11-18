@@ -5,6 +5,7 @@
  * @constructor
  */
 function EthereumService($q) {
+
     var self = this;
 
     self.abi = [ { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "getCustomer", "outputs": [ { "name": "", "type": "address", "value": "0x0000000000000000000000000000000000000000" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "serial", "type": "string" }, { "name": "customer", "type": "address" }, { "name": "endDate", "type": "uint256" } ], "name": "requestWarranty", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "contractAddress", "type": "address" } ], "name": "updateCalculator", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "getEndDate", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "isWarrantyValid", "outputs": [ { "name": "", "type": "bool", "value": true } ], "payable": false, "type": "function" }, { "inputs": [], "type": "constructor" } ];
@@ -19,13 +20,27 @@ function EthereumService($q) {
 
     self.web3 = new Web3();
     self.WarrantyContract;
-    self.walletBar.applyHook(self.web3)
+    self.waitForWallet = self.walletBar.applyHook(self.web3)
     .then(function() {
         self.WarrantyContract = self.web3.eth.contract(self.abi).at(self.contractAddress);
     })
     .catch(function(err) {
         console.log(err);
     });
+
+    function prepareForTransaction() {
+      self.walletBar.createSecureSigner();
+    }
+
+    self.getInfo = function(serial) {
+      return self.waitForWallet.then(function() {
+       return $q.all({
+          isWarrantyValid: self.isWarrantyValid(serial),
+          customer: self.getCustomer(serial),
+          warrantyEndDate: self.getWarrantyEndDate(serial)
+        });
+     });
+    }
 
     self.isWarrantyValid = function(serial) {
       var defer = $q.defer();
@@ -71,7 +86,7 @@ function EthereumService($q) {
 
     self.requestWarranty = function(serial, owner, endDate) {
       var defer = $q.defer();
-
+      prepareForTransaction();
       self.WarrantyContract.requestWarranty(serial, owner, enDate.getTime(), function(err, result){
         if(err) {
           defer.reject(err);
