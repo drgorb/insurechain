@@ -4,7 +4,7 @@
  * @param $mdSidenav
  * @constructor
  */
-function AppController(UsersDataService, $mdSidenav, ipfsApi) {
+function AppController(UsersDataService, EthereumService, $mdSidenav, ipfsApi) {
   var self = this;
 
   self.selected     = null;
@@ -41,4 +41,4 @@ function AppController(UsersDataService, $mdSidenav, ipfsApi) {
   }
 }
 
-export default [ 'UsersDataService', '$mdSidenav', 'ipfsApi', AppController ];
+export default [ 'UsersDataService','EthereumService', '$mdSidenav', 'ipfsApi', AppController ];

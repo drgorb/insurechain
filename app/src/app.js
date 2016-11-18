@@ -25,5 +25,5 @@ export default angular.module('starter-app', ['ngMaterial', Users.name])
             .primaryPalette('brown')
             .accentPalette('red');
     })
-    .controller('AppController', AppController)
-    .factory('EthereumService', EthereumService);
+    .factory('EthereumService', EthereumService)
+    .controller('AppController', AppController);
