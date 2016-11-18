@@ -4,16 +4,15 @@
  * @param $mdSidenav
  * @constructor
  */
-function EthereumService() {
+function EthereumService($q) {
     var self = this;
 
     // PUT YOUR CONTRACT'S ABI HERE
-    self.abi = [{"constant":true,"inputs":[],"name":"red","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"voteRed","type":"bool"}],"name":"vote","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"getEntitlement","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"blue","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"}];
+    self.abi = [ { "constant": false, "inputs": [ { "name": "serial", "type": "string" }, { "name": "owner", "type": "address" }, { "name": "endDate", "type": "uint256" } ], "name": "requestWarranty", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "contractAddress", "type": "address" } ], "name": "updateCalculator", "outputs": [], "payable": false, "type": "function" } ];
     self.dappId = "epam.hackathon";
 
     // PUT YOUR CONTRACT ADDRESS HERE
-    self.contractAddress = "0x8fc748ffeb1e5b624b1dd4eae76b2b16695d68ba";
-    console.log('creating wallet bar');
+    self.contractAddress = "0xdE1c9799021fADe9909b420DA6C919943C6272b1";
     self.walletBar = new WalletBar({
         containerName:'#signInId',
         dappNamespace: self.dappId,
@@ -30,7 +29,22 @@ function EthereumService() {
         console.log(err);
     });
 
+
+    self.requestWarranty = function(serial, owner, endDate) {
+      var defer = $q.defer();
+
+      self.WarrantyContract.requestWarranty(serial, owner, enDate.getTime(), function(err, result){
+        if(err) {
+          defer.reject(err);
+        }else {
+          defer.resolve(result);
+        }
+      });
+
+      return defer.promise;
+    }
+
     return self;
 }
 
-export default [ EthereumService ];
+export default ['$q', EthereumService ];

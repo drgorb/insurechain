@@ -1,4 +1,4 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.2;
 
 contract PriceCalculator {
 
@@ -35,8 +35,12 @@ contract Epam {
 		_;
 	}
 
+	function Epam() {
+		owner = msg.sender;
+	}
+
 	function updateCalculator(address contractAddress) ownerOnly {
-		calculator = contractAddress;
+		calculator = PriceCalculator(contractAddress);
 	}
 
 	function requestWarranty(string serial, address owner, uint endDate) noWarranty(serial) {
