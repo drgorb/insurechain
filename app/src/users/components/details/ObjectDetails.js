@@ -2,7 +2,7 @@
 export default {
   name : 'objectDetails',
   config : {
-    bindings         : {  selected: '<' },
+    bindings         : {  selected: '=' },
     templateUrl      : 'src/users/components/details/ObjectDetails.html',
     controller       : [ '$mdBottomSheet', '$log', class ObjectDetailsController  {
 

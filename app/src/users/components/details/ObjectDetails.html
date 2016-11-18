@@ -6,7 +6,7 @@
         <md-list-item>
             <md-input-container>
                 <label>Customer</label>
-                <input name="customerId" ng-model="$ctrl.selected.customerId" required md-maxlength="42" minlength="42">
+                <input name="customerId" ng-model="$ctrl.selected.customerId" md-maxlength="42">
             </md-input-container>
             <div>
                 Customer: {{$ctrl.selected.firstName}} {{$ctrl.selected.lastName}}
@@ -14,10 +14,8 @@
         </md-list-item>
         <md-list-item>
             <md-input-container>
-                <md-input-container>
-                    <label>Paid Price</label>
-                    <input type="number" name="price" ng-model="$ctrl.selected.price" required md-maxlength="15"></input>
-                </md-input-container>
+                <label>Paid Price</label>
+                <input name="price" ng-model="$ctrl.selected.price" md-maxlength="15"></input>
             </md-input-container>
             <div>
                 {{$ctrl.selected.type}}: {{$ctrl.selected.brand}} {{$ctrl.selected.name}}
