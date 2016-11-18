@@ -29,7 +29,6 @@ function EthereumService($q) {
         console.log(err);
     });
 
-
     self.isWarrantyValid = function(serial) {
       var defer = $q.defer();
 
