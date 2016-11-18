@@ -18,12 +18,45 @@
                 <input name="price" ng-model="$ctrl.selected.price" md-maxlength="15"></input>
             </md-input-container>
             <div>
-                {{$ctrl.selected.type}}: {{$ctrl.selected.brand}} {{$ctrl.selected.name}}
+                {{$ctrl.selected.productType}}: {{$ctrl.selected.brand}} {{$ctrl.selected.name}}
             </div>
+        </md-list-item>
+
+        <md-list-item ng-if="$ctrl.repair != undefined">
+            <md-input-container>
+                <label>Repair Date</label>
+                <input ng-disabled="true" name="replacementDate" ng-model="$ctrl.replacement.date" >
+            </md-input-container>
+            <md-input-container>
+                <label>Repair Price</label>
+                <input name="repairCosts" ng-model="$ctrl.repair.price" md-maxlength="42">
+            </md-input-container>
+        </md-list-item>
+
+        <md-list-item ng-if="$ctrl.replacement != undefined">
+            <md-input-container>
+                <label>Replacement Date</label>
+                <input ng-disabled="true" name="replacementDate" ng-model="$ctrl.replacement.date" >
+            </md-input-container>
+            <md-input-container>
+                <label>Replacement Price</label>
+                <input name="replacementCosts" ng-model="$ctrl.replacement.price" >
+            </md-input-container>
         </md-list-item>
     </md-list>
 
 </form>
+
+<div ng-if="$ctrl.repair == undefined && $ctrl.replacement == undefined">
+    <md-button class="md-primary" ng-click="$ctrl.addRepair()">add Repair</md-button>
+    <md-button class="md-primary" ng-click="$ctrl.addReplacement()">add Replacement</md-button>
+</div>
+
+<div ng-if="$ctrl.repair != undefined || $ctrl.replacement != undefined">
+    <md-button class="md-primary" ng-click="$ctrl.send()">Send</md-button>
+</div>
+
+
 
 <md-button class="md-fab md-fab-bottom-right" ng-click="$ctrl.share($event)" aria-label="Share">
     <md-icon md-svg-icon="share"></md-icon>

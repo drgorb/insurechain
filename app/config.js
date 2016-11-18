@@ -20,6 +20,7 @@ System.config({
     "ethereum/web3.js": "github:ethereum/web3.js@0.16.0",
     "haadcode/js-ipfs-api.git": "github:haadcode/js-ipfs-api@8.0.3",
     "json": "github:systemjs/plugin-json@0.1.2",
+    "moment": "npm:moment@2.16.0",
     "text": "github:systemjs/plugin-text@0.0.4",
     "traceur": "github:jmcriffey/bower-traceur@0.0.92",
     "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.92",
