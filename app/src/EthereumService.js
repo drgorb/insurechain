@@ -7,12 +7,10 @@
 function EthereumService($q) {
     var self = this;
 
-    // PUT YOUR CONTRACT'S ABI HERE
-    self.abi = [ { "constant": false, "inputs": [ { "name": "serial", "type": "string" }, { "name": "owner", "type": "address" }, { "name": "endDate", "type": "uint256" } ], "name": "requestWarranty", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "contractAddress", "type": "address" } ], "name": "updateCalculator", "outputs": [], "payable": false, "type": "function" } ];
+    self.abi = [ { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "getCustomer", "outputs": [ { "name": "", "type": "address", "value": "0x0000000000000000000000000000000000000000" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "serial", "type": "string" }, { "name": "customer", "type": "address" }, { "name": "endDate", "type": "uint256" } ], "name": "requestWarranty", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "contractAddress", "type": "address" } ], "name": "updateCalculator", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "getEndDate", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "isWarrantyValid", "outputs": [ { "name": "", "type": "bool", "value": true } ], "payable": false, "type": "function" }, { "inputs": [], "type": "constructor" } ];
     self.dappId = "epam.hackathon";
 
-    // PUT YOUR CONTRACT ADDRESS HERE
-    self.contractAddress = "0xdE1c9799021fADe9909b420DA6C919943C6272b1";
+    self.contractAddress = "0xF65a613630e112cc2Fc0fB382770E3845b857105";
     self.walletBar = new WalletBar({
         containerName:'#signInId',
         dappNamespace: self.dappId,
@@ -33,6 +31,34 @@ function EthereumService($q) {
       var defer = $q.defer();
 
       self.WarrantyContract.isWarrantyValid(serial, function(err, result){
+        if(err) {
+          defer.reject(err);
+        }else {
+          defer.resolve(result);
+        }
+      });
+
+      return defer.promise;
+    }
+
+    self.getCustomer = function(serial) {
+      var defer = $q.defer();
+
+      self.WarrantyContract.getCustomer(serial, function(err, result){
+        if(err) {
+          defer.reject(err);
+        }else {
+          defer.resolve(result);
+        }
+      });
+
+      return defer.promise;
+    }
+
+    self.getWarrantyEndDate = function(serial) {
+      var defer = $q.defer();
+
+      self.WarrantyContract.getWarrantyEndDate(serial, function(err, result){
         if(err) {
           defer.reject(err);
         }else {

@@ -12,7 +12,7 @@ contract Epam {
 	struct Product {
 		string manufacturer;
 		string productType;
-		address owner;
+		address customer;
 		string warrantyId;
 		uint warrantyEndDate;
 	}
@@ -43,14 +43,22 @@ contract Epam {
 		calculator = PriceCalculator(contractAddress);
 	}
 
-	function requestWarranty(string serial, address owner, uint endDate) noWarranty(serial) {
-		products[serial].owner = owner;
+	function requestWarranty(string serial, address customer, uint endDate) noWarranty(serial) {
+		products[serial].customer = customer;
 		products[serial].warrantyEndDate = endDate;
 
 	}
 
 	function isWarrantyValid(string serial) constant returns (bool) {
 		return products[serial].warrantyEndDate < now;
+	}
+
+	function getEndDate(string serial) constant returns (uint) {
+		return products[serial].warrantyEndDate;
+	}
+
+	function getCustomer(string serial) constant returns (address) {
+		return products[serial].customer;
 	}
 
 }
