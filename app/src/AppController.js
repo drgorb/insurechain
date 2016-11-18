@@ -15,7 +15,7 @@ function AppController(ObjectsDataService, EthereumService, $mdSidenav, ipfsApi)
   // Load all registered users
 
   ObjectsDataService
-        .loadAllUsers()
+        .loadAllObjects()
         .then( function( users ) {
           self.users    = [].concat(users);
           self.selected = users[0];

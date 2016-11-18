@@ -5,6 +5,9 @@ import 'angular-animate';
 import 'angular-aria';
 import 'angular-material';
 
+
+import moment from 'moment';
+
 import AppController from 'src/AppController';
 import EthereumService from 'src/EthereumService';
 import Objects from 'src/users/Objects';
@@ -26,4 +29,5 @@ export default angular.module('starter-app', ['ngMaterial', Objects.name])
             .accentPalette('red');
     })
     .factory('EthereumService', EthereumService)
+    .factory('moment', moment)
     .controller('AppController', AppController);
