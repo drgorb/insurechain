@@ -1,5 +1,5 @@
 /**
- * Users DataService
+ * Objects DataService
  * Uses embedded, hard-coded data model; acts asynchronously to simulate
  * remote data service call(s).
  *

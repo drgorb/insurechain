@@ -1,43 +1,32 @@
 <md-icon md-svg-icon="{{$ctrl.selected.avatar}}" class="avatar"></md-icon>
-<h2>{{$ctrl.selected.name}}</h2>
-<p>{{$ctrl.selected.content}}</p>
 
 <form name="objectForm">
-  <!-- NOTE: @see ngClick for how to pass data selection to outside expression -->
-  <md-list>
-    <md-list-item>
-      <md-input-container>
-        <label>Customer</label>
-        <input name="customerId" ng-model="customerId" required md-maxlength="42" minlength="42">
-        <div ng-messages="userForm.customerId.$error" ng-show="userForm.customerId.$dirty">
-          <div ng-message="required">This is required!</div>
-          <div ng-message="md-maxlength">That has to be 42 characters long! Exactyl</div>
-          <div ng-message="minlength">That has to be 42 characters long! Exactyl!</div>
-        </div>
-      </md-input-container>
-    </md-list-item>
-    <md-list-item>
-    <md-input-container>
-      <md-input-container>
-        <label>Biography</label>
-        <textarea name="bio" ng-model="biography" required md-maxlength="150"></textarea>
-        <div ng-messages="userForm.bio.$error" ng-show="userForm.bio.$dirty">
-          <div ng-message="required">This is required!</div>
-          <div ng-message="md-maxlength">That's too long!</div>
-        </div>
-      </md-input-container>
-    </md-input-container>
-    </md-list-item>
-  </md-list>
+    <!-- NOTE: @see ngClick for how to pass data selection to outside expression -->
+    <md-list>
+        <md-list-item>
+            <md-input-container>
+                <label>Customer</label>
+                <input name="customerId" ng-model="$ctrl.selected.customerId" required md-maxlength="42" minlength="42">
+            </md-input-container>
+            <div>
+                Customer: {{$ctrl.selected.firstName}} {{$ctrl.selected.lastName}}
+            </div>
+        </md-list-item>
+        <md-list-item>
+            <md-input-container>
+                <md-input-container>
+                    <label>Paid Price</label>
+                    <input type="number" name="price" ng-model="$ctrl.selected.price" required md-maxlength="15"></input>
+                </md-input-container>
+            </md-input-container>
+            <div>
+                {{$ctrl.selected.type}}: {{$ctrl.selected.brand}} {{$ctrl.selected.name}}
+            </div>
+        </md-list-item>
+    </md-list>
 
-  <md-input-container>
-    <input aria-label="title" ng-model="title">
-  </md-input-container>
-  <md-input-container>
-    <input placeholder="title" ng-model="title">
-  </md-input-container>
 </form>
 
 <md-button class="md-fab md-fab-bottom-right" ng-click="$ctrl.share($event)" aria-label="Share">
-  <md-icon md-svg-icon="share" ></md-icon>
+    <md-icon md-svg-icon="share"></md-icon>
 </md-button>

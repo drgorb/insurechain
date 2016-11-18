@@ -6,9 +6,9 @@ import 'angular-aria';
 import 'angular-material';
 
 import AppController from 'src/AppController';
-import Users from 'src/users/Users';
+import Objects from 'src/users/Objects';
 
-export default angular.module('starter-app', ['ngMaterial', Users.name])
+export default angular.module('starter-app', ['ngMaterial', Objects.name])
     .config(($mdIconProvider, $mdThemingProvider) => {
         // Register the user `avatar` icons
         $mdIconProvider

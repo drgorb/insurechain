@@ -1,10 +1,10 @@
 /**
  * Main App Controller for the Angular Material Starter App
- * @param UsersDataService
+ * @param ObjectsDataService
  * @param $mdSidenav
  * @constructor
  */
-function AppController(UsersDataService, $mdSidenav, ipfsApi) {
+function AppController(ObjectsDataService, $mdSidenav, ipfsApi) {
   var self = this;
 
   self.selected     = null;
@@ -14,7 +14,7 @@ function AppController(UsersDataService, $mdSidenav, ipfsApi) {
 
   // Load all registered users
 
-  UsersDataService
+  ObjectsDataService
         .loadAllUsers()
         .then( function( users ) {
           self.users    = [].concat(users);
@@ -41,4 +41,4 @@ function AppController(UsersDataService, $mdSidenav, ipfsApi) {
   }
 }
 
-export default [ 'UsersDataService', '$mdSidenav', 'ipfsApi', AppController ];
+export default [ 'ObjectsDataService', '$mdSidenav', 'ipfsApi', AppController ];
