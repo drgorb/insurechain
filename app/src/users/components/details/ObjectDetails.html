@@ -52,14 +52,14 @@
 
 </form>
 
-<div ng-if="!$ctrl.isWarantyValid($ctrl.selected.serial)">
+<div ng-if="!$ctrl.isWarantyValid">
     <md-button class="md-primary"
                ng-click="$ctrl.requestWaranty($ctrl.selected.serial, $ctrl.selected.customerId, $ctrl.selected.warantyEndDate)">
         Request Waranty
     </md-button>
 </div>
 
-<div ng-if="$ctrl.isWarantyValid($ctrl.selected.serial)">
+<div ng-if="$ctrl.isWarantyValid">
     <div ng-if="$ctrl.repair == undefined && $ctrl.replacement == undefined">
         <md-button class="md-primary" ng-click="$ctrl.addRepair()">add Repair</md-button>
         <md-button class="md-primary" ng-click="$ctrl.addReplacement()">add Replacement</md-button>

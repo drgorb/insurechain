@@ -15,14 +15,16 @@ export default {
                 this.moment = moment;
                 this.contract = contract;
                 this.$log = $log;
-            }
-
-            isWarantyValid(serial) {
-                return this.contract.isWarrantyValid(serial);
+                var self = this;
+                contract.getInfo(this.selected.serial).then(function (info) {
+                    self.isWarrantyValid = info.isWarrantyValid;
+                    self.selected.warrantyEndDate = info.warrantyEndDate;
+                    self.selected.customerId = info.customer;
+                })
             }
 
             requestWaranty(serial, customerId, endDate){
-                this.contract.requestWarranty(serial, customerId, endDate);
+                this.contract.requestWarranty(serial, customerId, new Date(endDate));
             }
 
             addRepair() {
