@@ -30,6 +30,20 @@ function EthereumService($q) {
     });
 
 
+    self.isWarrantyValid = function(serial) {
+      var defer = $q.defer();
+
+      self.WarrantyContract.isWarrantyValid(serial, function(err, result){
+        if(err) {
+          defer.reject(err);
+        }else {
+          defer.resolve(result);
+        }
+      });
+
+      return defer.promise;
+    }
+
     self.requestWarranty = function(serial, owner, endDate) {
       var defer = $q.defer();
 
