@@ -3,16 +3,16 @@
 import UsersDataService from 'src/users/services/UsersDataService';
 import IpfsApiService from 'src/users/services/IpfsApiService';
 
-import UsersList from 'src/users/components/list/UsersList';
-import UserDetails from 'src/users/components/details/UserDetails';
+import ObjectsList from 'src/users/components/list/ObjectsList';
+import ObjectDetails from 'src/users/components/details/ObjectDetails';
 
 // Define the Angular 'users' module
 
 export default angular
     .module("users", ['ngMaterial'])
 
-    .component(UsersList.name, UsersList.config)
-    .component(UserDetails.name, UserDetails.config)
+    .component(ObjectsList.name, ObjectsList.config)
+    .component(ObjectDetails.name, ObjectDetails.config)
 
     .service("UsersDataService", UsersDataService)
 
