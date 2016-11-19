@@ -112,6 +112,10 @@ contract Epam {
 		return requestCount;
 	}
 
+	function getProduct(string serial) constant returns(address , string , string , address, string, uint, uint) {
+		Product product = products[serial];
+		return (product.retailer, product.manufacturer, product.productType, product.customer, product.warrantyId, product.warrantyEndDate, product.price);
+	}
 
 	function getRequest(uint id) constant returns (uint, string, string, string, address, string, uint, uint) {
 		Product product = products[requests[id].serial];
