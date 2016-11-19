@@ -4,7 +4,7 @@
  * @param $mdSidenav
  * @constructor
  */
-function AppController(ObjectsDataService, contract, $mdSidenav, ipfsApi) {
+function AppController(ObjectsDataService, contract, $mdSidenav) {
   var self = this;
 
   self.selected     = null;
@@ -44,9 +44,7 @@ function AppController(ObjectsDataService, contract, $mdSidenav, ipfsApi) {
       self.selected.customerId = info.customer;
       self.selected.price = info.price;
     })
-
-
   }
 }
 
-export default [ 'ObjectsDataService','EthereumService', '$mdSidenav', 'ipfsApi', AppController ];
+export default [ 'ObjectsDataService','EthereumService', '$mdSidenav', AppController ];

@@ -1,7 +1,6 @@
 // Load the custom app ES6 modules
 
 import ObjectsDataService from 'src/users/services/ObjectsDataService';
-import IpfsApiService from 'src/users/services/IpfsApiService';
 import FileSaverService from 'src/users/services/FileSaverService';
 
 import ObjectsList from 'src/users/components/list/ObjectsList';
@@ -19,6 +18,5 @@ export default angular
     .component(DownloadReportData.name, DownloadReportData.config)
 
     .service("ObjectsDataService", ObjectsDataService)
-    .service("FileSaverService", FileSaverService)
-    .service("ipfsApi", IpfsApiService);
-;
+    .service("FileSaverService", FileSaverService);
+
