@@ -12,34 +12,10 @@ function EthereumService($q) {
     self.dappId = "epam.hackathon";
 
     self.contractAddress = "0x64910c65a13B08634D7263b5f06c0C67AfFf36Cf";
-    /*
-    self.walletBar = new WalletBar({
-        containerName: '#signInId',
-        dappNamespace: self.dappId,
-        blockchain: "morden"
-    });
-    */
-    console.log(web3);
+
     self.web3 = web3;
     self.WarrantyContract = web3.eth.contract(self.abi).at(self.contractAddress);
-    /*
-    self.waitForWallet = self.walletBar.applyHook(self.web3)
-        .then(function () {
-            self.WarrantyContract = self.web3.eth.contract(self.abi).at(self.contractAddress);
-            return self.WarrantyContract;
-        })
-        .catch(function (err) {
-            console.log(err);
-        });
-    
 
-    function prepareForTransaction() {
-        var account = self.walletBar.getCurrentAccount(); // get account selected in wallet bar
-        if (!account) return alert("You must log in to transact");
-        self.walletBar.createSecureSigner();
-        return account;
-    }
-    */
     self.getInfo = function (serial) {
         return $q.all({
             isWarrantyValid: self.isWarrantyValid(serial),
