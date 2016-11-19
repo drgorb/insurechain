@@ -1,5 +1,7 @@
 # Extended Waranty smart-contract interface on Ethereum
 
+[here is a screen cast of how the app works](https://youtu.be/87IiN8InU7A)
+
 The web-app covers 3 use cases:
 
 * request an extended warranty for a product
