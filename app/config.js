@@ -18,6 +18,7 @@ System.config({
     "angular-mocks": "github:angular/bower-angular-mocks@1.5.8",
     "css": "github:systemjs/plugin-css@0.1.26",
     "ethereum/web3.js": "github:ethereum/web3.js@0.16.0",
+    "file-saver": "npm:file-saver@1.3.3",
     "haadcode/js-ipfs-api.git": "github:haadcode/js-ipfs-api@8.0.3",
     "json": "github:systemjs/plugin-json@0.1.2",
     "moment": "npm:moment@2.16.0",

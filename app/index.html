@@ -1,37 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no"/>
 
-  <title>Angular Material - Starter App</title>
-  <link rel="icon" type="image/png" href="/app/hackathon.png">
-  <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
-  <link rel="stylesheet" href="./jspm_packages/github/angular/bower-material@master/angular-material.css"/>
-  <link rel="stylesheet" href="./assets/app.css"/>
+    <title>Angular Material - Starter App</title>
+    <link rel="icon" type="image/png" href="/app/hackathon.png">
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,700'>
+    <link rel="stylesheet" href="./jspm_packages/github/angular/bower-material@master/angular-material.css"/>
+    <link rel="stylesheet" href="./assets/app.css"/>
 
-  <script src="https://blockone.thomsonreuters.com/wallet-bar/bundle.js"></script>
-  <script src="https://rawgit.com/ethereum/web3.js/develop/dist/web3.min.js"></script>
+    <script src="https://blockone.thomsonreuters.com/wallet-bar/bundle.js"></script>
+    <script src="https://rawgit.com/ethereum/web3.js/develop/dist/web3.min.js"></script>
 </head>
 
 <body ng-cloak layout="column" ng-controller="AppController as app">
 
 <!-- Container #1 (see wireframe) -->
-<md-toolbar layout="row" class="md-toolbar-tools">
+<md-toolbar class="md-toolbar-tools">
     <md-button class="menu md-icon-button" hide-gt-sm ng-click="app.toggleList()"
                aria-label="Search for object">
         <md-icon md-svg-icon="menu"></md-icon>
     </md-button>
     <h1 style="margin-right: 20pt">Waranties</h1>
-        <md-input-container>
-            <label>Serial Number</label>
-            <input type="text" ng-model="searchTerm">
-        </md-input-container>
+
+    <md-input-container>
+        <label>Serial Number</label>
+        <input type="text" ng-model="searchTerm">
+    </md-input-container>
+
+    <span flex></span>
     <div layout="row" layout-align="end end">
         <div id="signInId"></div>
     </div>
+
+    <span flex></span>
+
+    <download-report-data/>
 </md-toolbar>
 
 <!-- Container #2 -->

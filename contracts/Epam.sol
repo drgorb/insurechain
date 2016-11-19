@@ -10,15 +10,26 @@ contract PriceCalculator {
 contract Epam {
 
 	struct Product {
+		address retailer;
 		string manufacturer;
 		string productType;
 		address customer;
 		string warrantyId;
 		uint warrantyEndDate;
+		uint price;
+	}
+
+	struct Claim {
+		address claimant;
+		uint amount;
+		string serial;
 	}
 
 	address owner;
 	mapping(string => Product) products;
+	mapping(uint => Claim) claims;
+	uint claimCount;
+
 	PriceCalculator calculator;
 
 	modifier ownerOnly {
@@ -43,9 +54,22 @@ contract Epam {
 		calculator = PriceCalculator(contractAddress);
 	}
 
-	function requestWarranty(string serial, address customer, uint endDate) noWarranty(serial) {
-		products[serial].customer = customer;
-		products[serial].warrantyEndDate = endDate;
+	function requestWarranty(string serial, address customer, uint endDate, uint price) noWarranty(serial) {
+		Product product;
+		product.retailer = msg.sender;
+		product.customer = customer;
+		product.warrantyEndDate = endDate;
+		product.price = price;
+
+		products[serial] = product;
+	}
+
+	function claimWaranty(string serial, uint amount) {
+		Claim claim;
+		claim.claimant = msg.sender;
+		claim.amount = amount;
+		claim.serial = serial;
+		claims[claimCount++] = claim;
 	}
 
 	function isWarrantyValid(string serial) constant returns (bool) {

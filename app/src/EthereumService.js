@@ -46,6 +46,14 @@ function EthereumService($q) {
      });
     }
 
+    self.getReportData = function(month) {
+        return $q(function(resolve, reject) {
+            setTimeout(function() {
+                resolve("productType,productName,serial,pricePaid,claim,claimAmount,claimantId");
+            }, 500);
+        });
+    }
+
     self.isWarrantyValid = function(serial) {
       console.log('is warranty valid');
       var defer = $q.defer();
