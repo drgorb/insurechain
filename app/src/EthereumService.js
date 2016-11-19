@@ -32,26 +32,39 @@ function EthereumService($q) {
         }).then(function (counts) {
             var getClaims = [];
             for (var i = 0; i < counts.claims; i++) {
-                getClaims.push(self.getClaim(i))
+                getClaims.push(self.getClaim(i));
             }
             var getRequests = [];
             for (var i = 0; i < counts.requests; i++) {
-                getClaims.push(self.getRequest(i))
+                getRequests.push(self.getRequest(i));
             }
             return $q.all({
                 claims: $q.all(getClaims),
                 requests: $q.all(getRequests)
             });
         }).then(function(results){
-            var report = "productType,productName,serial,pricePaid,claimDate,claimAmount,claimantId\n";
+            var report = "entryType,productType,serial,pricePaid,claimDate,claimAmount,claimantId\n";
             results.claims.forEach(function (claim) {
+                report += "claim," //entryType
                 report += "," //productType
-                report += "," //productName
-                report += claim.serial + "," //productSerial
+                report += claim[2].toString() + "," //productSerial
+                report += "," //pricePaid
+                report += (new Date(claim[3])).toDateString() + "," //claimDate
+                report += claim[1].toNumber() + "," //claimAmount
+                report += claim[0].toString() + "\n" //claimantId
             });
-            return $q(function (resolve, reject) {
-                resolve(report);
+
+            results.requests.forEach(function (request) {
+                report += "request," //entryType
+                report += request[3].toString() + "," //productType
+                report += request[1].toString() + "," //productSerial
+                report += request[7].toNumber() + "," //pricePaid
+                report += "," //claimDate
+                report += "," //claimAmount
+                report += request[4].toString() + "\n" //retailer
             });
+
+            return report;
         });
 
 
