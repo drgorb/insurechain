@@ -42,7 +42,7 @@ function AppController(ObjectsDataService, contract, $mdSidenav) {
       self.selected.isWarrantyValid = info.isWarrantyValid;
       self.selected.warrantyEndDate = info.warrantyEndDate;
       self.selected.customerId = info.customer;
-      self.selected.price = info.price;
+      self.selected.price = info.product[6];
     })
   }
 }

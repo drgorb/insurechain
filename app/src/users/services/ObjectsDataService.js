@@ -13,7 +13,7 @@ function ObjectsDataService($q) {
             name: 'Galaxy Edge 7',
             productType: 'Phone',
             serial: '12345677890',
-            avatar: 'svg-1',
+            avatar: 'smart-phone',
             description: 'It\'s a phone'
         },
         {

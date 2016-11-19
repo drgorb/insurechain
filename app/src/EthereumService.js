@@ -20,7 +20,8 @@ function EthereumService($q) {
         return $q.all({
             isWarrantyValid: self.isWarrantyValid(serial),
             customer: self.getCustomer(serial),
-            warrantyEndDate: self.getWarrantyEndDate(serial)
+            warrantyEndDate: self.getWarrantyEndDate(serial),
+            product: self.getProduct(serial)
         });
 
     }
@@ -145,6 +146,20 @@ function EthereumService($q) {
         var defer = $q.defer();
 
         self.WarrantyContract.getClaim(idx, function (err, result) {
+            if (err) {
+                defer.reject(err);
+            } else {
+                defer.resolve(result);
+            }
+        });
+
+        return defer.promise;
+    }
+
+    self.getProduct = function (serial) {
+        var defer = $q.defer();
+
+        self.WarrantyContract.getProduct(serial, function (err, result) {
             if (err) {
                 defer.reject(err);
             } else {
