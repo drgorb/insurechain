@@ -194,7 +194,7 @@ function EthereumService($q) {
     self.requestWarranty = function (serial, owner, endDate) {
         var defer = $q.defer();
         var account = prepareForTransaction();
-        self.WarrantyContract.requestWarranty(serial, owner, endDate.getTime(), {from: account}, function (err, result) {
+        self.WarrantyContract.requestWarranty(serial, owner, endDate.getTime() / 1000, {from: account}, function (err, result) {
             if (err) {
                 defer.reject(err);
             } else {
