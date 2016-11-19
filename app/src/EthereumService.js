@@ -44,24 +44,24 @@ function EthereumService($q) {
                 requests: $q.all(getRequests)
             });
         }).then(function(results){
-            var report = "entryType,productType,serial,pricePaid,claimDate,claimAmount,claimantId\n";
+            var report = "entryType;productType;serial;pricePaid;claimDate;claimAmount;claimantId\n";
             results.claims.forEach(function (claim) {
-                report += "claim," //entryType
-                report += "," //productType
-                report += claim[2].toString() + "," //productSerial
-                report += "," //pricePaid
-                report += (new Date(claim[3] * 1000)).toDateString() + "," //claimDate
-                report += claim[1].toNumber() + "," //claimAmount
+                report += "claim;" //entryType
+                report += ";" //productType
+                report += claim[2].toString() + ";" //productSerial
+                report += ";" //pricePaid
+                report += (new Date(claim[3] * 1000)).toDateString() + ";" //claimDate
+                report += claim[1].toNumber() + ";" //claimAmount
                 report += claim[0].toString() + "\n" //claimantId
             });
 
             results.requests.forEach(function (request) {
-                report += "request," //entryType
-                report += request[3].toString() + "," //productType
-                report += request[1].toString() + "," //productSerial
-                report += request[7].toNumber() + "," //pricePaid
-                report += "," //claimDate
-                report += "," //claimAmount
+                report += "request;" //entryType
+                report += request[3].toString() + ";" //productType
+                report += request[1].toString() + ";" //productSerial
+                report += request[7].toNumber() + ";" //pricePaid
+                report += ";" //claimDate
+                report += ";" //claimAmount
                 report += request[4].toString() + "\n" //retailer
             });
 
