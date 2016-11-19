@@ -169,6 +169,19 @@ function EthereumService($q) {
         return defer.promise;
     }
 
+    self.claimWarranty = function (serial, amount) {
+        var defer = $q.defer();
+        self.WarrantyContract.claimWarranty(serial, amount, function (err, result) {
+            if (err) {
+                defer.reject(err);
+            } else {
+                defer.resolve(result);
+            }
+        });
+
+        return defer.promise;
+    }
+
     return self;
 }
 

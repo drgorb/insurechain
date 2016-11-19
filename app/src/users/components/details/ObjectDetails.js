@@ -35,6 +35,10 @@ export default {
                     price: 100
                 };
             }
+            
+            send() {
+                this.contract.claimWarranty(this.selected.serial, this.selected.price);
+            }
 
         }]
     }
