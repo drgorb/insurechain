@@ -10,7 +10,7 @@
                     <input name="customerId" ng-model="$ctrl.selected.customerId" md-maxlength="42" >
                 </md-input-container>
             </div>
-            <div>
+            <div class="secondRow">
                 <md-input-container>
                     <label>Waranty End Date</label>
                     <input name="endDate" ng-model="$ctrl.selected.warrantyEndDate">
@@ -22,19 +22,19 @@
                 <label>Paid Price</label>
                 <input name="price" ng-model="$ctrl.selected.price" md-maxlength="15"></input>
             </md-input-container>
-            <div>
+            <div class="secondRow">
                 {{$ctrl.selected.productType}}: {{$ctrl.selected.brand}} {{$ctrl.selected.name}}
             </div>
         </md-list-item>
 
-        <md-list-item ng-if="$ctrl.claim">
+        <md-list-item ng-if="$ctrl.selected.claim">
             <md-input-container>
                 <label>{{$ctrl.claim.claimType}} Date</label>
-                <input ng-disabled="true" name="claimDate" ng-model="$ctrl.claim.date">
+                <input ng-disabled="true" name="claimDate" ng-model="$ctrl.selected.claim.date">
             </md-input-container>
             <md-input-container>
                 <label>{{$ctrl.claim.claimType}} Price</label>
-                <input name="claimCosts" ng-model="$ctrl.claim.price">
+                <input name="claimCosts" ng-model="$ctrl.selected.claim.price">
             </md-input-container>
         </md-list-item>
     </md-list>
@@ -42,7 +42,7 @@
 </form>
 
 <div ng-if="!$ctrl.selected.isWarrantyValid">
-    <md-button class="md-primary"
+    <md-button class="md-primary md-raised"
                ng-click="$ctrl.requestWaranty($ctrl.selected.serial,
                $ctrl.selected.customerId,
                $ctrl.selected.warrantyEndDate,
@@ -52,17 +52,13 @@
 </div>
 
 <div ng-if="$ctrl.selected.isWarrantyValid">
-    <div ng-if="$ctrl.claim == undefined">
-        <md-button class="md-primary" ng-click="$ctrl.addRepair()">add Repair</md-button>
-        <md-button class="md-primary" ng-click="$ctrl.addReplacement()">add Replacement</md-button>
+    <div ng-if="$ctrl.selected.claim == undefined">
+        <md-button class="md-primary md-raised" ng-click="$ctrl.addRepair()">add Repair</md-button>
+        <md-button class="md-primary md-raised" ng-click="$ctrl.addReplacement()">add Replacement</md-button>
     </div>
 
-    <div ng-if="$ctrl.repair != $ctrl.claim">
-        <md-button class="md-primary" ng-click="$ctrl.sendClaim()">Send</md-button>
+    <div ng-if="$ctrl.selected.repair != $ctrl.selected.claim">
+        <md-button class="md-primary md-raised" ng-click="$ctrl.sendClaim()">Send</md-button>
+        <md-button class="md-primary md-raised" ng-click="$ctrl.cancelClaim()">Cancel</md-button>
     </div>
 </div>
-
-
-<md-button class="md-fab md-fab-bottom-right" ng-click="$ctrl.share($event)" aria-label="Share">
-    <md-icon md-svg-icon="share"></md-icon>
-</md-button>

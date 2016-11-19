@@ -23,7 +23,7 @@ export default {
             }
 
             addRepair() {
-                this.claim = {
+                this.selected.claim = {
                     claimType: "repair",
                     date: this.moment.format("YYYY-MM-DD"),
                     serial: this.selected.serial,
@@ -32,7 +32,7 @@ export default {
             }
 
             addReplacement() {
-                this.claim = {
+                this.selected.claim = {
                     claimType: "replacement",
                     date: this.moment.format("YYYY-MM-DD"),
                     serial: this.selected.serial,
@@ -42,10 +42,14 @@ export default {
 
             sendClaim() {
                 var self = this;
-                this.contract.claimWarranty(this.claim.serial, this.claim.price, this.claim.claimType)
+                this.contract.claimWarranty(this.selected.claim.serial, this.selected.claim.price, this.selected.claim.claimType)
                     .then(function () {
-                        delete self.claim;
+                        delete self.selected.claim;
                     });
+            }
+
+            cancelClaim() {
+                delete this.selected.claim;
             }
 
         }]
