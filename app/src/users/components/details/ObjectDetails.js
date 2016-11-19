@@ -3,7 +3,7 @@ export default {
     config: {
         bindings: {selected: '='},
         templateUrl: 'src/users/components/details/ObjectDetails.html',
-        controller: ['moment', 'EthereumService', '$log', class ObjectDetailsController {
+        controller: ['moment', 'EthereumService', '$log', '$scope', class ObjectDetailsController {
 
             /**
              * Constructor
@@ -11,16 +11,11 @@ export default {
              * @param $mdBottomSheet
              * @param $log
              */
-            constructor(moment, contract, $log) {
+            constructor(moment, contract, $log, $scope) {
                 this.moment = moment;
                 this.contract = contract;
                 this.$log = $log;
-                var self = this;
-                contract.getInfo(this.selected.serial).then(function (info) {
-                    self.isWarrantyValid = info.isWarrantyValid;
-                    self.selected.warrantyEndDate = info.warrantyEndDate;
-                    self.selected.customerId = info.customer;
-                })
+                this.self = this;
             }
 
             requestWaranty(serial, customerId, endDate){

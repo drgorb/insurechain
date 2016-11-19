@@ -4,7 +4,7 @@
  * @param $mdSidenav
  * @constructor
  */
-function AppController(ObjectsDataService, EthereumService, $mdSidenav, ipfsApi) {
+function AppController(ObjectsDataService, contract, $mdSidenav, ipfsApi) {
   var self = this;
 
   self.selected     = null;
@@ -38,6 +38,14 @@ function AppController(ObjectsDataService, EthereumService, $mdSidenav, ipfsApi)
    */
   function selectUser ( user ) {
     self.selected = angular.isNumber(user) ? $scope.users[user] : user;
+    contract.getInfo(self.selected.serial).then(function (info) {
+      self.selected.isWarrantyValid = info.isWarrantyValid;
+      self.selected.warrantyEndDate = info.warrantyEndDate;
+      self.selected.customerId = info.customer;
+      self.selected.price = info.price;
+    })
+
+
   }
 }
 

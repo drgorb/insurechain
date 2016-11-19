@@ -32,29 +32,15 @@ function EthereumService($q) {
         }).then(function (counts) {
             var getClaims = [];
             for (var i = 0; i < counts.claims; i++) {
-                getClaims.push(self.WarrantyContract.getClaim(idx, function (err, result) {
-                        if (err) {
-                            defer.reject(err);
-                        } else {
-                            defer.resolve(result);
-                        }
-                    })
-                )
+                getClaims.push(self.getClaim(i))
             }
             var getRequests = [];
             for (var i = 0; i < counts.requests; i++) {
-                getClaims.push(self.WarrantyContract.getRequest(idx, function (err, result) {
-                        if (err) {
-                            defer.reject(err);
-                        } else {
-                            defer.resolve(result);
-                        }
-                    })
-                )
+                getClaims.push(self.getRequest(i))
             }
             return $q.all({
-                claims: getClaims,
-                requests: getRequests
+                claims: $q.all(getClaims),
+                requests: $q.all(getRequests)
             });
         }).then(function(results){
             var report = "productType,productName,serial,pricePaid,claimDate,claimAmount,claimantId\n";
@@ -163,7 +149,7 @@ function EthereumService($q) {
             if (err) {
                 defer.reject(err);
             } else {
-                defer.resolve(result);
+                defer.resolve((new Date(result.toNumber())).toDateString());
             }
         });
 

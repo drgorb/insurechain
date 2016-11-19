@@ -13,7 +13,7 @@
             <div>
                 <md-input-container>
                     <label>Waranty End Date</label>
-                    <input name="endDate" ng-model="$ctrl.selected.warantyEndDate">
+                    <input name="endDate" ng-model="$ctrl.selected.warrantyEndDate">
                 </md-input-container>
             </div>
         </md-list-item>
@@ -52,14 +52,14 @@
 
 </form>
 
-<div ng-if="!$ctrl.isWarrantyValid">
+<div ng-if="!$ctrl.selected.isWarrantyValid">
     <md-button class="md-primary"
                ng-click="$ctrl.requestWaranty($ctrl.selected.serial, $ctrl.selected.customerId, $ctrl.selected.warantyEndDate)">
         Request Waranty
     </md-button>
 </div>
 
-<div ng-if="$ctrl.isWarrantyValid">
+<div ng-if="$ctrl.selected.isWarrantyValid">
     <div ng-if="$ctrl.repair == undefined && $ctrl.replacement == undefined">
         <md-button class="md-primary" ng-click="$ctrl.addRepair()">add Repair</md-button>
         <md-button class="md-primary" ng-click="$ctrl.addReplacement()">add Replacement</md-button>
