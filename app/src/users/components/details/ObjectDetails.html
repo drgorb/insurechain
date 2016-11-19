@@ -27,25 +27,14 @@
             </div>
         </md-list-item>
 
-        <md-list-item ng-if="$ctrl.repair != undefined">
+        <md-list-item ng-if="$ctrl.claim">
             <md-input-container>
-                <label>Repair Date</label>
-                <input ng-disabled="true" name="replacementDate" ng-model="$ctrl.repair.date">
+                <label>{{$ctrl.claim.claimType}} Date</label>
+                <input ng-disabled="true" name="claimDate" ng-model="$ctrl.claim.date">
             </md-input-container>
             <md-input-container>
-                <label>Repair Price</label>
-                <input name="repairCosts" ng-model="$ctrl.repair.price" md-maxlength="42">
-            </md-input-container>
-        </md-list-item>
-
-        <md-list-item ng-if="$ctrl.replacement != undefined">
-            <md-input-container>
-                <label>Replacement Date</label>
-                <input ng-disabled="true" name="replacementDate" ng-model="$ctrl.replacement.date">
-            </md-input-container>
-            <md-input-container>
-                <label>Replacement Price</label>
-                <input name="replacementCosts" ng-model="$ctrl.replacement.price">
+                <label>{{$ctrl.claim.claimType}} Price</label>
+                <input name="claimCosts" ng-model="$ctrl.claim.price">
             </md-input-container>
         </md-list-item>
     </md-list>
@@ -54,7 +43,10 @@
 
 <div ng-if="!$ctrl.selected.isWarrantyValid">
     <md-button class="md-primary"
-               ng-click="$ctrl.requestWaranty($ctrl.selected.serial, $ctrl.selected.customerId, $ctrl.selected.warantyEndDate)">
+               ng-click="$ctrl.requestWaranty($ctrl.selected.serial,
+               $ctrl.selected.customerId,
+               $ctrl.selected.warrantyEndDate,
+               $ctrl.selected.price)">
         Request Waranty
     </md-button>
 </div>
@@ -66,7 +58,7 @@
     </div>
 
     <div ng-if="$ctrl.repair != undefined || $ctrl.replacement != undefined">
-        <md-button class="md-primary" ng-click="$ctrl.send()">Send</md-button>
+        <md-button class="md-primary" ng-click="$ctrl.sendClaim()">Send</md-button>
     </div>
 </div>
 

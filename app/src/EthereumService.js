@@ -49,7 +49,7 @@ function EthereumService($q) {
                 report += "," //productType
                 report += claim[2].toString() + "," //productSerial
                 report += "," //pricePaid
-                report += (new Date(claim[3])).toDateString() + "," //claimDate
+                report += (new Date(claim[3] * 1000)).toDateString() + "," //claimDate
                 report += claim[1].toNumber() + "," //claimAmount
                 report += claim[0].toString() + "\n" //claimantId
             });
@@ -162,16 +162,17 @@ function EthereumService($q) {
             if (err) {
                 defer.reject(err);
             } else {
-                defer.resolve((new Date(result.toNumber())).toDateString());
+                defer.resolve((new Date(result.toNumber() * 1000)).toDateString());
             }
         });
 
         return defer.promise;
     }
 
-    self.requestWarranty = function (serial, owner, endDate) {
+    self.requestWarranty = function (serial, owner, endDate, price) {
         var defer = $q.defer();
-        self.WarrantyContract.requestWarranty(serial, owner, endDate.getTime() / 1000, function (err, result) {
+        price = parseInt(price);
+        self.WarrantyContract.requestWarranty(serial, owner, endDate.getTime() / 1000, price, function (err, result) {
             if (err) {
                 defer.reject(err);
             } else {
@@ -182,9 +183,9 @@ function EthereumService($q) {
         return defer.promise;
     }
 
-    self.claimWarranty = function (serial, amount) {
+    self.claimWarranty = function (serial, amount, claimType) {
         var defer = $q.defer();
-        self.WarrantyContract.claimWarranty(serial, amount, function (err, result) {
+        self.WarrantyContract.claimWarranty(serial, amount, claimType, function (err, result) {
             if (err) {
                 defer.reject(err);
             } else {

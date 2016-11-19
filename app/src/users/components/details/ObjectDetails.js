@@ -18,26 +18,33 @@ export default {
                 this.self = this;
             }
 
-            requestWaranty(serial, customerId, endDate){
-                this.contract.requestWarranty(serial, customerId, new Date(endDate));
+            requestWaranty(serial, customerId, endDate, price) {
+                this.contract.requestWarranty(serial, customerId, new Date(endDate), price);
             }
 
             addRepair() {
-                this.repair = {
+                this.claim = {
+                    claimType: "repair",
                     date: this.moment.format("YYYY-MM-DD"),
+                    serial: this.selectec.serial,
                     price: 100
                 };
             }
 
             addReplacement() {
-                this.replacement = {
+                this.claim = {
+                    claimType: "replacement",
                     date: this.moment.format("YYYY-MM-DD"),
+                    serial: this.selectec.serial,
                     price: 100
                 };
             }
-            
-            send() {
-                this.contract.claimWarranty(this.selected.serial, this.selected.price);
+
+            sendClaim() {
+                this.contract.claimWarranty(this.claim.serial, this.claim.price, this.claim.claimType)
+                    .then(function () {
+                        delete this.claim;
+                    });
             }
 
         }]
