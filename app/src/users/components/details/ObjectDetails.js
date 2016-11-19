@@ -26,7 +26,7 @@ export default {
                 this.claim = {
                     claimType: "repair",
                     date: this.moment.format("YYYY-MM-DD"),
-                    serial: this.selectec.serial,
+                    serial: this.selected.serial,
                     price: 100
                 };
             }
@@ -35,15 +35,16 @@ export default {
                 this.claim = {
                     claimType: "replacement",
                     date: this.moment.format("YYYY-MM-DD"),
-                    serial: this.selectec.serial,
+                    serial: this.selected.serial,
                     price: 100
                 };
             }
 
             sendClaim() {
+                var self = this;
                 this.contract.claimWarranty(this.claim.serial, this.claim.price, this.claim.claimType)
                     .then(function () {
-                        delete this.claim;
+                        delete self.claim;
                     });
             }
 

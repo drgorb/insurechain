@@ -52,12 +52,12 @@
 </div>
 
 <div ng-if="$ctrl.selected.isWarrantyValid">
-    <div ng-if="$ctrl.repair == undefined && $ctrl.replacement == undefined">
+    <div ng-if="$ctrl.claim == undefined">
         <md-button class="md-primary" ng-click="$ctrl.addRepair()">add Repair</md-button>
         <md-button class="md-primary" ng-click="$ctrl.addReplacement()">add Replacement</md-button>
     </div>
 
-    <div ng-if="$ctrl.repair != undefined || $ctrl.replacement != undefined">
+    <div ng-if="$ctrl.repair != $ctrl.claim">
         <md-button class="md-primary" ng-click="$ctrl.sendClaim()">Send</md-button>
     </div>
 </div>
