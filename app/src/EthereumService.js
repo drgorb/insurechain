@@ -60,7 +60,6 @@ function EthereumService($q) {
 
       self.WarrantyContract.isWarrantyValid(serial, function(err, result){
         if(err) {
-          console.log(err);
           defer.reject(err);
         }else {
           defer.resolve(result);
@@ -75,10 +74,8 @@ function EthereumService($q) {
 
       self.WarrantyContract.getCustomer(serial, function(err, result){
         if(err) {
-          console.log(err);
           defer.reject(err);
         }else {
-          console.log(result);
           defer.resolve(result);
         }
       });
@@ -107,7 +104,6 @@ function EthereumService($q) {
         if(err) {
           defer.reject(err);
         }else {
-          console.log(result);
           defer.resolve(result);
         }
       });
