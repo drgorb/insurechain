@@ -55,7 +55,7 @@ contract Epam {
 	}
 
 	function requestWarranty(string serial, address customer, uint endDate, uint price) noWarranty(serial) {
-		Product product;
+		Product memory product;
 		product.retailer = msg.sender;
 		product.customer = customer;
 		product.warrantyEndDate = endDate;
@@ -65,7 +65,7 @@ contract Epam {
 	}
 
 	function claimWaranty(string serial, uint amount) {
-		Claim claim;
+		Claim memory claim;
 		claim.claimant = msg.sender;
 		claim.amount = amount;
 		claim.serial = serial;
