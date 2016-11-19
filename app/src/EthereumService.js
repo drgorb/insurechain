@@ -22,7 +22,7 @@ function EthereumService($q) {
             customer: self.getCustomer(serial),
             warrantyEndDate: self.getWarrantyEndDate(serial)
         });
-        
+
     }
 
     self.getReportData = function (month) {
@@ -172,7 +172,7 @@ function EthereumService($q) {
 
     self.requestWarranty = function (serial, owner, endDate) {
         var defer = $q.defer();
-        self.WarrantyContract.requestWarranty(serial, owner, endDate.getTime(), function (err, result) {
+        self.WarrantyContract.requestWarranty(serial, owner, endDate.getTime() / 1000, function (err, result) {
             if (err) {
                 defer.reject(err);
             } else {
