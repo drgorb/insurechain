@@ -11,15 +11,18 @@ function EthereumService($q) {
     self.abi = [ { "constant": true, "inputs": [], "name": "getRequestCount", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "getCustomer", "outputs": [ { "name": "", "type": "address", "value": "0x0000000000000000000000000000000000000000" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "id", "type": "uint256" } ], "name": "getClaim", "outputs": [ { "name": "", "type": "address", "value": "0x0000000000000000000000000000000000000000" }, { "name": "", "type": "uint256", "value": "0" }, { "name": "", "type": "string", "value": "" }, { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "serial", "type": "string" }, { "name": "amount", "type": "uint256" } ], "name": "claimWaranty", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "contractAddress", "type": "address" } ], "name": "updateCalculator", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "getClaimCount", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "getEndDate", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "id", "type": "uint256" } ], "name": "getRequest", "outputs": [ { "name": "", "type": "uint256", "value": "0" }, { "name": "", "type": "string", "value": "" }, { "name": "", "type": "string", "value": "" }, { "name": "", "type": "string", "value": "" }, { "name": "", "type": "address", "value": "0x0000000000000000000000000000000000000000" }, { "name": "", "type": "string", "value": "" }, { "name": "", "type": "uint256", "value": "0" }, { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "isWarrantyValid", "outputs": [ { "name": "", "type": "bool", "value": true } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "serial", "type": "string" }, { "name": "customer", "type": "address" }, { "name": "endDate", "type": "uint256" }, { "name": "price", "type": "uint256" } ], "name": "requestWarranty", "outputs": [], "payable": false, "type": "function" }, { "inputs": [], "type": "constructor" } ];
     self.dappId = "epam.hackathon";
 
-    self.contractAddress = "0xC27a02556661134ea38A2FdC82906D855842E4C6";
+    self.contractAddress = "0x64910c65a13B08634D7263b5f06c0C67AfFf36Cf";
+    /*
     self.walletBar = new WalletBar({
         containerName: '#signInId',
         dappNamespace: self.dappId,
         blockchain: "morden"
     });
-
-    self.web3 = new Web3();
-    self.WarrantyContract;
+    */
+    console.log(web3);
+    self.web3 = web3;
+    self.WarrantyContract = web3.eth.contract(self.abi).at(self.contractAddress);
+    /*
     self.waitForWallet = self.walletBar.applyHook(self.web3)
         .then(function () {
             self.WarrantyContract = self.web3.eth.contract(self.abi).at(self.contractAddress);
@@ -29,21 +32,21 @@ function EthereumService($q) {
             console.log(err);
         });
 
+
     function prepareForTransaction() {
         var account = self.walletBar.getCurrentAccount(); // get account selected in wallet bar
         if (!account) return alert("You must log in to transact");
         self.walletBar.createSecureSigner();
         return account;
     }
-
+    */
     self.getInfo = function (serial) {
-        return self.waitForWallet.then(function () {
-            return $q.all({
-                isWarrantyValid: self.isWarrantyValid(serial),
-                customer: self.getCustomer(serial),
-                warrantyEndDate: self.getWarrantyEndDate(serial)
-            });
+        return $q.all({
+            isWarrantyValid: self.isWarrantyValid(serial),
+            customer: self.getCustomer(serial),
+            warrantyEndDate: self.getWarrantyEndDate(serial)
         });
+
     }
 
     self.getReportData = function (month) {
@@ -193,8 +196,7 @@ function EthereumService($q) {
 
     self.requestWarranty = function (serial, owner, endDate) {
         var defer = $q.defer();
-        var account = prepareForTransaction();
-        self.WarrantyContract.requestWarranty(serial, owner, endDate.getTime() / 1000, {from: account}, function (err, result) {
+        self.WarrantyContract.requestWarranty(serial, owner, endDate.getTime() / 1000, function (err, result) {
             if (err) {
                 defer.reject(err);
             } else {
