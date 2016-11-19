@@ -24,7 +24,7 @@ contract Epam {
 		uint amount;
 		string serial;
 		uint date;
-		uint claimType;
+		string claimType;
 	}
 
 	struct Request {
@@ -78,7 +78,7 @@ contract Epam {
 		requestCount++;
 	}
 
-	function claimWarranty(string serial, uint amount, uint claimType) {
+	function claimWarranty(string serial, uint amount, string claimType) {
 		Claim claim = claims[claimCount];
 		claim.claimant = msg.sender;
 		claim.amount = amount;
@@ -104,8 +104,8 @@ contract Epam {
 		return claimCount;
 	}
 
-	function getClaim(uint id) constant returns (address, uint, string, uint) {
-		return (claims[id].claimant, claims[id].amount, claims[id].serial, claims[id].date);
+	function getClaim(uint id) constant returns (address, uint, string, uint, string) {
+		return (claims[id].claimant, claims[id].amount, claims[id].serial, claims[id].date, claims[id].claimType);
 	}
 
 	function getRequestCount() constant returns (uint) {
