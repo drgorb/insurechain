@@ -87,7 +87,7 @@ contract Epam {
 	}
 
 	function isWarrantyValid(string serial) constant returns (bool) {
-		return products[serial].warrantyEndDate < now;
+		return products[serial].warrantyEndDate > now;
 	}
 
 	function getEndDate(string serial) constant returns (uint) {

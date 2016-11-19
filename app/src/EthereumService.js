@@ -8,48 +8,10 @@ function EthereumService($q) {
 
     var self = this;
 
-    self.abi = [{
-        "constant": true,
-        "inputs": [{"name": "serial", "type": "string"}],
-        "name": "getCustomer",
-        "outputs": [{"name": "", "type": "address", "value": "0x0000000000000000000000000000000000000000"}],
-        "payable": false,
-        "type": "function"
-    }, {
-        "constant": false,
-        "inputs": [{"name": "serial", "type": "string"}, {"name": "customer", "type": "address"}, {
-            "name": "endDate",
-            "type": "uint256"
-        }],
-        "name": "requestWarranty",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
-    }, {
-        "constant": false,
-        "inputs": [{"name": "contractAddress", "type": "address"}],
-        "name": "updateCalculator",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
-    }, {
-        "constant": true,
-        "inputs": [{"name": "serial", "type": "string"}],
-        "name": "getEndDate",
-        "outputs": [{"name": "", "type": "uint256", "value": "0"}],
-        "payable": false,
-        "type": "function"
-    }, {
-        "constant": true,
-        "inputs": [{"name": "serial", "type": "string"}],
-        "name": "isWarrantyValid",
-        "outputs": [{"name": "", "type": "bool", "value": true}],
-        "payable": false,
-        "type": "function"
-    }, {"inputs": [], "type": "constructor"}];
+    self.abi = [ { "constant": true, "inputs": [], "name": "getRequestCount", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "getCustomer", "outputs": [ { "name": "", "type": "address", "value": "0x0000000000000000000000000000000000000000" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "id", "type": "uint256" } ], "name": "getClaim", "outputs": [ { "name": "", "type": "address", "value": "0x0000000000000000000000000000000000000000" }, { "name": "", "type": "uint256", "value": "0" }, { "name": "", "type": "string", "value": "" }, { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "serial", "type": "string" }, { "name": "amount", "type": "uint256" } ], "name": "claimWaranty", "outputs": [], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "contractAddress", "type": "address" } ], "name": "updateCalculator", "outputs": [], "payable": false, "type": "function" }, { "constant": true, "inputs": [], "name": "getClaimCount", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "getEndDate", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "id", "type": "uint256" } ], "name": "getRequest", "outputs": [ { "name": "", "type": "uint256", "value": "0" }, { "name": "", "type": "string", "value": "" }, { "name": "", "type": "string", "value": "" }, { "name": "", "type": "string", "value": "" }, { "name": "", "type": "address", "value": "0x0000000000000000000000000000000000000000" }, { "name": "", "type": "string", "value": "" }, { "name": "", "type": "uint256", "value": "0" }, { "name": "", "type": "uint256", "value": "0" } ], "payable": false, "type": "function" }, { "constant": true, "inputs": [ { "name": "serial", "type": "string" } ], "name": "isWarrantyValid", "outputs": [ { "name": "", "type": "bool", "value": true } ], "payable": false, "type": "function" }, { "constant": false, "inputs": [ { "name": "serial", "type": "string" }, { "name": "customer", "type": "address" }, { "name": "endDate", "type": "uint256" }, { "name": "price", "type": "uint256" } ], "name": "requestWarranty", "outputs": [], "payable": false, "type": "function" }, { "inputs": [], "type": "constructor" } ];
     self.dappId = "epam.hackathon";
 
-    self.contractAddress = "0xF65a613630e112cc2Fc0fB382770E3845b857105";
+    self.contractAddress = "0xC27a02556661134ea38A2FdC82906D855842E4C6";
     self.walletBar = new WalletBar({
         containerName: '#signInId',
         dappNamespace: self.dappId,
