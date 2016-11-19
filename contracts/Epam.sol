@@ -46,7 +46,6 @@ contract Epam {
 	function requestWarranty(string serial, address customer, uint endDate) noWarranty(serial) {
 		products[serial].customer = customer;
 		products[serial].warrantyEndDate = endDate;
-
 	}
 
 	function isWarrantyValid(string serial) constant returns (bool) {

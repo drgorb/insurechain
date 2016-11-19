@@ -23,6 +23,7 @@ function EthereumService($q) {
     self.waitForWallet = self.walletBar.applyHook(self.web3)
     .then(function() {
         self.WarrantyContract = self.web3.eth.contract(self.abi).at(self.contractAddress);
+        return self.WarrantyContract;
     })
     .catch(function(err) {
         console.log(err);
@@ -46,10 +47,12 @@ function EthereumService($q) {
     }
 
     self.isWarrantyValid = function(serial) {
+      console.log('is warranty valid');
       var defer = $q.defer();
 
       self.WarrantyContract.isWarrantyValid(serial, function(err, result){
         if(err) {
+          console.log(err);
           defer.reject(err);
         }else {
           defer.resolve(result);
@@ -64,8 +67,10 @@ function EthereumService($q) {
 
       self.WarrantyContract.getCustomer(serial, function(err, result){
         if(err) {
+          console.log(err);
           defer.reject(err);
         }else {
+          console.log(result);
           defer.resolve(result);
         }
       });
@@ -76,7 +81,7 @@ function EthereumService($q) {
     self.getWarrantyEndDate = function(serial) {
       var defer = $q.defer();
 
-      self.WarrantyContract.getWarrantyEndDate(serial, function(err, result){
+      self.WarrantyContract.getEndDate(serial, function(err, result){
         if(err) {
           defer.reject(err);
         }else {
@@ -94,6 +99,7 @@ function EthereumService($q) {
         if(err) {
           defer.reject(err);
         }else {
+          console.log(result);
           defer.resolve(result);
         }
       });
