@@ -48,7 +48,7 @@ contract Epam {
 	}
 
 	modifier noWarranty(string serial) {
-		if(!isWarrantyValid(serial)) {
+		if(isWarrantyValid(serial)) {
 			throw;
 		}
 		_;
