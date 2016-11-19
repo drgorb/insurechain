@@ -2,6 +2,12 @@
 
 [here is a screen cast of how the app works](https://youtu.be/87IiN8InU7A)
 
+The app has been created with the following technology components:
+
+* [Metamask wallet](metamask.io)
+* Solidity contract
+* Angular web frontend
+
 The web-app covers 3 use cases:
 
 * request an extended warranty for a product
