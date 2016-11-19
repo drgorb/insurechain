@@ -135,10 +135,10 @@ function EthereumService($q) {
         return defer.promise;
     }
 
-    self.getClaimsCount = function () {
+    self.getClaimCount = function () {
         var defer = $q.defer();
 
-        self.WarrantyContract.getClaimsCount(function (err, result) {
+        self.WarrantyContract.getClaimCount(function (err, result) {
             if (err) {
                 defer.reject(err);
             } else {
