@@ -58,7 +58,7 @@ function RetailersEthereumService ($q) {
 
     self.dappId = "insurechain.retailers";
 
-    self.contractAddress = "0x7A714DCBD735FEC51784A0D7fE60F5E7eee1Ff0B";
+    self.contractAddress = "0xEBc67246B1F0e28c061029Bb2e21964589c7318A";
 
     self.web3 = web3;
     self.contract = web3.eth.contract (self.abi).at (self.contractAddress);
