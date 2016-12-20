@@ -1,7 +1,7 @@
 logs/*
 node_modules/
-bower_components/
-app/jspm_packages
+dist/
+coverage/
 tmp
 .DS_Store
 .idea

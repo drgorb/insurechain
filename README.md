@@ -1,47 +1,89 @@
-# Extended Waranty smart-contract interface on Ethereum
+# angular-webpack
 
-[here is a screen cast of how the app works](https://youtu.be/87IiN8InU7A)
+[![Dependency Status](https://david-dm.org/preboot/angular-webpack/status.svg)](https://david-dm.org/preboot/angular-webpack#info=dependencies) [![devDependency Status](https://david-dm.org/preboot/angular-webpack/dev-status.svg)](https://david-dm.org/preboot/angular-webpack#info=devDependencies)
 
-The app has been created with the following technology components:
+A complete, yet simple, starter for Angular using Webpack.
 
-* [Metamask wallet](metamask.io)
-* Solidity contract
-* Angular web frontend
+This workflow serves as a starting point for building Angular 1.x applications using Webpack. Should be noted that apart from the pre-installed angular package, this workflow is pretty much generic.
 
-The web-app covers 3 use cases:
+* Heavily commented webpack configuration with reasonable defaults.
+* ES6, and ES7 support with babel.
+* Source maps included in all builds.
+* Development server with live reload.
+* Production builds with cache busting.
+* Testing environment using karma to run tests and jasmine as the framework.
+* Code coverage when tests are run.
+* No gulp and no grunt, just npm scripts.
 
-* request an extended warranty for a product
-    * register a customer with her [blockone](https://blockone.thomsonreuters.com/docs/) address as identity
-    * set the expiration date of the warranty contract
-* open a claim for repair or replacement of the insured object
-* create a list for all the claims and warranty contracts created in a specific month
+>Warning: Make sure you're using the latest version of Node.js and NPM
 
-the following things were left out:
+### Quick start
 
-* the transfer of an object to a new owner
-* security of the application
-* sercurity of the smart-contract
-* scanning of serial numbers, QR-Codes and Barcodes to improve efficiency
-* setting the warranty contract id 
-* calculating the commission for the retailer - there is a PriceCalculator contract but it is not used
+> Clone/Download the repo then edit `app.js` inside [`/src/app/app.js`](/src/app/app.js)
 
-## Data Model in the smart-contract
+```bash
+# clone our repo
+$ git clone https://github.com/preboot/angular-webpack.git my-app
 
-There are 3 entities to hold the data:
+# change directory to your app
+$ cd my-app
 
-* Product - identified by its serial number
-* Request - identified by its index
-* Claim - identified by it index
+# install the dependencies with npm
+$ npm install
 
-A product is linked to a customer and a retailer. 
+# start the server
+$ npm start
+```
 
-The retailer is the one who makes claims. He can decide if the item should be replaced or repaired
+go to [http://localhost:8080](http://localhost:8080) in your browser.
 
-## reporting
+# Table of Contents
 
-the reporting function is a simple CSV export of all the data in the smart contract. This is obviously not the way one would implement reporting for a real world application. But it gets the job done for the demo.
+* [Getting Started](#getting-started)
+    * [Dependencies](#dependencies)
+    * [Installing](#installing)
+    * [Running the app](#running-the-app)
+    * [Developing](#developing)
+    * [Testing](#testing)
+* [License](#license)
 
-In real life, you would create an Oracle (a web app) which observes the transactions on the contract and writes them into a database for efficient analysis, reporting and inteerface with billing and contract management systems.
+# Getting Started
 
+## Dependencies
 
+What you need to run this app:
+* `node` and `npm` (Use [NVM](https://github.com/creationix/nvm))
+* Ensure you're running Node (`v4.1.x`+) and NPM (`2.14.x`+)
 
+## Installing
+
+* `fork` this repo
+* `clone` your fork
+* `npm install` to install all dependencies
+
+## Running the app
+
+After you have installed all dependencies you can now run the app with:
+```bash
+npm start
+```
+
+It will start a local server using `webpack-dev-server` which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://localhost:8080`.
+
+## Developing
+
+### Build files
+
+* single run: `npm run build`
+* build files and watch: `npm start`
+
+## Testing
+
+#### 1. Unit Tests
+
+* single run: `npm test`
+* live mode (TDD style): `npm run test-watch`
+
+# License
+
+[MIT](/LICENSE)
