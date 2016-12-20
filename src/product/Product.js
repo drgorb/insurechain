@@ -12,6 +12,7 @@ import ProductDetails from './components/details/ProductDetails';
 import DownloadReportData from './components/downloadReport/DownloadReportData';
 
 import EthereumService from './../ethereum/EthereumService';
+import RetailersEthereumService from './../ethereum/Retailers';
 
 import ProductController from './controllers/ProductController';
 
@@ -28,6 +29,7 @@ angular.module(product, [
     });
 }])
 .factory('EthereumService', EthereumService)
+.factory('RetailersEthereumService', RetailersEthereumService)
 .factory('moment', moment)
 
 .service("ProductDataService", ProductDataService)
