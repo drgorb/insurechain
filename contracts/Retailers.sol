@@ -42,10 +42,10 @@ contract Retailers is mortal {
     );
 
     event StatusChanged(
-        address indexed retailer;
-        address indexed insurance;
-        Status status;
-    )
+        address indexed retailer,
+        address indexed insurance,
+        Status status
+    );
 
     /**
     the retailer send a transaction to request registration with an insurer
@@ -67,5 +67,5 @@ contract Retailers is mortal {
         retailers[retailer].partnerRelations[msg.sender].status = status;
         StatusChanged(retailer, msg.sender, status);
     }
-    
+
 }
