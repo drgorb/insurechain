@@ -6,3 +6,5 @@ tmp
 .DS_Store
 .idea
 !.gitkeep
+/insurechain.iml
+/database/nodeId.properties
