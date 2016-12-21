@@ -5,7 +5,7 @@ import ngMdIcons from 'angular-material-icons';
 import ngMaterialSidemenu from 'angular-material-sidemenu';
 
 import '!style!css!angular-material-sidemenu/dest/angular-material-sidemenu.css'
-import '../style/app.css';
+import '../style/app.scss';
 
 import homeModule from './../home/Home'
 import productModule from './../product/Product'

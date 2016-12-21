@@ -32,6 +32,8 @@ function AppController($scope, $mdSidenav, $location) {
         }
     ];
 
+    $scope.user = web3.eth.accounts[0] || 'No active user';
+
     $scope.isActive = function(route) {
         return route === $location.path();
     }

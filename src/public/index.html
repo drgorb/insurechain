@@ -17,7 +17,7 @@
 <div layout="column" class="relative" layout-fill role="main">
   <md-toolbar>
     <div class="md-toolbar-tools">
-      <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
+      <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu" class="md-icon-button md-primary">
         <ng-md-icon icon="menu"></ng-md-icon>
       </md-button>
       <h3>
@@ -28,6 +28,11 @@
   </md-toolbar>
   <div flex layout="row">
     <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+      <md-toolbar md-colors="{background: 'primary-400'}">
+        <div class="md-toolbar-tools">
+          <span>{{user}}</span>
+        </div>
+      </md-toolbar>
       <md-sidemenu locked="true">
         <md-sidemenu-group>
           <md-subheader class="md-no-sticky">Menu</md-subheader>

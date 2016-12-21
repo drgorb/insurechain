@@ -88,6 +88,9 @@ module.exports = function makeWebpackConfig () {
       loader: 'babel',
       exclude: /node_modules/
     }, {
+        test: /\.scss$/,
+        loaders: ["style-loader", "css-loader", "sass-loader"]
+    }, {
       // CSS LOADER
       // Reference: https://github.com/webpack/css-loader
       // Allow loading css through js
