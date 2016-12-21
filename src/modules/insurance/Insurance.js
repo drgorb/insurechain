@@ -1,17 +1,19 @@
 'use strict';
 
 import angular from 'angular';
-import ngRoute from 'angular-route';
+import uirouter from 'angular-ui-router';
 
 import InsuranceController from './controllers/InsuranceController'
 
 const insurance = 'app.insurance';
 
 angular.module(insurance, [
-    ngRoute
+    uirouter
 ])
-.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/insurance', {
+.config(['$stateProvider', function($stateProvider) {
+    $stateProvider.state({
+        name: 'insurance',
+        url: '/insurance',
         template: require('./templates/InsuranceTemplate.html'),
         controller: ('InsuranceController', InsuranceController)
     });
