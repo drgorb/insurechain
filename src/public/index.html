@@ -36,7 +36,7 @@
       <md-sidemenu locked="true">
         <md-sidemenu-group>
           <md-subheader class="md-no-sticky">Menu</md-subheader>
-          <md-sidemenu-button ng-repeat="item in menu" ng-href="{{item.link}}">
+          <md-sidemenu-button ng-repeat="item in menu" ui-sref-active="md-active" ui-sref="{{item.link}}">
             {{item.title}}
           </md-sidemenu-button>
         </md-sidemenu-group>
@@ -46,7 +46,8 @@
         </md-sidemenu-group>
       </md-sidemenu>
     </md-sidenav>
-    <md-content flex md-scroll-y ng-view>
+    <md-content flex md-scroll-y>
+      <ui-view></ui-view>
     </md-content>
   </div>
 </div>

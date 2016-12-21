@@ -1,17 +1,19 @@
 'use strict';
 
 import angular from 'angular';
-import ngRoute from 'angular-route';
+import uirouter from 'angular-ui-router';
 
 import WarrantyController from './controllers/WarrantyController'
 
 const warranty = 'app.warranty';
 
 angular.module(warranty, [
-    ngRoute
+    uirouter
 ])
-.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/warranty', {
+.config(['$stateProvider', function($stateProvider) {
+    $stateProvider.state({
+        name: 'warranty',
+        url: '/warranty',
         template: require('./templates/WarrantyTemplate.html'),
         controller: ('WarrantyController', WarrantyController)
     });

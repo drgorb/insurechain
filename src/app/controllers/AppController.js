@@ -6,7 +6,7 @@ function AppController($scope, $mdSidenav, $location) {
 
     $scope.menu = [
         {
-            link : '/',
+            link : 'home',
             title: 'Home',
             icon: 'dashboard'
         },

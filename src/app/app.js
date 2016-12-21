@@ -1,5 +1,6 @@
 import angular from 'angular';
-import ngRoute from 'angular-route';
+import uirouter from 'angular-ui-router';
+
 import ngMaterial from 'angular-material';
 import ngMdIcons from 'angular-material-icons';
 import ngMaterialSidemenu from 'angular-material-sidemenu';
@@ -18,7 +19,7 @@ import AppController from './controllers/AppController';
 const appModule = 'app';
 
 angular.module(appModule, [
-  ngRoute,
+  uirouter,
   ngMaterial,
   ngMdIcons,
   ngMaterialSidemenu,
@@ -29,9 +30,9 @@ angular.module(appModule, [
   insuranceModule
 ])
 .controller('AppController', AppController)
-.config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
+.config(['$locationProvider', '$urlRouterProvider', function($locationProvider, $urlRouterProvider) {
   $locationProvider.html5Mode(true);
-  $routeProvider.otherwise({redirectTo: '/'});
+  $urlRouterProvider.otherwise('/');
 }])
 .config(($mdThemingProvider) => {
   $mdThemingProvider.theme('default')
