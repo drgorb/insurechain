@@ -78,7 +78,13 @@ module.exports = function makeWebpackConfig () {
 
   // Initialize module
   config.module = {
-    preLoaders: [],
+    preLoaders: [
+        // {
+        //     test: /\.js$/,
+        //     exclude: /node_modules/,
+        //     loader: 'eslint-loader'
+        // },
+    ],
     loaders: [{
       // JS LOADER
       // Reference: https://github.com/babel/babel-loader
@@ -206,6 +212,10 @@ module.exports = function makeWebpackConfig () {
   config.devServer = {
     contentBase: './src/public',
     stats: 'minimal'
+  };
+
+  config.eslint = {
+        configFile: './.eslintrc'
   };
 
   return config;
