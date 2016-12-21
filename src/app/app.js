@@ -7,11 +7,11 @@ import ngMaterialSidemenu from 'angular-material-sidemenu';
 import '!style!css!angular-material-sidemenu/dest/angular-material-sidemenu.css'
 import '../style/app.scss';
 
-import homeModule from './../home/Home';
-import productModule from './../product/Product';
-import retailerModule from './../retailer/Retailer';
-import warrantyModule from './../warranty/Warranty';
-import insuranceModule from './../insurance/Insurance';
+import homeModule from '../modules/home/Home';
+import productModule from '../modules/product/Product';
+import retailerModule from '../modules/retailer/Retailer';
+import warrantyModule from '../modules/warranty/Warranty';
+import insuranceModule from '../modules/insurance/Insurance';
 
 import AppController from './controllers/AppController';
 
