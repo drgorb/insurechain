@@ -1,10 +1,4 @@
-/**
- * Main App Controller for the Angular Material Starter App
- * @param ProductDataService
- * @param $mdSidenav
- * @constructor
- */
-function AppController() {
-
+function RetailerController($scope) {
+    $scope.title = 'hello, this is retailer page!';
 }
-export default [AppController ];
+export default ['$scope', RetailerController];

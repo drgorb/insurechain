@@ -5,9 +5,9 @@ import ngRoute from 'angular-route';
 
 import RetailerController from './controllers/RetailerController'
 
-const product = 'app.retailer';
+const retailer = 'app.retailer';
 
-angular.module(product, [
+angular.module(retailer, [
     ngRoute
 ])
 .config(['$routeProvider', function($routeProvider) {
@@ -17,4 +17,4 @@ angular.module(product, [
     });
 }]);
 
-export default product
+export default retailer
