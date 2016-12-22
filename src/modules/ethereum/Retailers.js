@@ -58,15 +58,15 @@ function RetailersEthereumService($q) {
     self.insauranceList = [
         {
             name: 'Zurich insurance',
-            value: '1'
+            address: '1'
         },
         {
             name: 'Allianz',
-            value: '2'
+            address: '2'
         },
         {
             name: 'Vaudoise',
-            value: '3'
+            address: '3'
         }
     ]
 

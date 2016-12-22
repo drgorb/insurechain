@@ -10,7 +10,7 @@
     <md-input-container class="md-block" flex-gt-sm>
         <label>InsuranceId</label>
         <md-select name="companyInsuranceId" ng-model="company.selectedInsurance" required>
-            <md-option ng-repeat="insurance in company.insurances" value="{{insurance.value}}">
+            <md-option ng-repeat="insurance in company.insurances" value="{{insurance.address}}">
                 {{insurance.name}}
             </md-option>
         </md-select>
