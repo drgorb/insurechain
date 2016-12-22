@@ -4,8 +4,7 @@
  * @param $mdSidenav
  * @constructor
  */
-
-import angular from 'angular'
+import angular from "angular";
 
 function AppController(ProductDataService, contract, $mdSidenav, $scope) {
     var self = this

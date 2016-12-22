@@ -3,9 +3,9 @@ import uirouter from "angular-ui-router";
 import ngMaterial from "angular-material";
 import ngMdIcons from "angular-material-icons";
 import ngMaterialSidemenu from "angular-material-sidemenu";
-import ngMessages from 'angular-messages'
-import ngAnimate from 'angular-animate'
-import ngAria from 'angular-aria'
+import ngMessages from "angular-messages";
+import ngAnimate from "angular-animate";
+import ngAria from "angular-aria";
 import "!style!css!angular-material-sidemenu/dest/angular-material-sidemenu.css";
 import "../style/app.scss";
 import homeModule from "../modules/home/Home";

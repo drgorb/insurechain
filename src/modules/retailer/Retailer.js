@@ -1,15 +1,13 @@
 'use strict';
 
-import angular from 'angular'
-import uirouter from 'angular-ui-router'
-import ngAria from 'angular-aria'
-import 'ui-router-extras'
-
-import RetailerController from './controllers/RetailerController'
-import RetailerCreateController from './controllers/RetailerCreateController'
-import RetailerConfirmationController from './controllers/RetailerConfirmationController'
-
-import RetailersEthereumService from './../ethereum/Retailers'
+import angular from "angular";
+import uirouter from "angular-ui-router";
+import ngAria from "angular-aria";
+import "ui-router-extras";
+import RetailerController from "./controllers/RetailerController";
+import RetailerCreateController from "./controllers/RetailerCreateController";
+import RetailerConfirmationController from "./controllers/RetailerConfirmationController";
+import RetailersEthereumService from "./../ethereum/Retailers";
 
 
 const retailer = 'app.retailer';
