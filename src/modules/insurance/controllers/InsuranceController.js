@@ -5,6 +5,6 @@
  * @constructor
  */
 function HomeController($scope) {
-    $scope.title = 'hello, this is insurance page!';
+    $scope.title = 'hello, this is insurance page!'
 }
-export default ['$scope', HomeController];
+export default ['$scope', HomeController]
