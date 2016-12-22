@@ -6,6 +6,8 @@ import 'ui-router-extras';
 
 import RetailerController from './controllers/RetailerController'
 import RetailerCreateController from './controllers/RetailerCreateController'
+import RetailerConfirmationController from './controllers/RetailerConfirmationController'
+
 
 const retailer = 'app.retailer';
 
@@ -28,7 +30,13 @@ angular.module(retailer, [
             url: '/create',
             template: require('./templates/RetailerCreateTemplate.html'),
             controller: ('RetailerCreateController', RetailerCreateController)
-        });
+        })
+        .state({
+            name: 'retailer.confirmation',
+            url: '/confirmation',
+            template: require('./templates/RetailerConfirmationTemplate.html'),
+            controller: ('RetailerConfirmationController', RetailerConfirmationController)
+        });;
 }]);
 
 export default retailer
