@@ -1,0 +1,16 @@
+<div>
+    <md-content class="md-padding">
+        <md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+            <md-nav-item md-nav-sref="retailer.create" name="retailer.create">Registration Request</md-nav-item>
+            <md-nav-item md-nav-sref="retailer" name="Registration Confirmation">Registration Confirmation</md-nav-item>
+        </md-nav-bar>
+    </md-content>
+</div>
+
+<div layout="column" layout-fill layout-padding>
+    <md-card flex-gt-sm="90" flex-gt-md="80">
+        <md-card-content>
+            <ui-view></ui-view>
+        </md-card-content>
+    </md-card>
+</div>

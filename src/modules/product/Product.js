@@ -1,7 +1,7 @@
 'use strict';
 
 import angular from 'angular';
-import ngRoute from 'angular-route';
+import uirouter from 'angular-ui-router';
 import moment from 'moment';
 
 import ProductDataService from './services/ProductDataService';
@@ -19,10 +19,12 @@ import ProductController from './controllers/ProductController';
 const product = 'app.product';
 
 angular.module(product, [
-    ngRoute
+    uirouter
 ])
-.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.when('/product', {
+.config(['$stateProvider', function($stateProvider) {
+    $stateProvider.state({
+        name: 'product',
+        url: '/product',
         template: require('./templates/productTemplate.html'),
         controller: ('ProductController', ProductController),
         controllerAs: 'app'
