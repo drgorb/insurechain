@@ -1,23 +1,7 @@
 pragma solidity ^0.4.4;
 
-contract owned {
-    address owner;
+import "./Mortal.sol";
 
-    modifier ownerOnly() {
-        if (msg.sender == owner) _;
-        throw;
-    }
-
-    function Owned() {
-        owner = msg.sender;
-    }
-}
-
-contract mortal is owned {
-    function kill() {
-        if (msg.sender == owner) selfdestruct(owner);
-    }
-}
 
 contract Retailers is mortal {
     enum Status {Requested, Accepted, Rejected, Terminated}
