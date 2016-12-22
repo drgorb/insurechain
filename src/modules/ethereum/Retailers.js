@@ -4,61 +4,16 @@
  * @param $mdSidenav
  * @constructor
  */
-function RetailersEthereumService ($q) {
+import retailers from "./contract-definitions";
+
+function RetailersEthereumService ($q, $timeout) {
 
     var self = this;
-
-    self.abi = [{
-        "constant": false,
-        "inputs": [{"name": "retailer", "type": "address"}, {"name": "status", "type": "uint8"}],
-        "name": "setRequestState",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
-    }, {
-        "constant": false,
-        "inputs": [{"name": "companyName", "type": "string"}, {"name": "insurance", "type": "address"}],
-        "name": "requestRegistration",
-        "outputs": [{"name": "", "type": "bool"}],
-        "payable": false,
-        "type": "function"
-    }, {
-        "constant": false,
-        "inputs": [],
-        "name": "kill",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
-    }, {
-        "constant": false,
-        "inputs": [],
-        "name": "Owned",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
-    }, {
-        "anonymous": false,
-        "inputs": [{"indexed": true, "name": "companyName", "type": "string"}, {
-            "indexed": false,
-            "name": "retailerAddress",
-            "type": "address"
-        }, {"indexed": true, "name": "insurance", "type": "address"}],
-        "name": "RetailerRequest",
-        "type": "event"
-    }, {
-        "anonymous": false,
-        "inputs": [{"indexed": true, "name": "retailer", "type": "address"}, {
-            "indexed": true,
-            "name": "insurance",
-            "type": "address"
-        }, {"indexed": false, "name": "status", "type": "uint8"}],
-        "name": "StatusChanged",
-        "type": "event"
-    }];
+    self.abi = retailers.abi;
 
     self.dappId = "insurechain.retailers";
 
-    self.contractAddress = "0xEBc67246B1F0e28c061029Bb2e21964589c7318A";
+    self.contractAddress = retailers.address;
 
     self.web3 = web3;
     self.contract = web3.eth.contract (self.abi).at (self.contractAddress);
@@ -81,6 +36,20 @@ function RetailersEthereumService ($q) {
             }
         });
 
+        return defer.promise;
+    }
+
+    self.getREgistrationStatus = function (insurance) {
+        var defer = $q.defer ();
+        $timeout(function(){
+            if(insurance === "0xc62e02ddc6c1a78ca63f144253e74c85ecb76b74"){
+                defer.resolve(1)
+            } else if(insurance === "0x607aae63a7d99e0207214248b9f663e55b465766"){
+                defer.resolve(0)
+            } else {
+                defer.resolve(2)
+            }
+        }, 500)
         return defer.promise;
     }
 
