@@ -4,84 +4,98 @@
  * @param $mdSidenav
  * @constructor
  */
-function RetailersEthereumService ($q) {
-
-    var self = this;
+function RetailersEthereumService($q) {
+    var self = this
 
     self.abi = [{
-        "constant": false,
-        "inputs": [{"name": "retailer", "type": "address"}, {"name": "status", "type": "uint8"}],
-        "name": "setRequestState",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
+        'constant': false,
+        'inputs': [{'name': 'retailer', 'type': 'address'}, {'name': 'status', 'type': 'uint8'}],
+        'name': 'setRequestState',
+        'outputs': [],
+        'payable': false,
+        'type': 'function'
     }, {
-        "constant": false,
-        "inputs": [{"name": "companyName", "type": "string"}, {"name": "insurance", "type": "address"}],
-        "name": "requestRegistration",
-        "outputs": [{"name": "", "type": "bool"}],
-        "payable": false,
-        "type": "function"
+        'constant': false,
+        'inputs': [{'name': 'companyName', 'type': 'string'}, {'name': 'insurance', 'type': 'address'}],
+        'name': 'requestRegistration',
+        'outputs': [{'name': '', 'type': 'bool'}],
+        'payable': false,
+        'type': 'function'
     }, {
-        "constant": false,
-        "inputs": [],
-        "name": "kill",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
+        'constant': false,
+        'inputs': [],
+        'name': 'kill',
+        'outputs': [],
+        'payable': false,
+        'type': 'function'
     }, {
-        "constant": false,
-        "inputs": [],
-        "name": "Owned",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
+        'constant': false,
+        'inputs': [],
+        'name': 'Owned',
+        'outputs': [],
+        'payable': false,
+        'type': 'function'
     }, {
-        "anonymous": false,
-        "inputs": [{"indexed": true, "name": "companyName", "type": "string"}, {
-            "indexed": false,
-            "name": "retailerAddress",
-            "type": "address"
-        }, {"indexed": true, "name": "insurance", "type": "address"}],
-        "name": "RetailerRequest",
-        "type": "event"
+        'anonymous': false,
+        'inputs': [{'indexed': true, 'name': 'companyName', 'type': 'string'}, {
+            'indexed': false,
+            'name': 'retailerAddress',
+            'type': 'address'
+        }, {'indexed': true, 'name': 'insurance', 'type': 'address'}],
+        'name': 'RetailerRequest',
+        'type': 'event'
     }, {
-        "anonymous": false,
-        "inputs": [{"indexed": true, "name": "retailer", "type": "address"}, {
-            "indexed": true,
-            "name": "insurance",
-            "type": "address"
-        }, {"indexed": false, "name": "status", "type": "uint8"}],
-        "name": "StatusChanged",
-        "type": "event"
-    }];
+        'anonymous': false,
+        'inputs': [{'indexed': true, 'name': 'retailer', 'type': 'address'}, {
+            'indexed': true,
+            'name': 'insurance',
+            'type': 'address'
+        }, {'indexed': false, 'name': 'status', 'type': 'uint8'}],
+        'name': 'StatusChanged',
+        'type': 'event'
+    }]
 
-    self.dappId = "insurechain.retailers";
+    self.insauranceList = [
+        {
+            name: 'Zurich insurance',
+            value: '1'
+        },
+        {
+            name: 'Allianz',
+            value: '2'
+        },
+        {
+            name: 'Vaudoise',
+            value: '3'
+        }
+    ]
 
-    self.contractAddress = "0xEBc67246B1F0e28c061029Bb2e21964589c7318A";
+    self.dappId = 'insurechain.retailers'
 
-    self.web3 = web3;
-    self.contract = web3.eth.contract (self.abi).at (self.contractAddress);
+    self.contractAddress = '0xEBc67246B1F0e28c061029Bb2e21964589c7318A'
+
+    self.web3 = web3
+    self.contract = web3.eth.contract (self.abi).at (self.contractAddress)
 
     /**
-     * in fact this creates the partner relation between the retailer and the insurance with a status "Requested"
+     * in fact this creates the partner relation between the retailer and the insurance with a status 'Requested'
      * @param companyName
      * @param insurance
      * @returns {Function}
      */
-    self.requestRegistration = function (companyName, insurance) {
-        console.log ('requesting registration for ', companyName);
-        var defer = $q.defer ();
+    self.requestRegistration = function(companyName, insurance) {
+        console.log ('requesting registration for ', companyName)
+        var defer = $q.defer()
 
-        self.contract.requestRegistration (companyName, insurance, function (err, result) {
-            if (err) {
-                defer.reject (err);
+        self.contract.requestRegistration(companyName, insurance, function (err, result) {
+            if(err) {
+                defer.reject(err)
             } else {
-                defer.resolve (result);
+                defer.resolve(result)
             }
-        });
+        })
 
-        return defer.promise;
+        return defer.promise
     }
 
     /**
@@ -90,21 +104,25 @@ function RetailersEthereumService ($q) {
      * @param status the status is a number with this meaning 0 = requested, 1 = Accepted, 2 = Rejected, 3 = Terminated
      * @returns {Function}
      */
-    self.setRequestState = function (retailer, status) {
-        var defer = $q.defer ();
+    self.setRequestState = function(retailer, status) {
+        var defer = $q.defer()
 
-        self.contract.setRequestState (retailer, status, function (err, result) {
-            if (err) {
-                defer.reject (err);
+        self.contract.setRequestState(retailer, status, function (err, result) {
+            if(err) {
+                defer.reject(err)
             } else {
-                defer.resolve (result);
+                defer.resolve(result)
             }
-        });
+        })
 
-        return defer.promise;
+        return defer.promise
     }
 
-    return self;
+    self.getInsuranceId = function() {
+        return $q.when(self.insauranceList)
+    }
+
+    return self
 }
 
-export default ['$q', RetailersEthereumService];
+export default ['$q', RetailersEthereumService]

@@ -1,22 +1,20 @@
-function RetailerCreateController($scope) {
-    $scope.title = 'hello, this is retailer creation page!';
-    $scope.companyName = '';
+function RetailerCreateController(RetailersEthereumService, $scope) {
+    $scope.title = 'hello, this is retailer creation page!'
+    $scope.company = {
+        companyName: '',
+        selectedInsurance: '',
+        insurances: []
+    }
 
-    $scope.selectedInsurance = '';
-    $scope.insurances = [
-        {
-            name: 'first insurance',
-            id: 2
-        },
-        {
-            name: 'other insurance',
-            id: 4
-        }
+    RetailersEthereumService
+        .getInsuranceId()
+        .then(function(insurances) {
+            $scope.company.insurances = insurances
+        })
 
-    ];
-
-    $scope.querySearch = function (searchText) {
-        console.log(searchText);
+    $scope.sendRequest = function(company) {
+        RetailersEthereumService
+            .requestRegistration(company.companyName, company.selectedInsurance)
     }
 }
-export default ['$scope', RetailerCreateController];
+export default ['RetailersEthereumService', '$scope', RetailerCreateController]

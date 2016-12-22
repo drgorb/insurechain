@@ -4,47 +4,50 @@
  * @param $mdSidenav
  * @constructor
  */
-function AppController(ProductDataService, contract, $mdSidenav) {
-  var self = this;
 
-  self.selected     = null;
-  self.users        = [ ];
-  self.selectUser   = selectUser;
-  self.toggleList   = toggleUsersList;
+import angular from 'angular'
 
-  // Load all registered users
+function AppController(ProductDataService, contract, $mdSidenav, $scope) {
+    var self = this
 
-  ProductDataService
+    self.selected = null
+    self.users = [ ]
+    self.selectUser = selectUser
+    self.toggleList = toggleUsersList
+
+    // Load all registered users
+
+    ProductDataService
         .loadAllObjects()
-        .then( function( users ) {
-          self.users    = [].concat(users);
-          self.selected = users[0];
-        });
+        .then(function(users) {
+            self.users = [].concat(users)
+            self.selected = users[0]
+        })
 
-  // *********************************
-  // Internal methods
-  // *********************************
+    // *********************************
+    // Internal methods
+    // *********************************
 
-  /**
-   * Hide or Show the 'left' sideNav area
-   */
-  function toggleUsersList() {
-    $mdSidenav('left').toggle();
-  }
+    /**
+     * Hide or Show the 'left' sideNav area
+     */
+    function toggleUsersList() {
+        $mdSidenav('left').toggle()
+    }
 
-  /**
-   * Select the current avatars
-   * @param menuId
-   */
-  function selectUser ( user ) {
-    self.selected = angular.isNumber(user) ? $scope.users[user] : user;
-    contract.getInfo(self.selected.serial).then(function (info) {
-      self.selected.isWarrantyValid = info.isWarrantyValid;
-      self.selected.warrantyEndDate = info.warrantyEndDate;
-      self.selected.customerId = info.customer;
-      self.selected.price = info.product[6];
-    })
-  }
+    /**
+     * Select the current avatars
+     * @param menuId
+     */
+    function selectUser(user) {
+        self.selected = angular.isNumber(user) ? $scope.users[user] : user
+        contract.getInfo(self.selected.serial).then(function(info) {
+            self.selected.isWarrantyValid = info.isWarrantyValid
+            self.selected.warrantyEndDate = info.warrantyEndDate
+            self.selected.customerId = info.customer
+            self.selected.price = info.product[6]
+        })
+    }
 }
 
-export default [ 'ProductDataService','EthereumService', '$mdSidenav', AppController ];
+export default [ 'ProductDataService', 'EthereumService', '$mdSidenav', '$scope', AppController ]

@@ -1,7 +1,7 @@
-<form name="colorForm">
+<form name="colorForm" ng-submit="sendRequest(company)">
     <md-input-container>
         <label>Company Name</label>
-        <input name="companyName" ng-model="companyName" required>
+        <input name="companyName" ng-model="company.companyName" required>
         <div ng-messages="colorForm.favoriteColor.$error">
             <div ng-message="required">This is required!</div>
         </div>
@@ -9,8 +9,8 @@
 
     <md-input-container class="md-block" flex-gt-sm>
         <label>InsuranceId</label>
-        <md-select ng-model="selectedInsurance" required>
-            <md-option ng-repeat="insurance in insurances" value="{{insurance.id}}">
+        <md-select ng-model="company.selectedInsurance" required>
+            <md-option ng-repeat="insurance in company.insurances" value="{{insurance.value}}">
                 {{insurance.name}}
             </md-option>
         </md-select>
@@ -18,4 +18,6 @@
             <div ng-message="required">This is required!</div>
         </div>
     </md-input-container>
+
+    <md-button type="submit" class="md-raised md-primary">Submit</md-button>
 </form>

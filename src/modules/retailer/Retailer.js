@@ -8,6 +8,8 @@ import RetailerController from './controllers/RetailerController'
 import RetailerCreateController from './controllers/RetailerCreateController'
 import RetailerConfirmationController from './controllers/RetailerConfirmationController'
 
+import RetailersEthereumService from './../ethereum/Retailers'
+
 
 const retailer = 'app.retailer';
 
@@ -15,6 +17,7 @@ angular.module(retailer, [
     uirouter,
     'ct.ui.router.extras'
 ])
+.factory('RetailersEthereumService', RetailersEthereumService)
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.when('retailer', 'retailer.create');
     $stateProvider
