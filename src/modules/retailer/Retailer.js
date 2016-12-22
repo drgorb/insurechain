@@ -1,11 +1,10 @@
 'use strict';
 
-import angular from 'angular';
-import uirouter from 'angular-ui-router';
-import 'ui-router-extras';
-
-import RetailerController from './controllers/RetailerController'
-import RetailerCreateController from './controllers/RetailerCreateController'
+import angular from "angular";
+import uirouter from "angular-ui-router";
+import "ui-router-extras";
+import RetailerController from "./controllers/RetailerController";
+import RetailerCreateController from "./controllers/RetailerCreateController";
 
 const retailer = 'app.retailer';
 

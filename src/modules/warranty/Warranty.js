@@ -1,9 +1,8 @@
 'use strict';
 
-import angular from 'angular';
-import uirouter from 'angular-ui-router';
-
-import WarrantyController from './controllers/WarrantyController'
+import angular from "angular";
+import uirouter from "angular-ui-router";
+import WarrantyController from "./controllers/WarrantyController";
 
 const warranty = 'app.warranty';
 

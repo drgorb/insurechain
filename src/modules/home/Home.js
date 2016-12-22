@@ -1,9 +1,8 @@
 'use strict';
 
-import angular from 'angular';
-import uirouter from 'angular-ui-router';
-
-import HomeController from './controllers/HomeController'
+import angular from "angular";
+import uirouter from "angular-ui-router";
+import HomeController from "./controllers/HomeController";
 
 const home = 'app.home';
 
