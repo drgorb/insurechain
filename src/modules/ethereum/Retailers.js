@@ -70,6 +70,39 @@ function RetailersEthereumService($q) {
         }
     ]
 
+    self.retailerList = [
+        {
+            name: 'Company name 1',
+            address: '1',
+            status: 0
+        },
+        {
+            name: 'Company name 2',
+            address: '2',
+            status: 2
+        },
+        {
+            name: 'Company name 3',
+            address: '3',
+            status: 0
+        },
+        {
+            name: 'Company name 4',
+            address: '4',
+            status: 2
+        },
+        {
+            name: 'Company name 5',
+            address: '5',
+            status: 2
+        },
+        {
+            name: 'Company name 6',
+            address: '6',
+            status: 3
+        }
+    ]
+
     self.dappId = 'insurechain.retailers'
 
     self.contractAddress = '0xEBc67246B1F0e28c061029Bb2e21964589c7318A'
@@ -120,6 +153,10 @@ function RetailersEthereumService($q) {
 
     self.getInsuranceId = function() {
         return $q.when(self.insauranceList)
+    }
+
+    self.getRetailerList = function () {
+        return $q.when(self.retailerList)
     }
 
     return self

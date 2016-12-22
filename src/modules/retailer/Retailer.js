@@ -1,8 +1,9 @@
 'use strict';
 
-import angular from 'angular';
-import uirouter from 'angular-ui-router';
-import 'ui-router-extras';
+import angular from 'angular'
+import uirouter from 'angular-ui-router'
+import ngAria from 'angular-aria'
+import 'ui-router-extras'
 
 import RetailerController from './controllers/RetailerController'
 import RetailerCreateController from './controllers/RetailerCreateController'
@@ -15,6 +16,7 @@ const retailer = 'app.retailer';
 
 angular.module(retailer, [
     uirouter,
+    ngAria,
     'ct.ui.router.extras'
 ])
 .factory('RetailersEthereumService', RetailersEthereumService)
@@ -26,7 +28,7 @@ angular.module(retailer, [
             url: '/retailer',
             template: require('./templates/RetailerTemplate.html'),
             controller: ('RetailerController', RetailerController),
-            deepStateRedirect: { default: { state: 'retailer.create' } }
+            deepStateRedirect: { default: 'retailer.create' }
         })
         .state({
             name: 'retailer.create',
@@ -39,7 +41,7 @@ angular.module(retailer, [
             url: '/confirmation',
             template: require('./templates/RetailerConfirmationTemplate.html'),
             controller: ('RetailerConfirmationController', RetailerConfirmationController)
-        });;
-}]);
+        })
+}])
 
 export default retailer
