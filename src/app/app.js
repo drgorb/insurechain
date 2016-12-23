@@ -15,9 +15,11 @@ import warrantyModule from "../modules/warranty/Warranty";
 import insuranceModule from "../modules/insurance/Insurance";
 import AppController from "./controllers/AppController";
 
+import AppWeb3CheckService from './services/AppWeb3CheckService'
+
 const appModule = 'app';
 
-angular.module(appModule, [
+export default angular.module(appModule, [
     uirouter,
     ngMessages,
     ngAnimate,
@@ -31,6 +33,7 @@ angular.module(appModule, [
     warrantyModule,
     insuranceModule,
 ])
+    .factory('AppWeb3CheckService', AppWeb3CheckService)
     .controller('AppController', AppController)
     .config(['$locationProvider', '$urlRouterProvider', function($locationProvider, $urlRouterProvider) {
         $locationProvider.html5Mode(true);
@@ -41,5 +44,3 @@ angular.module(appModule, [
             .primaryPalette('brown')
             .accentPalette('red');
     });
-
-export default appModule;

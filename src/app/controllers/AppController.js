@@ -1,4 +1,4 @@
-function AppController($scope, $mdSidenav, $location) {
+function AppController($scope, $mdSidenav, AppWeb3CheckService, $state, $interval) {
 
     $scope.menu = [
         {
@@ -28,29 +28,33 @@ function AppController($scope, $mdSidenav, $location) {
         }
     ];
 
-    window.addEventListener('load', function() {
+    $scope.toggleSidenav = function(menuId) {
+        $mdSidenav(menuId).toggle();
+    };
 
-        // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-        if (typeof web3 !== 'undefined') {
-            // Use Mist/MetaMask's provider
-            web3 = new Web3(web3.currentProvider);
-        } else {
-            console.log('No web3? You should consider trying MetaMask!')
-            // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-        }
 
-        $scope.toggleSidenav = function(menuId) {
-            $mdSidenav(menuId).toggle();
-        };
+    function updateUser() {
+        AppWeb3CheckService
+            .userCheck()
+            .then(function (user) {
+                $scope.user = user;
+                if($scope.user !== user) {
+                    $state.reload();
+                }
+            })
+            .catch(function (err) {
+                alert(err)
+            });
+    }
 
-        $scope.user = web3.eth.accounts[0] || 'No active user';
-
-        $scope.isActive = function(route) {
-            return route === $location.path();
-        }
-
-    })
+    $interval(updateUser, 1000);
 }
 
-export default ['$scope','$mdSidenav', '$location', AppController]
+export default [
+    '$scope',
+    '$mdSidenav',
+    'AppWeb3CheckService',
+    '$state',
+    '$interval',
+    AppController
+]
