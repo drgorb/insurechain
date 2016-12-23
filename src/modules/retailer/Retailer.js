@@ -18,7 +18,7 @@ angular.module(retailer, [
     'ct.ui.router.extras'
 ])
 .factory('RetailersEthereumService', RetailersEthereumService)
-.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider', '$urlRouterProvider', '$mdToastProvider', function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.when('retailer', 'retailer.create');
     $stateProvider
         .state({

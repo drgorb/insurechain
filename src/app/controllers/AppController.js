@@ -46,8 +46,8 @@ function AppController($scope, $mdSidenav, AppWeb3CheckService, $state, $interva
                 alert(err)
             });
     }
-
-    $interval(updateUser, 1000);
+    updateUser();
+    $interval(updateUser, 3000);
 }
 
 export default [

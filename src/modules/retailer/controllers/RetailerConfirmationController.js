@@ -1,11 +1,12 @@
 function RetailerConfirmationController(RetailersEthereumService, $scope) {
-    RetailersEthereumService
-        .getRetailerList()
-        .then(function(retailers) {
-            $scope.retailers = retailers
-        })
 
-    $scope.filterStatus = '';
+    RetailersEthereumService
+        .getRetailerList(web3.eth.accounts)
+        .then(function(retailers) {
+            $scope.retailers = retailers;
+        });
+
+    $scope.filterStatus = 0;
 
     $scope.statuses = [
         {
@@ -30,11 +31,20 @@ function RetailerConfirmationController(RetailersEthereumService, $scope) {
         RetailersEthereumService
             .setRequestState(retailer, status)
             .then(function (info) {
-                console.log(info, 'ok')
+                $scope.showToast(info)
             })
             .catch(function (err) {
-                consol.log(err, 'nok')
+                console.log(err)
+                $scope.showToast(err)
             })
+    }
+
+    $scope.showAcceptButton = function (status) {
+        return (status!=1);
+    }
+
+    $scope.showRejectButton = function (status) {
+        return (status!=2);
     }
 }
 export default ['RetailersEthereumService', '$scope', RetailerConfirmationController]

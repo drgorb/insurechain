@@ -30,7 +30,7 @@ var retailerList = [
     {
         name: 'M-Electronics',
         address: '0xb3b499b3a1f35d1b413e8fb17d0134ed11c650cc',
-        status: 0
+        status: 1
     }
 ]
 

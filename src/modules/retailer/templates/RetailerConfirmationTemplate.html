@@ -9,9 +9,9 @@
 
 <md-list>
     <md-list-item ng-repeat="retailer in retailers | filter: {status: filterStatus}">
-        <md-checkbox ng-model="person.selected"></md-checkbox>
         <p>{{ retailer.name }}</p>
-        <md-button aria-label="Accept" class="md-secondary" ng-click="setRequestState(retailer.address, 1)">Accept</md-button>
-        <md-button aria-label="Reject" class="md-secondary" ng-click="setRequestState(retailer.address, 2)">Reject</md-button>
+
+        <md-button ng-if="showAcceptButton(retailer.status)" aria-label="Accept" class="md-secondary" ng-click="setRequestState(retailer.address, 1)">Accept</md-button>
+        <md-button ng-if="showRejectButton(retailer.status)" aria-label="Reject" class="md-secondary" ng-click="setRequestState(retailer.address, 2)">Reject</md-button>
     </md-list-item>
 </md-list>

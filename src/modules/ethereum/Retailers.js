@@ -39,7 +39,7 @@ function RetailersEthereumService ($q, $timeout) {
         return defer.promise;
     }
 
-    self.getRgistrationStatus = function (insurance) {
+    self.getRegistrationStatus = function (insurance) {
         var defer = $q.defer ();
         $timeout(function(){
             if(insurance === "0xc62e02ddc6c1a78ca63f144253e74c85ecb76b74"){
@@ -77,8 +77,12 @@ function RetailersEthereumService ($q, $timeout) {
         return $q.when(insauranceList)
     }
 
-    self.getRetailerList = function () {
-        return $q.when(retailerList)
+    self.getRetailerList = function (address) {
+        if(address == '0xc62e02ddc6c1a78ca63f144253e74c85ecb76b74') {
+            return $q.when(retailerList)
+        } else {
+            return $q.when([]);
+        }
     }
 
     return self

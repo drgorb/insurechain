@@ -8,7 +8,7 @@ function appWeb3UserCheckService ($q) {
             let defer = $q.defer ();
             web3.eth.getAccounts(function (err, accs) {
                 if (err != null) {
-                    defer.reject(err, "There was an error fetching your accounts.")
+                    defer.reject('There was an error fetching your accounts.')
                 } else if (accs.length == 0) {
                     defer.reject('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly')
                 } else {
@@ -20,4 +20,4 @@ function appWeb3UserCheckService ($q) {
     };
 }
 
-export default ['$q' ,appWeb3UserCheckService];
+export default ['$q', appWeb3UserCheckService];
