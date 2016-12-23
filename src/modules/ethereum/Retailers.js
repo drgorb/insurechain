@@ -5,49 +5,15 @@
  * @constructor
  */
 import retailers from "./contract-definitions";
+import insauranceList from "./mock-data";
 
 function RetailersEthereumService ($q, $timeout) {
 
     var self = this;
     self.abi = retailers.abi;
-
-    self.insauranceList = [
-        {
-            name: 'Zurich insurance',
-            address: '0x95262f78c646178416c123dbeef2a286d41a27e8'
-        },
-        {
-            name: 'Allianz',
-            address: '0xc62e02ddc6c1a78ca63f144253e74c85ecb76b74'
-        },
-        {
-            name: 'Mobiliar',
-            address: '0x607aae63a7d99e0207214248b9f663e55b465766'
-        }
-    ]
-
-    self.retailerList = [
-        {
-            name: 'Digitec',
-            address: '0x3b06274c18e8a188c24f64dd4793f1027c1f3123',
-            status: 0
-        },
-        {
-            name: 'Interdiscount',
-            address: '0xce2db460f2c86b5b66bfb2815d5ee476e61584ac',
-            status: 2
-        },
-        {
-            name: 'M-Electronics',
-            address: '0xb3b499b3a1f35d1b413e8fb17d0134ed11c650cc',
-            status: 0
-        }
-    ]
     self.contractAddress = retailers.address;
 
     self.dappId = 'insurechain.retailers'
-
-    self.contractAddress = '0xEBc67246B1F0e28c061029Bb2e21964589c7318A'
 
     self.web3 = web3
     self.contract = web3.eth.contract (self.abi).at (self.contractAddress)
@@ -108,11 +74,11 @@ function RetailersEthereumService ($q, $timeout) {
     }
 
     self.getInsuranceId = function() {
-        return $q.when(self.insauranceList)
+        return $q.when(insauranceList)
     }
 
     self.getRetailerList = function () {
-        return $q.when(self.retailerList)
+        return $q.when(etailerList)
     }
 
     return self
