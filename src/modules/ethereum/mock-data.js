@@ -34,4 +34,4 @@ var retailerList = [
     }
 ]
 
-export default {insauranceList, retailerList}
+export {insauranceList, retailerList}

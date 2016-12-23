@@ -61,4 +61,4 @@ var insurances = {
     }, {"constant": false, "inputs": [], "name": "Owned", "outputs": [], "payable": false, "type": "function"}],
     abiHash: '05aeafc9c5c8403945b8426c0837b3a5b9213a1ad5b87db85a03a25337a2f9ff'
 };
-export default {retailers, insurances}
+export {retailers, insurances}

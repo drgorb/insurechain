@@ -4,8 +4,8 @@
  * @param $mdSidenav
  * @constructor
  */
-import retailers from "./contract-definitions";
-import insauranceList from "./mock-data";
+import { retailers } from "./contract-definitions";
+import { insauranceList, retailerList } from "./mock-data";
 
 function RetailersEthereumService ($q, $timeout) {
 
@@ -39,7 +39,7 @@ function RetailersEthereumService ($q, $timeout) {
         return defer.promise;
     }
 
-    self.getREgistrationStatus = function (insurance) {
+    self.getRgistrationStatus = function (insurance) {
         var defer = $q.defer ();
         $timeout(function(){
             if(insurance === "0xc62e02ddc6c1a78ca63f144253e74c85ecb76b74"){
@@ -78,10 +78,10 @@ function RetailersEthereumService ($q, $timeout) {
     }
 
     self.getRetailerList = function () {
-        return $q.when(etailerList)
+        return $q.when(retailerList)
     }
 
     return self
 }
 
-export default ['$q', RetailersEthereumService]
+export default ['$q', '$timeout', RetailersEthereumService]

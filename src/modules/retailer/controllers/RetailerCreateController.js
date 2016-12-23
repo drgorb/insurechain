@@ -9,7 +9,11 @@ function RetailerCreateController(RetailersEthereumService, $scope) {
     RetailersEthereumService
         .getInsuranceId()
         .then(function(insurances) {
+            console.log(insurances);
             $scope.company.insurances = insurances
+        })
+        .catch(function (err) {
+            console.log(err)
         })
 
     $scope.sendRequest = function(company) {
