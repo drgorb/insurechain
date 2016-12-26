@@ -45,7 +45,7 @@ _.each (soliditySources, (source, name) => {
 $q.all(contractTransactions)
     .then(function (results) {
         var json = "";
-        var exports = "export default {x";
+        var exports = "export {x";
         results.forEach(function (result) {
             if (result.name) {
                 /*TODO: if the hash is the same as the existing contract, do not overwrite*/
