@@ -35,6 +35,8 @@ contract Retailers is mortal {
     }
 
     mapping (address=>Retailer) retailers;
+    mapping (uint=>address) retailerList;
+    uint retailersCount;
 
     event RetailerRequest(
         string indexed companyName,
@@ -55,18 +57,30 @@ contract Retailers is mortal {
         Retailer retailer = retailers[msg.sender];
         retailer.companyName = companyName;
         retailer.partnerRelations[insurance].status = Status.Requested;
+        /*only store retailers which have not been stored before*/
+        if(bytes(retailers[msg.sender].companyName).length == 0)
+            retailerList[retailersCount++] = msg.sender;
+
         retailers[msg.sender] = retailer;
         RetailerRequest(companyName, msg.sender, insurance);
         return true;
+    }
+
+    function getRequestStatus(address retailer, address insurance) constant returns(Status){
+        return retailers[retailer].partnerRelations[insurance].status;
     }
 
     /**
     sets the status of a retailer's request.
     only the insurance to which the request was made can do this
     */
-    function setRequestState(address retailer, Status status) {
+    function setRequestStatus(address retailer, Status status) {
         retailers[retailer].partnerRelations[msg.sender].status = status;
         StatusChanged(retailer, msg.sender, status);
+    }
+
+    function getRetailer(uint index) constant returns (address, string, Status) {
+        return (retailerList[index], "titi", Status.Requested);
     }
 
 }
