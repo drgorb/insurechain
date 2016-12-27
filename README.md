@@ -1,5 +1,7 @@
 # Extended Waranty smart-contract interface on Ethereum
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0514ee3f5627487cb5829303c33928b1)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=drgorb/insurechain&utm_campaign=badger)
+
 [here is a screen cast of how the app works](https://youtu.be/87IiN8InU7A)
 
 The app has been created with the following technology components:
