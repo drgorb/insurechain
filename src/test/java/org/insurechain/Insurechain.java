@@ -8,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
  * Created by mroon on 21/12/16.
  */
 public interface Insurechain {
-    CompletableFuture<Boolean> requestRegistration(String companyName, EthAccount insurance);
+    CompletableFuture<Void> requestRegistration(String companyName, EthAccount insurance);
 
     RegistrationState getRequestState(EthAccount retailer, EthAccount insurance);
 

@@ -40,6 +40,7 @@ public class InsurechainTest {
     @Before
     public void before() throws Exception {
         ethereum = new PrivateEthereumFacadeProvider().create(PrivateNetworkConfig.config()
+                .reset(true)
                 .initialBalance(mainAccount, ether(100))
                 .initialBalance(insuranceAccount, ether(100))
                 .initialBalance(retailerAccount, ether(100))
