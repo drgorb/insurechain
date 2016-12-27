@@ -1,5 +1,5 @@
-var retailers = {
-    address: '0xbff841d520241d300531baad3f65dd133a04b95a',
+var insurechain = {
+    address: '0x7871666Bf430368f268B3a0f21F42AD422f9277b',
     abi: [{
         "constant": false,
         "inputs": [{"name": "retailer", "type": "address"}, {"name": "status", "type": "uint8"}],
@@ -11,7 +11,14 @@ var retailers = {
         "constant": false,
         "inputs": [{"name": "companyName", "type": "string"}, {"name": "insurance", "type": "address"}],
         "name": "requestRegistration",
-        "outputs": [{"name": "", "type": "bool"}],
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+    }, {
+        "constant": true,
+        "inputs": [{"name": "retailer", "type": "address"}, {"name": "insurance", "type": "address"}],
+        "name": "getRequestState",
+        "outputs": [{"name": "", "type": "uint8"}],
         "payable": false,
         "type": "function"
     }, {
@@ -19,6 +26,20 @@ var retailers = {
         "inputs": [],
         "name": "kill",
         "outputs": [],
+        "payable": false,
+        "type": "function"
+    }, {
+        "constant": false,
+        "inputs": [{"name": "name", "type": "string"}, {"name": "insuranceAddress", "type": "address"}],
+        "name": "createInsurance",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+    }, {
+        "constant": true,
+        "inputs": [{"name": "index", "type": "uint256"}],
+        "name": "getRetailer",
+        "outputs": [{"name": "", "type": "address"}, {"name": "", "type": "string"}],
         "payable": false,
         "type": "function"
     }, {
@@ -44,21 +65,18 @@ var retailers = {
             "name": "insurance",
             "type": "address"
         }, {"indexed": false, "name": "status", "type": "uint8"}],
-        "name": "StatusChanged",
+        "name": "RetailerStatusChanged",
         "type": "event"
-    }],
-    abiHash: 'd6b4a24ecb15544fc2914fcd4029abc46569024ed1f8ad83bf74efb8274a9522'
+    }, {
+        "anonymous": false,
+        "inputs": [{"indexed": true, "name": "insurance", "type": "address"}, {
+            "indexed": false,
+            "name": "status",
+            "type": "uint8"
+        }],
+        "name": "InsuranceStatusChanged",
+        "type": "event"
+    }]
 };
-var insurances = {
-    address: '0x53889246ba9dd9776bcb61acb9991435072929fc',
-    abi: [{
-        "constant": false,
-        "inputs": [],
-        "name": "kill",
-        "outputs": [],
-        "payable": false,
-        "type": "function"
-    }, {"constant": false, "inputs": [], "name": "Owned", "outputs": [], "payable": false, "type": "function"}],
-    abiHash: '05aeafc9c5c8403945b8426c0837b3a5b9213a1ad5b87db85a03a25337a2f9ff'
-};
-export {retailers, insurances}
+
+export {insurechain}
