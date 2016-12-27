@@ -14,22 +14,22 @@ function RetailerConfirmationController(RetailersEthereumService, $scope) {
             value: ''
         }, {
             name: 'Requested',
-            value: 0
-        }, {
-            name: 'Accepted',
             value: 1
         }, {
-            name: 'Rejected',
+            name: 'Accepted',
             value: 2
         }, {
-            name: 'Terminated',
+            name: 'Rejected',
             value: 3
+        }, {
+            name: 'Terminated',
+            value: 4
         }
     ];
 
-    $scope.setRequestState = function (retailer, status) {
+    $scope.setRequestStatus = function (retailer, status) {
         RetailersEthereumService
-            .setRequestState(retailer, status)
+            .setRequestStatus(retailer, status)
             .then(function (info) {
                 $scope.showToast(info)
             })

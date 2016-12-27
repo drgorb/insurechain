@@ -7,8 +7,11 @@ import org.adridadou.ethereum.provider.StandaloneEthereumFacadeProvider;
 import org.adridadou.ethereum.values.EthAccount;
 import org.adridadou.ethereum.values.EthAddress;
 import org.adridadou.ethereum.values.SoliditySource;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +37,9 @@ public class InsurechainTest {
     private Insurechain insureChainContractFromInsurance;
     private Insurechain insureChainContractFromRetailer;
 
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
+
     public InsurechainTest() throws Exception {
     }
 
@@ -53,9 +59,19 @@ public class InsurechainTest {
     }
 
     @Test
-    public void test() throws ExecutionException, InterruptedException, IOException {
+    public void contractTest() throws ExecutionException, InterruptedException, IOException {
         assertEquals(RegistrationState.Undefined, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
+
+        /**first register and approve an insurance*/
+        insureChainContractFromInsurance.createInsurance("Zurich").get();
+
+        /**now check that the retailer can not request membership of an unapproved insurance*/
+/*        exception.expect(EthereumApiException.class);
         insureChainContractFromRetailer.requestRegistration("a company name", insuranceAccount).get();
+        exception.none();*/
+        insureChainContractFromAdmin.setInsuranceState(insuranceAccount, InsuranceStatus.Active.ordinal());
+        insureChainContractFromRetailer.requestRegistration("a company name", insuranceAccount).get();
+        Assert.assertEquals(1L, insureChainContractFromRetailer.retailerCount().longValue());
         assertEquals(RegistrationState.Requested, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
     }
 }
