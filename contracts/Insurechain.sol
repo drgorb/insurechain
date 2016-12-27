@@ -21,7 +21,7 @@ contract mortal is owned {
 
 contract Insurechain is mortal {
     enum RetailerStatus {Undefined, Requested, Accepted, Rejected, Terminated}
-    enum InsuranceStatus {Undefined, Active, Terminated}
+    enum InsuranceStatus {Undefined, Requested, Active, Terminated}
 
     struct PartnerRelations {
         RetailerStatus status;
@@ -40,7 +40,12 @@ contract Insurechain is mortal {
     }
 
     mapping (address=>Retailer) retailers;
+    mapping (uint=>address) retailerList;
+    uint public retailerCount;
+
     mapping (address => Insurance) insurances;
+    mapping (uint=>address) insuranceList;
+    uint public insuranceCount;
 
     event RetailerRequest(
         string indexed companyName,
@@ -60,22 +65,30 @@ contract Insurechain is mortal {
     );
 
     modifier insuranceOnly {
-        if(insurances[msg.sender] == InsuranceStatus.Undefined) throw;
+        if(insurances[msg.sender].status == InsuranceStatus.Undefined) throw;
         _;
     }
 
     modifier registeredRetailerOnly(address insurance) {
-        if(retailers[msg.sender].partnerRelations[insurance] != RetailerStatus.Accepted) throw;
+        if(retailers[msg.sender].partnerRelations[insurance].status != RetailerStatus.Accepted) throw;
         _;
     }
 
-    function createInsurance(string name, address insuranceAddress) {
-        Insurance insurance = insurances[insuranceAddress];
+    function createInsurance(string name) {
+        Insurance insurance = insurances[msg.sender];
         if(insurance.status != InsuranceStatus.Undefined) throw;
 
         insurance.status = InsuranceStatus.Active;
 
-        InsuranceStatusChanged(insuranceAddress, InsuranceStatus.Active);
+        InsuranceStatusChanged(msg.sender, InsuranceStatus.Requested);
+    }
+
+
+    function setInsuranceState(address insuranceAddress, InsuranceStatus status) ownerOnly {
+        Insurance insurance = insurances[insuranceAddress];        
+        if(insurance.status == InsuranceStatus.Undefined) throw;
+
+        insurance.status = status;
     }
 
     /**
@@ -84,9 +97,19 @@ contract Insurechain is mortal {
     function requestRegistration(string companyName, address insurance) {
         Retailer retailer = retailers[msg.sender];
         retailer.companyName = companyName;
+        /*make sure the insurance company exists*/
+        if(insurances[insurance].status != InsuranceStatus.Active) {
+            throw;        
+        }
+        /*make sure no previous request was made*/
+        if(retailers[msg.sender].partnerRelations[insurance].status != RetailerStatus.Undefined){
+            throw;
+        }
+
+        retailerList[retailerCount++] = msg.sender;
         retailer.partnerRelations[insurance].status = RetailerStatus.Requested;
         retailers[msg.sender] = retailer;
-        RetailerRequest(companyName, msg.sender, insurance);
+        //RetailerRequest(companyName, msg.sender, insurance);
     }
 
     function getRequestState(address retailer, address insurance) constant returns (RetailerStatus) {
@@ -101,5 +124,14 @@ contract Insurechain is mortal {
         retailers[retailer].partnerRelations[msg.sender].status = status;
         RetailerStatusChanged(retailer, msg.sender, status);
     }
+
+    /**
+    get the nth retailer in the list
+    for removed retailers, the name will be "removed" in that case an exception
+    */
+    function getRetailer(uint index) constant returns (address, string) {
+        return (retailerList[index], retailers[retailerList[index]].companyName);
+    }
+
 
 }
