@@ -14,14 +14,14 @@ contract owned {
 }
 
 contract mortal is owned {
-    enum Status {Requested, Accepted, Rejected, Terminated}
+    enum Status {Undefined, Requested, Accepted, Rejected, Terminated}
 
     function kill() {
         if (msg.sender == owner) selfdestruct(owner);
     }
 }
 
-contract Retailers is mortal {
+contract Insurechain is mortal {
 
     struct PartnerRelations {
         Status status;
@@ -58,6 +58,10 @@ contract Retailers is mortal {
         retailers[msg.sender] = retailer;
         RetailerRequest(companyName, msg.sender, insurance);
         return true;
+    }
+
+    function getRequestState(address retailer, address insurance) constant returns (Status) {
+        return retailers[retailer].partnerRelations[insurance].status;
     }
 
     /**
