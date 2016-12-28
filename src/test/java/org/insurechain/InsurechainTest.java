@@ -19,8 +19,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static org.adridadou.ethereum.values.EthValue.ether;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Created by davidroon on 21.12.16.
@@ -61,11 +60,16 @@ public class InsurechainTest {
 
     @Test
     public void contractTest() throws ExecutionException, InterruptedException, IOException {
+        assertFalse(mainAccount.equals(insuranceAccount));
+        assertFalse(mainAccount.equals(retailerAccount));
+        assertFalse(insuranceAccount.equals(retailerAccount));
+
         assertEquals(RegistrationState.Undefined, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
         assertEquals(mainAccount.getAddress(), insureChainContractFromAdmin.getOwner());
 
         /*first register and approve an insurance*/
         insureChainContractFromInsurance.createInsurance("Zurich").get();
+        Assert.assertEquals(1L, insureChainContractFromRetailer.insuranceCount().longValue());
 
         /*now check that the retailer can not request membership of an unapproved insurance*/
         try {
@@ -77,6 +81,8 @@ public class InsurechainTest {
 
         /*the owner approves the insurance creation*/
         insureChainContractFromAdmin.setInsuranceState(insuranceAccount, InsuranceStatus.Active.ordinal()).get();
+        InsuranceStruct returnValues = new InsuranceStruct("Zurich", InsuranceStatus.Active.ordinal());
+        Assert.assertEquals(true, returnValues.equals(insureChainContractFromInsurance.getInsurance(0)));
 
         /*the registration request should pass now*/
         insureChainContractFromRetailer.requestRegistration("a company name", insuranceAccount).get();
@@ -88,5 +94,9 @@ public class InsurechainTest {
         /*the insurer approves the registration request*/
         insureChainContractFromInsurance.setRequestState(retailerAccount, RegistrationState.Accepted.ordinal()).get();
         assertEquals(RegistrationState.Accepted, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
+
+        assertEquals(UserRole.Owner, insureChainContractFromAdmin.getRole(mainAccount));
+        assertEquals(UserRole.Insurance, insureChainContractFromAdmin.getRole(insuranceAccount));
+        assertEquals(UserRole.Retailer, insureChainContractFromAdmin.getRole(retailerAccount));
     }
 }

@@ -26,6 +26,7 @@ contract mortal is owned {
 contract Insurechain is mortal {
     enum RetailerStatus {Undefined, Requested, Accepted, Rejected, Terminated}
     enum InsuranceStatus {Undefined, Requested, Active, Terminated}
+    enum UserRole {Undefined, Retailer, Insurance, Owner}
 
     struct PartnerRelations {
         RetailerStatus status;
@@ -41,6 +42,7 @@ contract Insurechain is mortal {
     struct Retailer {
         string companyName;
         mapping (address=>PartnerRelations) partnerRelations /*the mapping holds the relation of the partner with each insurance company*/;
+        RetailerStatus status/*in order to easily check for the existence of a retailer the first status is also set on the retailer itself*/;
     }
 
     mapping (address=>Retailer) retailers;
@@ -83,6 +85,8 @@ contract Insurechain is mortal {
         if(insurance.status != InsuranceStatus.Undefined) throw;
 
         insurance.status = InsuranceStatus.Requested;
+        insurance.name = name;
+        insuranceList[insuranceCount++] = msg.sender;
 
         InsuranceStatusChanged(msg.sender, InsuranceStatus.Requested);
     }
@@ -93,6 +97,11 @@ contract Insurechain is mortal {
         if(insurance.status == InsuranceStatus.Undefined) throw;
 
         insurance.status = status;
+    }
+
+    function getInsurance(uint index) constant returns (string, InsuranceStatus) {
+        Insurance insurance = insurances[insuranceList[index]];
+        return (insurance.name, insurance.status);
     }
 
     /**
@@ -112,6 +121,7 @@ contract Insurechain is mortal {
 
         retailerList[retailerCount++] = msg.sender;
         retailer.partnerRelations[insurance].status = RetailerStatus.Requested;
+        retailer.status = RetailerStatus.Requested;
         retailers[msg.sender] = retailer;
         //RetailerRequest(companyName, msg.sender, insurance);
     }
@@ -131,10 +141,17 @@ contract Insurechain is mortal {
 
     /**
     get the nth retailer in the list
-    for removed retailers, the name will be "removed" in that case an exception
     */
     function getRetailer(uint index) constant returns (address, string) {
         return (retailerList[index], retailers[retailerList[index]].companyName);
+    }
+
+    function getRole(address user) constant returns (UserRole) {
+        if(user == owner) return UserRole.Owner;
+        if(retailers[user].status != RetailerStatus.Undefined) return UserRole.Retailer;
+        if(insurances[user].status != InsuranceStatus.Undefined) return UserRole.Insurance;
+
+        return UserRole.Undefined;        
     }
 
 

@@ -11,17 +11,27 @@ import java.util.concurrent.CompletableFuture;
 public interface Insurechain {
 
     CompletableFuture<Void> createInsurance(String name);
+
     CompletableFuture<Void> requestRegistration(String companyName, EthAccount insurance);
-    /**the status is passed as int because when it is passed as InsuranceStatus it fails*/
+
+    /**
+     * the status is passed as int because when it is passed as InsuranceStatus it fails
+     */
     CompletableFuture<Void> setInsuranceState(EthAccount insurance, int status);
 
+    InsuranceStruct getInsurance(int index);
+
     RegistrationState getRequestState(EthAccount retailer, EthAccount insurance);
+
     CompletableFuture<Void> setRequestState(EthAccount retailer, int status);
 
     Long retailerCount();
+
     Long insuranceCount();
 
     String[] getRetailer(int index);
 
     EthAddress getOwner();
+
+    UserRole getRole(EthAccount user);
 }
