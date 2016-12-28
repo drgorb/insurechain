@@ -82,7 +82,7 @@ contract Insurechain is mortal {
         Insurance insurance = insurances[msg.sender];
         if(insurance.status != InsuranceStatus.Undefined) throw;
 
-        insurance.status = InsuranceStatus.Active;
+        insurance.status = InsuranceStatus.Requested;
 
         InsuranceStatusChanged(msg.sender, InsuranceStatus.Requested);
     }
@@ -106,7 +106,7 @@ contract Insurechain is mortal {
             throw;
         }
         /*make sure no previous request was made*/
-        if(retailers[msg.sender].partnerRelations[insurance].status != RetailerStatus.Undefined){
+        if(retailer.partnerRelations[insurance].status != RetailerStatus.Undefined){
             throw;
         }
 

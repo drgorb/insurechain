@@ -7,6 +7,7 @@ import org.adridadou.ethereum.provider.StandaloneEthereumFacadeProvider;
 import org.adridadou.ethereum.values.EthAccount;
 import org.adridadou.ethereum.values.EthAddress;
 import org.adridadou.ethereum.values.SoliditySource;
+import org.adridadou.exception.EthereumApiException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 import static org.adridadou.ethereum.values.EthValue.ether;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Created by davidroon on 21.12.16.
@@ -31,7 +33,6 @@ public class InsurechainTest {
     private final EthAccount insuranceAccount = provider.getLockedAccount("insuranceAccount").decode("");
     private final EthAccount retailerAccount = provider.getLockedAccount("retailerAccount").decode("");
     private EthereumFacade ethereum;
-    private EthAddress contractAddress;
     private SoliditySource soliditySource = SoliditySource.from(new File("contracts/Insurechain.sol"));
     private Insurechain insureChainContractFromAdmin;
     private Insurechain insureChainContractFromInsurance;
@@ -52,7 +53,7 @@ public class InsurechainTest {
                 .initialBalance(retailerAccount, ether(100))
         );
         // add contracts to publish
-        contractAddress = ethereum.publishContract(soliditySource, "Insurechain", mainAccount).get();
+        EthAddress contractAddress = ethereum.publishContract(soliditySource, "Insurechain", mainAccount).get();
         insureChainContractFromAdmin = ethereum.createContractProxy(soliditySource, "Insurechain", contractAddress, mainAccount, Insurechain.class);
         insureChainContractFromInsurance = ethereum.createContractProxy(soliditySource, "Insurechain", contractAddress, insuranceAccount, Insurechain.class);
         insureChainContractFromRetailer = ethereum.createContractProxy(soliditySource, "Insurechain", contractAddress, retailerAccount, Insurechain.class);
@@ -63,14 +64,15 @@ public class InsurechainTest {
         assertEquals(RegistrationState.Undefined, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
         assertEquals(mainAccount.getAddress(), insureChainContractFromAdmin.getOwner());
 
-        /**first register and approve an insurance*/
+        /*first register and approve an insurance*/
         insureChainContractFromInsurance.createInsurance("Zurich").get();
 
-        /**now check that the retailer can not request membership of an unapproved insurance*/
+        /*now check that the retailer can not request membership of an unapproved insurance*/
         try {
             insureChainContractFromRetailer.requestRegistration("a company name", insuranceAccount).get();
-        } catch (RuntimeException e) {
-            Assert.assertNotNull(e);
+            fail("the call should throw an exception");
+        } catch (ExecutionException e) {
+            Assert.assertEquals(EthereumApiException.class, e.getCause().getClass());
         }
         insureChainContractFromAdmin.setInsuranceState(insuranceAccount, InsuranceStatus.Active.ordinal()).get();
 
