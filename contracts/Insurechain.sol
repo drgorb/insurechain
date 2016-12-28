@@ -4,12 +4,16 @@ contract owned {
     address owner;
 
     modifier ownerOnly() {
-        if (msg.sender == owner) _;
-        throw;
+        if (msg.sender != owner) throw;
+        _;
     }
 
-    function Owned() {
+    function owned() {
         owner = msg.sender;
+    }
+
+    function getOwner() constant returns (address) {
+        return owner;
     }
 }
 
@@ -85,7 +89,7 @@ contract Insurechain is mortal {
 
 
     function setInsuranceState(address insuranceAddress, InsuranceStatus status) ownerOnly {
-        Insurance insurance = insurances[insuranceAddress];        
+        Insurance insurance = insurances[insuranceAddress];
         if(insurance.status == InsuranceStatus.Undefined) throw;
 
         insurance.status = status;
@@ -99,7 +103,7 @@ contract Insurechain is mortal {
         retailer.companyName = companyName;
         /*make sure the insurance company exists*/
         if(insurances[insurance].status != InsuranceStatus.Active) {
-            throw;        
+            throw;
         }
         /*make sure no previous request was made*/
         if(retailers[msg.sender].partnerRelations[insurance].status != RetailerStatus.Undefined){

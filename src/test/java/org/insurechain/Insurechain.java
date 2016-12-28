@@ -1,6 +1,7 @@
 package org.insurechain;
 
 import org.adridadou.ethereum.values.EthAccount;
+import org.adridadou.ethereum.values.EthAddress;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -21,4 +22,6 @@ public interface Insurechain {
     Long insuranceCount();
 
     String[] getRetailer(int index);
+
+    EthAddress getOwner();
 }

@@ -69,7 +69,8 @@ public class InsurechainTest {
 /*        exception.expect(EthereumApiException.class);
         insureChainContractFromRetailer.requestRegistration("a company name", insuranceAccount).get();
         exception.none();*/
-        insureChainContractFromAdmin.setInsuranceState(insuranceAccount, InsuranceStatus.Active.ordinal());
+        assertEquals(mainAccount.getAddress(), insureChainContractFromAdmin.getOwner());
+        insureChainContractFromAdmin.setInsuranceState(insuranceAccount, InsuranceStatus.Active.ordinal()).get();
         insureChainContractFromRetailer.requestRegistration("a company name", insuranceAccount).get();
         Assert.assertEquals(1L, insureChainContractFromRetailer.retailerCount().longValue());
         assertEquals(RegistrationState.Requested, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
