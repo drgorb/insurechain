@@ -1,5 +1,5 @@
 import {insurechain} from "./contract-definitions";
-import {insauranceList, retailerList} from "./mock-data";
+import {insuranceList, retailerList} from "./mock-data";
 
 function InsuranceEthereumService ($q) {
 
@@ -13,7 +13,7 @@ function InsuranceEthereumService ($q) {
     self.contract = web3.eth.contract (self.abi).at (self.contractAddress)
 
     self.getInsurancesList = function () {
-        return $q.when (insauranceList);
+        return $q.when (insuranceList);
     }
 
     self.getRetailerList = function (insurance) {

@@ -1,4 +1,4 @@
-var insauranceList = [
+var insuranceList = [
     {
         name: 'Zurich insurance',
         address: '0x95262f78c646178416c123dbeef2a286d41a27e8',
@@ -34,4 +34,4 @@ var retailerList = [
     }
 ]
 
-export {insauranceList, retailerList}
+export {insuranceList, retailerList}

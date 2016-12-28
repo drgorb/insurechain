@@ -5,7 +5,7 @@
  * @constructor
  */
 import {insurechain} from "./contract-definitions";
-import {insauranceList, retailerList} from "./mock-data";
+import {insuranceList, retailerList} from "./mock-data";
 
 function RetailersEthereumService ($q, $timeout) {
     var retailers = insurechain;
@@ -74,7 +74,7 @@ function RetailersEthereumService ($q, $timeout) {
     }
 
     self.getInsuranceId = function() {
-        return $q.when(insauranceList)
+        return $q.when(insuranceList)
     }
 
     self.getRetailerList = function (address) {

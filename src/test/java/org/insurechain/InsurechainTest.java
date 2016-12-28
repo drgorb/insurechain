@@ -1,6 +1,7 @@
 package org.insurechain;
 
 import org.adridadou.ethereum.EthereumFacade;
+import org.adridadou.ethereum.keystore.StringSecureKey;
 import org.adridadou.ethereum.provider.PrivateEthereumFacadeProvider;
 import org.adridadou.ethereum.provider.PrivateNetworkConfig;
 import org.adridadou.ethereum.provider.StandaloneEthereumFacadeProvider;
@@ -28,9 +29,9 @@ import static org.junit.Assert.*;
 public class InsurechainTest {
 
     private final StandaloneEthereumFacadeProvider provider = new StandaloneEthereumFacadeProvider();
-    private final EthAccount mainAccount = provider.getLockedAccount("mainAccount").decode("");
-    private final EthAccount insuranceAccount = provider.getLockedAccount("insuranceAccount").decode("");
-    private final EthAccount retailerAccount = provider.getLockedAccount("retailerAccount").decode("");
+    private final EthAccount mainAccount = new StringSecureKey("mainAccount").decode("");
+    private final EthAccount insuranceAccount = new StringSecureKey("insuranceAccount").decode("");
+    private final EthAccount retailerAccount = new StringSecureKey("retailerAccount").decode("");
     private EthereumFacade ethereum;
     private SoliditySource soliditySource = SoliditySource.from(new File("contracts/Insurechain.sol"));
     private Insurechain insureChainContractFromAdmin;
