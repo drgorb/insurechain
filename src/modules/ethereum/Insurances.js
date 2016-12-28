@@ -1,12 +1,11 @@
-import retailers from "./contract-definitions";
-import insauranceList from "./mock-data";
-import retailerList from "./mock-data";
+import {insurechain} from "./contract-definitions";
+import {insauranceList, retailerList} from "./mock-data";
 
-function RetailersEthereumService ($q, $timeout) {
+function InsuranceEthereumService ($q) {
 
     var self = this;
-    self.abi = retailers.abi;
-    self.contractAddress = retailers.address;
+    self.abi = insurechain.abi;
+    self.contractAddress = insurechain.address;
 
     self.dappId = 'insurechain.retailers'
 
@@ -22,10 +21,13 @@ function RetailersEthereumService ($q, $timeout) {
     }
 
     self.regsiterInsurance = function(name, address) {
-        self.insauranceList.push({name: name, address: address, status: 0});
+        console.log(name, address);
+        insauranceList.push({name: name, address: address, status: 0});
         return $q.when(true);
     }
+
+    return self
 }
 
-export default ['$q', RetailersEthereumService]
+export default ['$q', InsuranceEthereumService]
 

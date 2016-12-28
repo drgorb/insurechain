@@ -1,10 +1,11 @@
-/**
- * Main App Controller for the Angular Material Starter App
- * @param ProductDataService
- * @param $mdSidenav
- * @constructor
- */
-function HomeController($scope) {
-    $scope.title = 'hello, this is insurance page!'
+function InsuranceController($mdToast, $scope) {
+    $scope.showToast = function(info) {
+        $mdToast.show(
+            $mdToast.simple()
+                .textContent(info)
+                .position('bottom right')
+                .hideDelay(3000)
+        );
+    }
 }
-export default ['$scope', HomeController]
+export default ['$mdToast', '$scope', InsuranceController]

@@ -1,0 +1,17 @@
+<md-input-container class="md-block" flex-gt-sm>
+    <label>Status</label>
+    <md-select name="status" ng-model="filterStatus">
+        <md-option ng-repeat="status in statuses" value="{{status.value}}">
+            {{status.name}}
+        </md-option>
+    </md-select>
+</md-input-container>
+
+<md-list>
+    <md-list-item ng-repeat="insurance in insurances | filter: {status: filterStatus}">
+        <p>{{ insurance.name }}</p>
+
+        <md-button ng-if="showAcceptButton(insurance.status)" aria-label="Accept" class="md-secondary" ng-click="setRequestState(insurance.address, 1)">Accept</md-button>
+        <md-button ng-if="showRejectButton(insurance.status)" aria-label="Reject" class="md-secondary" ng-click="setRequestState(insurance.address, 2)">Reject</md-button>
+    </md-list-item>
+</md-list>

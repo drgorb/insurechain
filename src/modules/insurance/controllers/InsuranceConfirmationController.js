@@ -1,9 +1,12 @@
-function RetailerConfirmationController(RetailersEthereumService, $scope) {
+function InsuranceConfirmationController(InsuranceEthereumService, $scope) {
 
-    RetailersEthereumService
-        .getRetailerList(web3.eth.accounts)
-        .then(function(retailers) {
-            $scope.retailers = retailers;
+    $scope.insurances = [];
+
+    InsuranceEthereumService
+        .getInsurancesList()
+        .then(function(insurances) {
+            console.dir(insurances);
+            $scope.insurances = insurances;
         });
 
     $scope.filterStatus = '';
@@ -47,5 +50,5 @@ function RetailerConfirmationController(RetailersEthereumService, $scope) {
         return (status!=3);
     }
 }
-export default ['RetailersEthereumService', '$scope', RetailerConfirmationController]
+export default ['InsuranceEthereumService', '$scope', InsuranceConfirmationController]
 

@@ -43,4 +43,7 @@ export default angular.module(appModule, [
         $mdThemingProvider.theme('default')
             .primaryPalette('brown')
             .accentPalette('red');
-    });
+    })
+    .config(['$qProvider', function ($qProvider) {
+        $qProvider.errorOnUnhandledRejections(false);
+    }]);
