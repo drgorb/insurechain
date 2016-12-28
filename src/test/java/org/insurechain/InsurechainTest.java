@@ -61,16 +61,19 @@ public class InsurechainTest {
     @Test
     public void contractTest() throws ExecutionException, InterruptedException, IOException {
         assertEquals(RegistrationState.Undefined, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
+        assertEquals(mainAccount.getAddress(), insureChainContractFromAdmin.getOwner());
 
         /**first register and approve an insurance*/
         insureChainContractFromInsurance.createInsurance("Zurich").get();
 
         /**now check that the retailer can not request membership of an unapproved insurance*/
-/*        exception.expect(EthereumApiException.class);
-        insureChainContractFromRetailer.requestRegistration("a company name", insuranceAccount).get();
-        exception.none();*/
-        assertEquals(mainAccount.getAddress(), insureChainContractFromAdmin.getOwner());
+        try {
+            insureChainContractFromRetailer.requestRegistration("a company name", insuranceAccount).get();
+        } catch (RuntimeException e) {
+            Assert.assertNotNull(e);
+        }
         insureChainContractFromAdmin.setInsuranceState(insuranceAccount, InsuranceStatus.Active.ordinal()).get();
+
         insureChainContractFromRetailer.requestRegistration("a company name", insuranceAccount).get();
         Assert.assertEquals(1L, insureChainContractFromRetailer.retailerCount().longValue());
         assertEquals(RegistrationState.Requested, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
