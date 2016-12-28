@@ -5,13 +5,12 @@ var _ = require ("lodash");
 var $q = require ("q");
 
 var web3 = new Web3 ();
-web3.setProvider (new web3.providers.HttpProvider ('http://localhost:8545'));
+web3.setProvider (new web3.providers.HttpProvider ('http://localhost:8646'));
 
 console.log(web3.eth.getCompilers());
 
 var soliditySources = {
-    retailers: (fs.readFileSync ('contracts/Retailers.sol') + ' '),
-    insurances: (fs.readFileSync ('contracts/Insurances.sol') + ' ')
+    insurechain: (fs.readFileSync ('contracts/Insurechain.sol') + ' '),
 }
 
 var contractTransactions = [];
@@ -23,7 +22,7 @@ _.each (soliditySources, (source, name) => {
     compiledContracts[name].contract = web3.eth.contract(compiledContracts[name].info.abiDefinition);
     var defer = $q.defer();
     compiledContracts[name].contract.new({
-            from: web3.eth.accounts[0],
+            from: "0x6d8B18F9b737160A73F536393C908FE89961E570",
             data: compiledContracts[name].code,
             value: 0,
             gas: 1000000

@@ -4,11 +4,11 @@
  * @param $mdSidenav
  * @constructor
  */
-import { retailers } from "./contract-definitions";
-import { insauranceList, retailerList } from "./mock-data";
+import {insurechain} from "./contract-definitions";
+import {insauranceList, retailerList} from "./mock-data";
 
 function RetailersEthereumService ($q, $timeout) {
-
+    var retailers = insurechain;
     var self = this;
     self.abi = retailers.abi;
     self.contractAddress = retailers.address;
@@ -59,7 +59,7 @@ function RetailersEthereumService ($q, $timeout) {
      * @param status the status is a number with this meaning 0 = requested, 1 = Accepted, 2 = Rejected, 3 = Terminated
      * @returns {Function}
      */
-    self.setRequestState = function(retailer, status) {
+    self.setRequestStatus = function(retailer, status) {
         var defer = $q.defer()
 
         self.contract.setRequestState(retailer, status, function (err, result) {
