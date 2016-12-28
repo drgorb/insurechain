@@ -11,7 +11,7 @@
     <md-list-item ng-repeat="retailer in retailers | filter: {status: filterStatus}">
         <p>{{ retailer.name }}</p>
 
-        <md-button ng-if="showAcceptButton(retailer.status)" aria-label="Accept" class="md-secondary" ng-click="setRequestState(retailer.address, 1)">Accept</md-button>
-        <md-button ng-if="showRejectButton(retailer.status)" aria-label="Reject" class="md-secondary" ng-click="setRequestState(retailer.address, 2)">Reject</md-button>
+        <md-button ng-if="showAcceptButton(retailer.status)" aria-label="Accept" class="md-secondary" ng-click="setRequestStatus(retailer.address, 2)">Accept</md-button>
+        <md-button ng-if="showRejectButton(retailer.status)" aria-label="Reject" class="md-secondary" ng-click="setRequestStatus(retailer.address, 3)">Reject</md-button>
     </md-list-item>
 </md-list>

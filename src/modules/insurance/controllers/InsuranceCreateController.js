@@ -6,10 +6,8 @@ function InsuranceCreateController(InsuranceEthereumService, $scope) {
     }
 
     $scope.sendRequest = function(insurance) {
-
-        console.log(insurance.insuranceName, insurance.insuranceAddress)
         InsuranceEthereumService
-            .regsiterInsurance(insurance.insuranceName, insurance.insuranceAddress)
+            .regsiterInsurance(insurance.insuranceName)
             .then(function (result) {
                 $scope.showToast(result)
             })

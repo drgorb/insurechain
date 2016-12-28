@@ -20,10 +20,31 @@ function InsuranceEthereumService ($q) {
         return $q.when (retailerList);
     }
 
-    self.regsiterInsurance = function(name, address) {
-        console.log(name, address);
-        insauranceList.push({name: name, address: address, status: 0});
-        return $q.when(true);
+    self.regsiterInsurance = function(name) {
+        var defer = $q.defer()
+
+        self.contract.createInsurance(name, function (err, result) {
+            if(err) {
+                defer.reject(err)
+            } else {
+                defer.resolve(result)
+            }
+        })
+
+        return defer.promise;
+    }
+    self.setRequestStatus = function (address, state) {
+        alert('work');
+        var defer = $q.defer()
+        self.contract.setInsuranceState(address, state, function (err, result) {
+            if(err) {
+                defer.reject(err)
+            } else {
+                defer.resolve(result)
+            }
+        })
+
+        return defer.promise;
     }
 
     return self

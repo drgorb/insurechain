@@ -20,7 +20,7 @@ var retailerList = [
     {
         name: 'Digitec',
         address: '0x3b06274c18e8a188c24f64dd4793f1027c1f3123',
-        status: 0
+        status: 1
     },
     {
         name: 'Interdiscount',

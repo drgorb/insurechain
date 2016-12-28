@@ -11,7 +11,7 @@
     <md-list-item ng-repeat="insurance in insurances | filter: {status: filterStatus}">
         <p>{{ insurance.name }}</p>
 
-        <md-button ng-if="showAcceptButton(insurance.status)" aria-label="Accept" class="md-secondary" ng-click="setRequestState(insurance.address, 1)">Accept</md-button>
-        <md-button ng-if="showRejectButton(insurance.status)" aria-label="Reject" class="md-secondary" ng-click="setRequestState(insurance.address, 2)">Reject</md-button>
+        <md-button ng-if="showAcceptButton(insurance.status)" aria-label="Accept" class="md-secondary" ng-click="setRequestStatus(insurance.address, 2)">Accept</md-button>
+        <md-button ng-if="showRejectButton(insurance.status)" aria-label="Reject" class="md-secondary" ng-click="setRequestStatus(insurance.address, 3)">Reject</md-button>
     </md-list-item>
 </md-list>

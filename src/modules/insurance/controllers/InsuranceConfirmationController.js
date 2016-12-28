@@ -5,7 +5,6 @@ function InsuranceConfirmationController(InsuranceEthereumService, $scope) {
     InsuranceEthereumService
         .getInsurancesList()
         .then(function(insurances) {
-            console.dir(insurances);
             $scope.insurances = insurances;
         });
 
@@ -30,9 +29,9 @@ function InsuranceConfirmationController(InsuranceEthereumService, $scope) {
         }
     ];
 
-    $scope.setRequestStatus = function (retailer, status) {
-        RetailersEthereumService
-            .setRequestStatus(retailer, status)
+    $scope.setRequestStatus = function (insurance, status) {
+        InsuranceEthereumService
+            .setRequestStatus(insurance, status)
             .then(function (info) {
                 $scope.showToast(info)
             })
