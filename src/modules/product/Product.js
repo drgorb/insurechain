@@ -9,7 +9,7 @@ import ProductList from "./components/list/ProductList";
 import ProductDetails from "./components/details/ProductDetails";
 import DownloadReportData from "./components/downloadReport/DownloadReportData";
 import EthereumService from "./../ethereum/EthereumService";
-import RetailersEthereumService from "./../ethereum/Retailers";
+import RetailersEthereumService from "./../ethereum/RetailersEthereumService";
 import ProductController from "./controllers/ProductController";
 
 const product = 'app.product';

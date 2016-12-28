@@ -7,7 +7,7 @@ import "ui-router-extras";
 import RetailerController from "./controllers/RetailerController";
 import RetailerCreateController from "./controllers/RetailerCreateController";
 import RetailerConfirmationController from "./controllers/RetailerConfirmationController";
-import RetailersEthereumService from "./../ethereum/Retailers";
+import RetailersEthereumService from "./../ethereum/RetailersEthereumService";
 
 
 const retailer = 'app.retailer';

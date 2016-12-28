@@ -6,7 +6,7 @@ import InsuranceController from './controllers/InsuranceController';
 import InsuranceCreateController from './controllers/InsuranceCreateController';
 import InsuranceConfirmationController from './controllers/InsuranceConfirmationController';
 
-import InsuranceEthereumService from './../ethereum/Insurances';
+import InsuranceEthereumService from './../ethereum/InsuranceEthereumService';
 
 const insurance = 'app.insurance';
 
