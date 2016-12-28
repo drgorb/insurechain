@@ -1,19 +1,4 @@
 <form name="insuranceCreate" ng-submit="sendRequest(insurance)">
-    <md-input-container class="md-block">
-        <label>Insurance ID</label>
-        <input name="insuranceId" ng-model="insurance.insuranceId" required>
-        <div ng-messages="insuranceCreate.insuranceId.$error">
-            <div ng-message="required">This is required!</div>
-        </div>
-    </md-input-container>
-
-    <md-input-container class="md-block">
-        <label>Insurance Address</label>
-        <input name="insuranceAddress" ng-model="insurance.insuranceAddress" required>
-        <div ng-messages="insuranceCreate.insuranceAddress.$error">
-            <div ng-message="required">This is required!</div>
-        </div>
-    </md-input-container>
 
     <md-input-container class="md-block">
         <label>Insurance Name</label>
