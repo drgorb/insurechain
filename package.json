@@ -4,7 +4,7 @@
   "description": "Extended Warranty smart-contract interface on Ethereum",
   "scripts": {
     "build": "rimraf dist && webpack --bail --progress --profile",
-    "server": "webpack-dev-server --history-api-fallback --inline --progress",
+    "server": "webpack-dev-server --history-api-fallback --inline --progress --port 8282",
     "test": "karma start",
     "test-watch": "karma start --auto-watch --no-single-run",
     "start": "npm run server"
