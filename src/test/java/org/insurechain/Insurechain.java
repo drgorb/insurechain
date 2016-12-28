@@ -16,7 +16,7 @@ public interface Insurechain {
     CompletableFuture<Void> setInsuranceState(EthAccount insurance, int status);
 
     RegistrationState getRequestState(EthAccount retailer, EthAccount insurance);
-    CompletableFuture<Void> setRequestState(EthAccount retailer, RegistrationState status);
+    CompletableFuture<Void> setRequestState(EthAccount retailer, int status);
 
     Long retailerCount();
     Long insuranceCount();

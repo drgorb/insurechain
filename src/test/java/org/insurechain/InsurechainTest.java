@@ -74,10 +74,19 @@ public class InsurechainTest {
         } catch (ExecutionException e) {
             Assert.assertEquals(EthereumApiException.class, e.getCause().getClass());
         }
+
+        /*the owner approves the insurance creation*/
         insureChainContractFromAdmin.setInsuranceState(insuranceAccount, InsuranceStatus.Active.ordinal()).get();
 
+        /*the registration request should pass now*/
         insureChainContractFromRetailer.requestRegistration("a company name", insuranceAccount).get();
+        /*there is one retailer in the list now*/
         Assert.assertEquals(1L, insureChainContractFromRetailer.retailerCount().longValue());
+        /*and the state of the request is pending approval*/
         assertEquals(RegistrationState.Requested, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
+
+        /*the insurer approves the registration request*/
+        insureChainContractFromInsurance.setRequestState(retailerAccount, RegistrationState.Accepted.ordinal()).get();
+        assertEquals(RegistrationState.Accepted, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
     }
 }
