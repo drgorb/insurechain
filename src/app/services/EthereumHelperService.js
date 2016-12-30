@@ -5,18 +5,20 @@ function EthereumService ($q, AppWeb3CheckService) {
 
     this.toPromise = (contractFunc) => {
         const defer = $q.defer();
-
+        let args = [].concat(arguments).concat([this.callbackFn(defer)]);
+        args = args.splice(1);
         return AppWeb3CheckService.userCheck().then(() => {
-            contractFunc(arguments, (err, result) => {
-                if(err) {
-                    defer.reject(err);
-                } else {
-                    defer.resolve(result);
-                }
-            });
-
+            contractFunc.apply(this, args);
             return defer.promise;
         });
+    };
+
+    this.callbackFn = (defer) => (err, result) => {
+        if(err) {
+            defer.reject(err);
+        } else {
+            defer.resolve(result);
+        }
     };
 
     return this;
