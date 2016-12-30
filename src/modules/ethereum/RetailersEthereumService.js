@@ -4,43 +4,24 @@
  * @param $mdSidenav
  * @constructor
  */
-import {insurechain} from "./contract-definitions";
 import {insuranceList, retailerList} from "./mock-data";
 
-function RetailersEthereumService ($q, $timeout) {
-    var retailers = insurechain;
-    var self = this;
-    self.abi = retailers.abi;
-    self.contractAddress = retailers.address;
-
-    self.dappId = 'insurechain.retailers'
-
-    self.web3 = web3
-    self.contract = web3.eth.contract (self.abi).at (self.contractAddress)
-
+function RetailersEthereumService ($q, $timeout, EthereumHelperService) {
+    const insurechainContract = EthereumHelperService.insurechain;
+    const toPromise = EthereumHelperService.toPromise;
     /**
      * in fact this creates the partner relation between the retailer and the insurance with a status 'Requested'
      * @param companyName
      * @param insurance
      * @returns {Function}
      */
-    self.requestRegistration = function(companyName, insurance) {
-        console.log ('requesting registration for ', companyName)
-        var defer = $q.defer()
+    this.requestRegistration = (companyName, insurance) => {
+        console.log ('requesting registration for ', companyName);
+        return toPromise(insurechainContract.requestRegistration, companyName, insurance);
+    };
 
-        self.contract.requestRegistration(companyName, insurance, function (err, result) {
-            if(err) {
-                defer.reject(err)
-            } else {
-                defer.resolve(result)
-            }
-        })
-
-        return defer.promise;
-    }
-
-    self.getRegistrationStatus = function (insurance) {
-        var defer = $q.defer ();
+    this.getRegistrationStatus = (insurance) => {
+        const defer = $q.defer ();
         $timeout(function(){
             if(insurance === "0xc62e02ddc6c1a78ca63f144253e74c85ecb76b74"){
                 defer.resolve(1)
@@ -49,9 +30,9 @@ function RetailersEthereumService ($q, $timeout) {
             } else {
                 defer.resolve(2)
             }
-        }, 500)
+        }, 500);
         return defer.promise;
-    }
+    };
 
     /**
      * set the status for a request. this function must be called by the insurance as the msg.sender is used to get the partnerRelation
@@ -59,33 +40,19 @@ function RetailersEthereumService ($q, $timeout) {
      * @param status the status is a number with this meaning 0 = requested, 1 = Accepted, 2 = Rejected, 3 = Terminated
      * @returns {Function}
      */
-    self.setRequestStatus = function(retailer, status) {
-        var defer = $q.defer()
+    this.setRequestStatus = (retailer, status) => EthereumHelperService.toPromise(insurechainContract.setRequestState, retailer, status);
 
-        self.contract.setRequestState(retailer, status, function (err, result) {
-            if(err) {
-                defer.reject(err)
-            } else {
-                defer.resolve(result)
-            }
-        })
+    this.getInsuranceId = () => $q.when(insuranceList);
 
-        return defer.promise
-    }
-
-    self.getInsuranceId = function() {
-        return $q.when(insuranceList)
-    }
-
-    self.getRetailerList = function (address) {
+    this.getRetailerList = (address) => {
         if(address == '0xc62e02ddc6c1a78ca63f144253e74c85ecb76b74') {
             return $q.when(retailerList)
         } else {
             return $q.when([]);
         }
-    }
+    };
 
-    return self
+    return this;
 }
 
-export default ['$q', '$timeout', RetailersEthereumService]
+export default ['$q', '$timeout', 'EthereumHelperService', RetailersEthereumService]

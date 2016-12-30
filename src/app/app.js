@@ -16,6 +16,7 @@ import insuranceModule from "../modules/insurance/Insurance";
 import AppController from "./controllers/AppController";
 
 import AppWeb3CheckService from './services/AppWeb3CheckService'
+import EthereumHelperService from './services/EthereumHelperService'
 
 const appModule = 'app';
 
@@ -34,6 +35,7 @@ export default angular.module(appModule, [
     insuranceModule,
 ])
     .factory('AppWeb3CheckService', AppWeb3CheckService)
+    .factory('EthereumHelperService', EthereumHelperService)
     .controller('AppController', AppController)
     .config(['$locationProvider', '$urlRouterProvider', function($locationProvider, $urlRouterProvider) {
         $locationProvider.html5Mode(true);
