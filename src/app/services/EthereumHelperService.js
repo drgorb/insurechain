@@ -5,9 +5,8 @@ function EthereumService ($q, AppWeb3CheckService) {
 
     this.toPromise = (contractFunc) => {
         const defer = $q.defer();
-
         return AppWeb3CheckService.userCheck().then(() => {
-            contractFunc(arguments, (err, result) => {
+            contractFunc(Array.from(arguments).slice(1), (err, result) => {
                 if(err) {
                     defer.reject(err);
                 } else {
