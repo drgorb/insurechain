@@ -61,10 +61,11 @@ $q.all (contractTransactions)
         exports = exports.replace ("x, ", "");
         console.log (json + "\n" + exports + "}");
         return json + "\n" + exports + "}";
-    }).then (function (javascript) {
-    fs.writeFile ("src/modules/ethereum/contract-definitions.js", javascript, (err) => {
-        if (err) throw err;
-        console.log ('It\'s saved!');
+    })
+    .then (function (javascript) {
+        fs.writeFile ("src/modules/ethereum/contract-definitions.js", javascript, (err) => {
+            if (err) throw err;
+            console.log ('It\'s saved!');
+        });
     });
-});
 
