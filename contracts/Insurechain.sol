@@ -148,8 +148,8 @@ contract Insurechain is mortal {
 
     function getRole(address user) constant returns (UserRole) {
         if(user == owner) return UserRole.Owner;
-        if(retailers[user].status != RetailerStatus.Undefined) return UserRole.Retailer;
-        if(insurances[user].status != InsuranceStatus.Undefined) return UserRole.Insurance;
+        if(retailers[user].status != RetailerStatus.Undefined && retailers[user].status != RetailerStatus.Terminated) return UserRole.Retailer;
+        if(insurances[user].status != InsuranceStatus.Undefined && insurances[user].status != InsuranceStatus.Terminated) return UserRole.Insurance;
 
         return UserRole.Undefined;        
     }
