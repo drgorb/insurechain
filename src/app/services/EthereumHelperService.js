@@ -3,10 +3,10 @@ import {insurechain} from "../../modules/ethereum/contract-definitions";
 function EthereumService ($q, AppWeb3CheckService) {
     this.insurechain = web3.eth.contract (insurechain.abi).at (insurechain.contractAddress);
 
-    this.toPromise = (contractFunc) => {
+    this.toPromise = function(contractFunc) {
         const defer = $q.defer();
-        let args = [].concat(arguments).concat([this.callbackFn(defer)]);
-        args = args.splice(1);
+        let args = Array.from(arguments).slice(1);
+        args.push(this.callbackFn(defer));
         return AppWeb3CheckService.userCheck().then(() => {
             contractFunc.apply(this, args);
             return defer.promise;
