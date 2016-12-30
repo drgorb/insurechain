@@ -99,9 +99,9 @@ contract Insurechain is mortal {
         insurance.status = status;
     }
 
-    function getInsurance(uint index) constant returns (string, InsuranceStatus) {
+    function getInsurance(uint index) constant returns (string, address, InsuranceStatus) {
         Insurance insurance = insurances[insuranceList[index]];
-        return (insurance.name, insurance.status);
+        return (insurance.name, insuranceList[index], insurance.status);
     }
 
     /**

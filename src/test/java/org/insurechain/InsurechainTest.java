@@ -82,7 +82,7 @@ public class InsurechainTest {
 
         /*the owner approves the insurance creation*/
         insureChainContractFromAdmin.setInsuranceState(insuranceAccount, InsuranceStatus.Active.ordinal()).get();
-        InsuranceStruct returnValues = new InsuranceStruct("Zurich", InsuranceStatus.Active.ordinal());
+        InsuranceStruct returnValues = new InsuranceStruct("Zurich", insuranceAccount.getAddress(), InsuranceStatus.Active.ordinal());
         Assert.assertEquals(true, returnValues.equals(insureChainContractFromInsurance.getInsurance(0)));
 
         /*the registration request should pass now*/
