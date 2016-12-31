@@ -1,10 +1,11 @@
-function InsuranceConfirmationController(InsuranceEthereumService, $scope) {
+function InsuranceConfirmationController(EthereumInsuranceService, $scope) {
 
     $scope.insurances = [];
 
-    InsuranceEthereumService
+    EthereumInsuranceService
         .getInsurancesList()
         .then(function(insurances) {
+            console.log(insurances);
             $scope.insurances = insurances;
         });
 
@@ -30,7 +31,7 @@ function InsuranceConfirmationController(InsuranceEthereumService, $scope) {
     ];
 
     $scope.setRequestStatus = function (insurance, status) {
-        InsuranceEthereumService
+        EthereumInsuranceService
             .setRequestStatus(insurance, status)
             .then(function (info) {
                 $scope.showToast(info)
@@ -39,15 +40,15 @@ function InsuranceConfirmationController(InsuranceEthereumService, $scope) {
                 console.log(err)
                 $scope.showToast(err)
             })
-    }
+    };
 
     $scope.showAcceptButton = function (status) {
         return (status!=2);
-    }
+    };
 
     $scope.showRejectButton = function (status) {
         return (status!=3);
     }
 }
-export default ['InsuranceEthereumService', '$scope', InsuranceConfirmationController]
+export default ['EthereumInsuranceService', '$scope', InsuranceConfirmationController]
 

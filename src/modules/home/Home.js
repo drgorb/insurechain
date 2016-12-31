@@ -11,8 +11,8 @@ angular.module(home, [
 ])
 .config(['$stateProvider', function($stateProvider) {
     $stateProvider.state({
-        name: 'home',
-        url: '/',
+        name: home,
+        url: '',
         template: require('./templates/HomeTemplate.html'),
         controller: ('HomeController', HomeController)
     });

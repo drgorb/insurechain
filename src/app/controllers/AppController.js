@@ -1,30 +1,43 @@
-function AppController($scope, $mdSidenav, AppWeb3CheckService, $state, $interval) {
+function AppController(
+    $scope,
+    $mdSidenav,
+    UserService,
+    PermissionService,
+    $state,
+    $interval,
+    userAddress,
+    userRole)
+{
+
+    console.log(userRole);
+    $scope.user = userAddress;
+
+    PermissionService.getPermission(userRole);
 
     $scope.menu = [
         {
-            link : 'home',
+            link : 'app.home',
             title: 'Home',
-            icon: 'dashboard'
+            icon: 'dashboard',
+            permissionRoles: ['UNDEFINED', 'RETAILER', 'INSURANCE', 'OWNER']
         },
         {
-            link : 'insurance',
+            link : 'app.insurance',
             title: 'Insurance',
-            icon: 'dashboard'
+            icon: 'dashboard',
+            permissionRoles: ['UNDEFINED', 'OWNER']
         },
         {
-            link : 'retailer',
+            link : 'app.retailer',
             title: 'Retailer',
-            icon: 'dashboard'
+            icon: 'dashboard',
+            permissionRoles: ['UNDEFINED', 'RETAILER', 'INSURANCE', 'OWNER']
         },
         {
-            link : 'warranty ',
+            link : 'app.warranty',
             title: 'Warranty',
-            icon: 'dashboard'
-        },
-        {
-            link : 'product',
-            title: 'Product',
-            icon: 'group'
+            icon: 'dashboard',
+            permissionRoles: ['UNDEFINED', 'RETAILER', 'INSURANCE', 'OWNER']
         }
     ];
 
@@ -34,27 +47,26 @@ function AppController($scope, $mdSidenav, AppWeb3CheckService, $state, $interva
 
 
     function updateUser() {
-        AppWeb3CheckService
-            .userCheck()
+        UserService
+            .checkUser()
             .then(function (user) {
-                $scope.user = user;
                 if($scope.user !== user) {
+                    $scope.user = user;
                     $state.reload();
                 }
             })
-            .catch(function (err) {
-                alert(err)
-            });
     }
-    updateUser();
     $interval(updateUser, 3000);
 }
 
 export default [
     '$scope',
     '$mdSidenav',
-    'AppWeb3CheckService',
+    'UserService',
+    'PermissionService',
     '$state',
     '$interval',
+    'userAddress',
+    'userRole',
     AppController
 ]

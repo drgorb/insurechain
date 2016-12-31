@@ -1,12 +1,11 @@
-function RetailerCreateController(RetailersEthereumService, $scope) {
-    $scope.title = 'hello, this is retailer creation page!'
+function RetailerCreateController(EthereumRetailersService, $scope) {
     $scope.company = {
         companyName: '',
         selectedInsurance: '',
         insurances: []
     }
 
-    RetailersEthereumService
+    EthereumRetailersService
         .getInsuranceId()
         .then(function(insurances) {
             $scope.company.insurances = insurances
@@ -16,7 +15,7 @@ function RetailerCreateController(RetailersEthereumService, $scope) {
         });
 
     $scope.sendRequest = function(company) {
-        RetailersEthereumService
+        EthereumRetailersService
             .requestRegistration(company.companyName, company.selectedInsurance)
             .then(function (result) {
                 $scope.showToast(result)
@@ -26,4 +25,4 @@ function RetailerCreateController(RetailersEthereumService, $scope) {
             })
     }
 }
-export default ['RetailersEthereumService', '$scope', RetailerCreateController]
+export default ['EthereumRetailersService', '$scope', RetailerCreateController]
