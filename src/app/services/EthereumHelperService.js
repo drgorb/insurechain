@@ -8,9 +8,7 @@ function EthereumHelperService ($q) {
     this.toPromise = function(contractFunc) {
         const defer = $q.defer();
         let args = Array.from(arguments).slice(1);
-        console.log(self);
         args.push(self.callbackFn(defer));
-        console.log(args);
         contractFunc.apply(this, args);
         return defer.promise;
     };
