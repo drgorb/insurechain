@@ -2,7 +2,7 @@
  * Created by Lukasz_Zygmanski on 23.12.2016.
  */
 
-function UserService ($q) {
+function UserService ($q, EthereumRoleService) {
     return {
         checkUser: function () {
             let defer = $q.defer ();
@@ -16,8 +16,23 @@ function UserService ($q) {
                 }
             });
             return defer.promise;
+        },
+        checkRole: function (roleID, userRole) {
+            let defer = $q.defer ();
+            if(userRole != undefined) {
+                (roleID == userRole) ? defer.resolve() : defer.reject();
+            } else {
+                this.checkUser()
+                    .then(function (address) {
+                        return EthereumRoleService.getRole(address);
+                    })
+                    .then(function (role) {
+                        (role.c[0] == roleID) ? defer.resolve() : defer.reject();
+                    });
+            }
+            return defer.promise;
         }
     };
 }
 
-export default ['$q', UserService];
+export default ['$q', 'EthereumRoleService', UserService];

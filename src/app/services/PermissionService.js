@@ -1,13 +1,13 @@
 function PermissionService(PermRoleStore) {
     return {
-        getPermission: function (userRole) {
+        getPermission: function () {
             PermRoleStore
                 .defineManyRoles({
-                    'UNDEFINED': () => userRole == 0,
-                    'RETAILER': () => userRole == 1,
-                    'INSURANCE': () => userRole == 2,
-                    'OWNER': () => userRole == 3,
-            });
+                    'UNDEFINED': ['UserService', '$rootScope', (UserService , $rootScope) => UserService.checkRole(0, $rootScope.userRole)],
+                    'RETAILER': ['UserService', '$rootScope', (UserService, $rootScope) => UserService.checkRole(1, $rootScope.userRole)],
+                    'INSURANCE': ['UserService', '$rootScope', (UserService, $rootScope) => UserService.checkRole(2, $rootScope.userRole)],
+                    'OWNER': ['UserService', '$rootScope', (UserService, $rootScope) => UserService.checkRole(3, $rootScope.userRole)]
+                });
         }
     }
 }

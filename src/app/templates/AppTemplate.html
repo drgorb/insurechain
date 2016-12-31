@@ -18,8 +18,11 @@
     </md-toolbar>
     <div flex layout="row">
         <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
-            <md-toolbar md-colors="{background: 'primary-400'}">
-                <div class="md-toolbar-tools">
+            <md-toolbar class="md-hue-2" md-colors="{background: 'primary-400'}">
+                <span flex></span>
+                <div layout="column" class="md-toolbar-tools-bottom inset">
+                    <span></span>
+                    <div>Role: {{userRole}}</div>
                     <span>{{user}}</span>
                 </div>
             </md-toolbar>

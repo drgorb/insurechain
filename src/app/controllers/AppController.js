@@ -1,18 +1,15 @@
 function AppController(
     $scope,
+    $rootScope,
     $mdSidenav,
     UserService,
-    PermissionService,
     $state,
     $interval,
     userAddress,
     userRole)
 {
-
-    console.log(userRole);
+    $rootScope.userRole = userRole;
     $scope.user = userAddress;
-
-    PermissionService.getPermission(userRole);
 
     $scope.menu = [
         {
@@ -61,9 +58,9 @@ function AppController(
 
 export default [
     '$scope',
+    '$rootScope',
     '$mdSidenav',
     'UserService',
-    'PermissionService',
     '$state',
     '$interval',
     'userAddress',

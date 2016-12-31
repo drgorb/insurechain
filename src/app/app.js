@@ -69,7 +69,7 @@ export default angular.module(appModule, [
     .config(['$qProvider', function ($qProvider) {
         $qProvider.errorOnUnhandledRejections(false);
     }])
-    .run(['$rootScope', '$state', function ($rootScope, $state) {
+    .run(['$rootScope', '$state', 'PermissionService', function ($rootScope, $state, PermissionService) {
         $rootScope.$on('$stateChangeStart', function (event, to, params) {
             if(to.redirect) {
                 event.preventDefault();
@@ -77,5 +77,6 @@ export default angular.module(appModule, [
                     location: 'replace'
                 })
             }
-        })
+        });
+        PermissionService.getPermission();
     }]);
