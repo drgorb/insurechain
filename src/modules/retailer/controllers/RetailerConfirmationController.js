@@ -1,8 +1,9 @@
-function RetailerConfirmationController(RetailersEthereumService, $scope) {
+function RetailerConfirmationController(EthereumRetailersService, $scope) {
 
-    RetailersEthereumService
+    EthereumRetailersService
         .getRetailerList(web3.eth.accounts)
         .then(function(retailers) {
+            console.log(retailers);
             $scope.retailers = retailers;
         });
 
@@ -28,7 +29,7 @@ function RetailerConfirmationController(RetailersEthereumService, $scope) {
     ];
 
     $scope.setRequestStatus = function (retailer, status) {
-        RetailersEthereumService
+        EthereumRetailersService
             .setRequestStatus(retailer, status)
             .then(function (info) {
                 $scope.showToast(info)
@@ -47,5 +48,5 @@ function RetailerConfirmationController(RetailersEthereumService, $scope) {
         return (status!=3);
     }
 }
-export default ['RetailersEthereumService', '$scope', RetailerConfirmationController]
+export default ['EthereumRetailersService', '$scope', RetailerConfirmationController]
 

@@ -2,9 +2,9 @@
  * Created by Lukasz_Zygmanski on 23.12.2016.
  */
 
-function appWeb3UserCheckService ($q) {
+function UserService ($q) {
     return {
-        userCheck: function () {
+        checkUser: function () {
             let defer = $q.defer ();
             web3.eth.getAccounts(function (err, accs) {
                 if (err != null) {
@@ -20,4 +20,4 @@ function appWeb3UserCheckService ($q) {
     };
 }
 
-export default ['$q', appWeb3UserCheckService];
+export default ['$q', UserService];

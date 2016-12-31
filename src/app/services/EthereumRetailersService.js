@@ -1,12 +1,6 @@
-/**
- * Main App Controller for the Angular Material Starter App
- * @param UsersDataService
- * @param $mdSidenav
- * @constructor
- */
-import {insuranceList, retailerList} from "./mock-data";
+import {insuranceList, retailerList} from "../../mock/mockData";
 
-function RetailersEthereumService ($q, $timeout, EthereumHelperService) {
+function EthereumRetailersService ($q, $timeout, EthereumHelperService) {
     const insurechainContract = EthereumHelperService.insurechain;
     const toPromise = EthereumHelperService.toPromise;
     /**
@@ -45,14 +39,11 @@ function RetailersEthereumService ($q, $timeout, EthereumHelperService) {
     this.getInsuranceId = () => $q.when(insuranceList);
 
     this.getRetailerList = (address) => {
-        if(address == '0xc62e02ddc6c1a78ca63f144253e74c85ecb76b74') {
-            return $q.when(retailerList)
-        } else {
-            return $q.when([]);
-        }
+        return $q.when(retailerList);
     };
+
 
     return this;
 }
 
-export default ['$q', '$timeout', 'EthereumHelperService', RetailersEthereumService]
+export default ['$q', '$timeout', 'EthereumHelperService', EthereumRetailersService]

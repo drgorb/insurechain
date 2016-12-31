@@ -1,6 +1,6 @@
-import {retailerList} from "./mock-data";
+import {retailerList} from "../../mock/mockData";
 
-function InsuranceEthereumService (EthereumHelperService, $q) {
+function EthereumInsuranceService (EthereumHelperService, $q) {
     const insurechainContract = EthereumHelperService.insurechain;
     this.getInsurancesList = () => EthereumHelperService.toPromise(insurechainContract.insuranceCount).then((count) => {
         const promises = [];
@@ -15,5 +15,5 @@ function InsuranceEthereumService (EthereumHelperService, $q) {
     return this;
 }
 
-export default ['EthereumHelperService', '$q', InsuranceEthereumService]
+export default ['EthereumHelperService', '$q', EthereumInsuranceService]
 
