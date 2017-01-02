@@ -14,19 +14,19 @@ angular.module(warranty, [
         $stateProvider.state({
             name: warranty,
             url: 'warranty',
-            template: require('./templates/warrantyTemplate.html'),
+            template: require('./templates/WarrantyTemplate.html'),
             controller: ('WarrantyController', WarrantyController)
         });
         $stateProvider.state({
             name: `${warranty}.list`,
             url: '/product',
-            template: require('./templates/warrantyList.html'),
+            template: require('./templates/WarrantyList.html'),
             controller: ('WarrantyController', WarrantyController)
         });
         $stateProvider.state({
             name: `${warranty}.details`,
             url: '/product/{id}',
-            template: require('./templates/warrantyDetails.html'),
+            template: require('./templates/WarrantyDetails.html'),
             controller: ('WarrantyController', WarrantyController)
         });
     }]);
