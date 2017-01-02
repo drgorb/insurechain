@@ -9,8 +9,8 @@ import ProductList from "./components/list/ProductList";
 import ProductDetails from "./components/details/ProductDetails";
 import DownloadReportData from "./components/downloadReport/DownloadReportData";
 
-import EthereumService from "../../app/services/EthereumService";
-import RetailersEthereumService from "../../app/services/EthereumRetailersService";
+import EthereumService from "../ethereum/services/EthereumService";
+import RetailersEthereumService from "../ethereum/services/EthereumRetailersService";
 
 import ProductController from "./controllers/ProductController";
 
