@@ -17,13 +17,13 @@ public interface Insurechain {
     /**
      * the status is passed as int because when it is passed as InsuranceStatus it fails
      */
-    CompletableFuture<Void> setInsuranceState(EthAccount insurance, int status);
+    CompletableFuture<Void> setInsuranceState(EthAccount insurance, InsuranceStatus status);
 
     InsuranceStruct getInsurance(int index);
 
     RegistrationState getRequestState(EthAccount retailer, EthAccount insurance);
 
-    CompletableFuture<Void> setRequestState(EthAccount retailer, int status);
+    CompletableFuture<Void> setRequestState(EthAccount retailer, RegistrationState status);
 
     Long retailerCount();
 

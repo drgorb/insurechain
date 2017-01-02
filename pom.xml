@@ -42,7 +42,7 @@
         <dependency>
             <groupId>org.adridadou</groupId>
             <artifactId>eth-contract-api</artifactId>
-            <version>0.13</version>
+            <version>0.14-SNAPSHOT</version>
         </dependency>
 
         <dependency>
