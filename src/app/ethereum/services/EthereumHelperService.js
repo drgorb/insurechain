@@ -1,4 +1,4 @@
-import {insurechain} from "./../contractDefinitions";
+import {insurechain} from "./../../contractDefinitions";
 
 function EthereumHelperService ($q) {
 

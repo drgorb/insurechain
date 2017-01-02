@@ -13,19 +13,20 @@ import '../style/app.scss';
 
 import resolvers from './resolvers';
 
-import AppController from './controllers/AppController';
+import AppController from './main/controllers/AppController';
 
-import UserService from './services/UserService';
-import PermissionService from './services/PermissionService';
+import UserService from './shared/services/UserService';
+import PermissionService from './main/services/PermissionService';
 
-import EthereumHelperService from './services/EthereumHelperService';
-import EthereumRoleService from './services/EthereumRoleService';
+import EthereumHelperService from './ethereum/services/EthereumHelperService';
+import EthereumRoleService from './ethereum/services/EthereumRoleService';
 
-import homeModule from '../modules/home/Home';
-import productModule from '../modules/product/Product';
-import warrantyModule from '../modules/warranty/Warranty';
-import retailerModule from '../modules/retailer/Retailer';
-import insuranceModule from '../modules/insurance/Insurance';
+import homeModule from './home/Home';
+import warrantyModule from './warranty/Warranty';
+import retailerModule from './retailer/Retailer';
+import insuranceModule from './insurance/Insurance';
+import productModule from './product/Product';
+
 
 
 const appModule = 'app';
@@ -56,7 +57,7 @@ export default angular.module(appModule, [
         $stateProvider.state({
             name: appModule,
             url: '/',
-            template: require('./templates/AppTemplate.html'),
+            template: require('./main/templates/AppTemplate.html'),
             controller: ('AppController', AppController),
             resolve: resolvers,
             redirect: homeModule

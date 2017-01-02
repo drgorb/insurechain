@@ -1,4 +1,4 @@
-import {products, retailers, manufacturers, productTypes} from './../mock/mockData';
+import {products, retailers, manufacturers, productTypes} from '../mock/mockData';
 function WarrantyController($scope) {
     $scope.retailer = null;
     $scope.manufacturer = null;

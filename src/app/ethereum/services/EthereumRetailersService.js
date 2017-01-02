@@ -1,4 +1,4 @@
-import {insuranceList, retailerList} from "../../mock/mockData";
+import {insuranceList, retailerList} from '../../shared/mock/mockData';
 
 function EthereumRetailersService ($q, $timeout, EthereumHelperService) {
     const insurechainContract = EthereumHelperService.insurechain;

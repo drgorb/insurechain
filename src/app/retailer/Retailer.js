@@ -8,7 +8,7 @@ import RetailerController from "./controllers/RetailerController";
 import RetailerCreateController from "./controllers/RetailerCreateController";
 import RetailerConfirmationController from "./controllers/RetailerConfirmationController";
 
-import EthereumRetailersService from "../../app/services/EthereumRetailersService";
+import EthereumRetailersService from "../ethereum/services/EthereumRetailersService";
 
 
 const retailer = 'app.retailer';
