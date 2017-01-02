@@ -1,0 +1,12 @@
+<md-card flex-gt-sm="90" flex-gt-md="80">
+    <md-card-content>
+        <md-list>
+            <md-list-item class="md-2-line" ng-repeat="product in products" ng-click="goToProduct(product)">
+                <div class="md-list-item-text">
+                    <h3>{{product.name}}</h3>
+                    <p>{{product.description}}</p>
+                </div>
+            </md-list-item>
+        </md-list>
+    </md-card-content>
+</md-card>

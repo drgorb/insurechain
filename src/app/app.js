@@ -22,7 +22,8 @@ import EthereumHelperService from './services/EthereumHelperService';
 import EthereumRoleService from './services/EthereumRoleService';
 
 import homeModule from '../modules/home/Home';
-import warrantyModule from '../modules/product/Product';
+import productModule from '../modules/product/Product';
+import warrantyModule from '../modules/warranty/Warranty';
 import retailerModule from '../modules/retailer/Retailer';
 import insuranceModule from '../modules/insurance/Insurance';
 
@@ -42,6 +43,7 @@ export default angular.module(appModule, [
     homeModule,
     insuranceModule,
     retailerModule,
+    productModule,
     warrantyModule,
 ])
     .factory('UserService', UserService)
