@@ -26,6 +26,7 @@ contract mortal is owned {
 contract Insurechain is mortal {
     enum RetailerStatus {Undefined, Requested, Accepted, Rejected, Terminated}
     enum InsuranceStatus {Undefined, Requested, Active, Terminated}
+    enum WarrantyStatus {Undefined, Created, Confirmed, Canceled}
     enum UserRole {Undefined, Retailer, Insurance, Owner}
 
     struct PartnerRelations {
@@ -44,6 +45,15 @@ contract Insurechain is mortal {
         mapping (address=>PartnerRelations) partnerRelations /*the mapping holds the relation of the partner with each insurance company*/;
         RetailerStatus status/*in order to easily check for the existence of a retailer the first status is also set on the retailer itself*/;
     }
+
+    struct Warranty {
+        uint startDate;
+        uint endDate;
+        string policyNumber;
+        WarrantyStatus status;
+    }
+    // mapping of insurance -> productId -> serialNumber -> Warranty
+    mapping(address => mapping( string => mapping( string => Warranty))) warranties;
 
     mapping (address=>Retailer) retailers;
     mapping (uint=>address) retailerList;
@@ -71,13 +81,18 @@ contract Insurechain is mortal {
     );
 
     modifier insuranceOnly {
-        if(insurances[msg.sender].status == InsuranceStatus.Undefined) throw;
+        if(!isInsurance(msg.sender)) throw;
         _;
     }
 
     modifier registeredRetailerOnly(address insurance) {
+        if(!isInsurance(insurance)) throw;
         if(retailers[msg.sender].partnerRelations[insurance].status != RetailerStatus.Accepted) throw;
         _;
+    }
+
+    function isInsurance(address insurance) constant returns (bool) {
+        return insurances[insurance].status != InsuranceStatus.Undefined;
     }
 
     function createInsurance(string name) {
@@ -121,9 +136,9 @@ contract Insurechain is mortal {
 
         retailerList[retailerCount++] = msg.sender;
         retailer.partnerRelations[insurance].status = RetailerStatus.Requested;
-        retailer.status = RetailerStatus.Requested;
+        retailer.status = RetailerStatus.Accepted;
         retailers[msg.sender] = retailer;
-        //RetailerRequest(companyName, msg.sender, insurance);
+        RetailerRequest(companyName, msg.sender, insurance);
     }
 
     function getRequestState(address retailer, address insurance) constant returns (RetailerStatus) {
@@ -148,11 +163,47 @@ contract Insurechain is mortal {
 
     function getRole(address user) constant returns (UserRole) {
         if(user == owner) return UserRole.Owner;
-        if(retailers[user].status != RetailerStatus.Undefined && retailers[user].status != RetailerStatus.Terminated) return UserRole.Retailer;
-        if(insurances[user].status != InsuranceStatus.Undefined && insurances[user].status != InsuranceStatus.Terminated) return UserRole.Insurance;
+        if(retailers[user].status == RetailerStatus.Accepted) return UserRole.Retailer;
+        if(insurances[user].status == InsuranceStatus.Active) return UserRole.Insurance;
 
-        return UserRole.Undefined;        
+        return UserRole.Undefined;
     }
 
 
+    /**
+        Creates a new warranty.
+        productId: The EAN13 that identifies the product
+        serialNumber: the particular product serial number
+        insurance: the eth address of the insurance
+        startDate: start date of the extended warranty
+        endDate: start date of the extended warranty
+        price: the price in cents
+    **/
+    function createWarranty(string productId, string serialNumber, address insurance, uint startDate, uint endDate, uint price) registeredRetailerOnly(insurance) {
+        Warranty warranty = warranties[insurance][productId][serialNumber];
+        if(warranty.status != WarrantyStatus.Undefined) throw;
+
+        warranty.status = WarrantyStatus.Created;
+        warranty.startDate = startDate;
+        warranty.endDate = endDate;
+
+    }
+    /**
+        Confirms a warranty
+        productId: The EAN13 that identifies the product
+        serialNumber: the particular product serial number
+        policyNumber: the policy number of the warranty
+    **/
+    function confirmWarranty(string productId, string serialNumber, string policyNumber) insuranceOnly {
+        Warranty warranty = warranties[msg.sender][productId][serialNumber];
+        if(warranty.status != WarrantyStatus.Created) throw;
+
+        warranty.status = WarrantyStatus.Confirmed;
+        warranty.policyNumber = policyNumber;
+    }
+
+    function getWarranty(string productId, string serialNumber, address insurance) constant returns (uint startDate, uint endDate, WarrantyStatus status, string policyNumber) {
+        Warranty warranty = warranties[insurance][productId][serialNumber];
+        return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber);
+    }
 }

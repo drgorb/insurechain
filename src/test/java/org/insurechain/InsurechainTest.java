@@ -16,6 +16,9 @@ import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import static org.adridadou.ethereum.keystore.AccountProvider.from;
@@ -99,5 +102,13 @@ public class InsurechainTest {
         assertEquals(UserRole.Owner, insureChainContractFromAdmin.getRole(mainAccount));
         assertEquals(UserRole.Insurance, insureChainContractFromAdmin.getRole(insuranceAccount));
         assertEquals(UserRole.Retailer, insureChainContractFromAdmin.getRole(retailerAccount));
+
+        Date startDate = Date.from(LocalDate.of(2017, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
+        Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
+        insureChainContractFromRetailer.createWarranty("productId", "serialNumber", insuranceAccount, startDate, endDate, 4000 ).get();
+        insureChainContractFromInsurance.confirmWarranty("productId", "serialNumber", "policyNumber" ).get();
+
+
+        assertEquals(new Warranty(startDate, endDate,WarrantyStatus.Confirmed,"policyNumber" ), insureChainContractFromAdmin.getWarranty("productId","serialNumber", insuranceAccount));
     }
 }

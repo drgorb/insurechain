@@ -14,6 +14,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,16 +51,14 @@ public class PublishAndSetup {
         initContractInterfaces();
         initInsurances();
         initRetailers();
+
+        Date startDate = Date.from(LocalDate.of(2017, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
+        Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
+
+        contract.get(digitec).createWarranty("ean13","productsn",zurich, startDate, endDate,4000);
+        contract.get(zurich).confirmWarranty("ean13", "productsn", "policyNumber");
+
     }
-
-    private final Consumer<CompletableFuture<Void>> waitForFuture = ((CompletableFuture<Void> c) -> {
-        try {
-            c.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-    });
-
 
     @Before
     public void before() {
@@ -93,5 +94,13 @@ public class PublishAndSetup {
         insurances.forEach(insurance -> contract.put(insurance, contractBuilder.forAccount(insurance)));
         retailers.forEach(retailer -> contract.put(retailer, contractBuilder.forAccount(retailer)));
     }
+
+    private final Consumer<CompletableFuture<Void>> waitForFuture = ((CompletableFuture<Void> c) -> {
+        try {
+            c.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    });
 
 }

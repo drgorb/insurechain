@@ -3,6 +3,8 @@ package org.insurechain;
 import org.adridadou.ethereum.values.EthAccount;
 import org.adridadou.ethereum.values.EthAddress;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -25,6 +27,10 @@ public interface Insurechain {
 
     CompletableFuture<Void> setRequestState(EthAccount retailer, RegistrationState status);
 
+    CompletableFuture<Void> createWarranty(String productId, String serialNumber, EthAccount insurance, Date startDate, Date endDate, Integer price);
+
+    CompletableFuture<Void> confirmWarranty(String productId, String serialNumber, String policyNumber);
+
     Long retailerCount();
 
     Long insuranceCount();
@@ -34,4 +40,6 @@ public interface Insurechain {
     EthAddress getOwner();
 
     UserRole getRole(EthAccount user);
+
+    Warranty getWarranty(String productId, String serialNumber, EthAccount insurance);
 }
