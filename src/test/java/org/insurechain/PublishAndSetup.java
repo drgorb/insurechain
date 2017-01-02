@@ -10,10 +10,14 @@ import org.adridadou.ethereum.provider.EthereumJConfigs;
 import org.adridadou.ethereum.values.EthAccount;
 import org.adridadou.ethereum.values.EthAddress;
 import org.adridadou.ethereum.values.SoliditySource;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Date;
@@ -47,7 +51,8 @@ public class PublishAndSetup {
     private EthereumFacade ethereum;
 
     @Test
-    public void test() throws ExecutionException, InterruptedException {
+    public void test() throws ExecutionException, InterruptedException, IOException {
+        printBalances();
         initContractInterfaces();
         initInsurances();
         initRetailers();
@@ -58,6 +63,19 @@ public class PublishAndSetup {
         contract.get(digitec).createWarranty("ean13","productsn",zurich, startDate, endDate,4000);
         contract.get(zurich).confirmWarranty("ean13", "productsn", "policyNumber");
 
+    }
+    private void p(EthAccount account) {
+        System.out.println("balance for " + account.getAddress().withLeading0x() + ":" + ethereum.getBalance(account).inEth().toString() + " Eth");
+    }
+
+    private void printBalances() {
+        p(owner);
+        p(alianz);
+        p(zurich);
+        p(mobiliere);
+        p(digitec);
+        p(interdiscount);
+        p(melectronics);
     }
 
     @Before
@@ -86,13 +104,19 @@ public class PublishAndSetup {
                 .forEach(waitForFuture);
     }
 
-    private void initContractInterfaces() throws InterruptedException, ExecutionException {
+    private void initContractInterfaces() throws InterruptedException, ExecutionException, IOException {
         EthAddress contractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/Insurechain.sol")), "Insurechain", owner).get();
-        System.out.println("*** contract address:" + contractAddress.withLeading0x());
+        writeToFile(contractAddress);
         EthereumFacade.Builder<Insurechain> contractBuilder = ethereum.createContractProxy(contractAddress, Insurechain.class);
-        contract.put(owner,ethereum.createContractProxy(contractAddress,owner, Insurechain.class));
+        contract.put(owner,contractBuilder.forAccount(owner));
         insurances.forEach(insurance -> contract.put(insurance, contractBuilder.forAccount(insurance)));
         retailers.forEach(retailer -> contract.put(retailer, contractBuilder.forAccount(retailer)));
+    }
+
+    private void writeToFile(EthAddress contractAddress) throws IOException {
+        FileOutputStream stream = new FileOutputStream(new File("insurechain.address"));
+        IOUtils.write(contractAddress.withLeading0x(), stream, StandardCharsets.UTF_8);
+
     }
 
     private final Consumer<CompletableFuture<Void>> waitForFuture = ((CompletableFuture<Void> c) -> {

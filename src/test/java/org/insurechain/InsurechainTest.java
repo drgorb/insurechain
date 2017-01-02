@@ -57,9 +57,10 @@ public class InsurechainTest {
         );
         // add contracts to publish
         EthAddress contractAddress = ethereum.publishContract(soliditySource, "Insurechain", mainAccount).get();
-        insureChainContractFromAdmin = ethereum.createContractProxy(soliditySource, "Insurechain", contractAddress, mainAccount, Insurechain.class);
-        insureChainContractFromInsurance = ethereum.createContractProxy(soliditySource, "Insurechain", contractAddress, insuranceAccount, Insurechain.class);
-        insureChainContractFromRetailer = ethereum.createContractProxy(soliditySource, "Insurechain", contractAddress, retailerAccount, Insurechain.class);
+        EthereumFacade.Builder<Insurechain> contractBuilder = ethereum.createContractProxy(contractAddress, Insurechain.class);
+        insureChainContractFromAdmin = contractBuilder.forAccount(mainAccount);
+        insureChainContractFromInsurance = contractBuilder.forAccount(insuranceAccount);
+        insureChainContractFromRetailer = contractBuilder.forAccount(retailerAccount);
     }
 
     @Test

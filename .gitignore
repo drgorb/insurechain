@@ -9,5 +9,6 @@ tmp
 /insurechain.iml
 /database/nodeId.properties
 /privateIntegration/*
+/database-ropsten/*
 /cachedDag/
 /database/
