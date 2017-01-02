@@ -31,6 +31,8 @@ public interface Insurechain {
 
     CompletableFuture<Void> confirmWarranty(String productId, String serialNumber, String policyNumber);
 
+    CompletableFuture<Void> cancelWarranty(String productId, String serialNumber);
+
     Long retailerCount();
 
     Long insuranceCount();

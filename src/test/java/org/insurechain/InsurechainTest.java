@@ -107,8 +107,10 @@ public class InsurechainTest {
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         insureChainContractFromRetailer.createWarranty("productId", "serialNumber", insuranceAccount, startDate, endDate, 4000 ).get();
         insureChainContractFromInsurance.confirmWarranty("productId", "serialNumber", "policyNumber" ).get();
-
-
         assertEquals(new Warranty(startDate, endDate,WarrantyStatus.Confirmed,"policyNumber" ), insureChainContractFromAdmin.getWarranty("productId","serialNumber", insuranceAccount));
+
+        insureChainContractFromInsurance.cancelWarranty("productId", "serialNumber").get();
+
+        assertEquals(new Warranty(startDate, endDate,WarrantyStatus.Canceled,"policyNumber" ), insureChainContractFromAdmin.getWarranty("productId","serialNumber", insuranceAccount));
     }
 }

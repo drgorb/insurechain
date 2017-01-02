@@ -202,6 +202,19 @@ contract Insurechain is mortal {
         warranty.policyNumber = policyNumber;
     }
 
+    /**
+            Confirms a warranty
+            productId: The EAN13 that identifies the product
+            serialNumber: the particular product serial number
+            policyNumber: the policy number of the warranty
+        **/
+        function cancelWarranty(string productId, string serialNumber) insuranceOnly {
+            Warranty warranty = warranties[msg.sender][productId][serialNumber];
+            if(warranty.status == WarrantyStatus.Undefined) throw;
+
+            warranty.status = WarrantyStatus.Canceled;
+        }
+
     function getWarranty(string productId, string serialNumber, address insurance) constant returns (uint startDate, uint endDate, WarrantyStatus status, string policyNumber) {
         Warranty warranty = warranties[insurance][productId][serialNumber];
         return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber);
