@@ -114,8 +114,10 @@ public class PublishAndSetup {
     }
 
     private void writeToFile(EthAddress contractAddress) throws IOException {
-        FileOutputStream stream = new FileOutputStream(new File("insurechain.address"));
-        IOUtils.write(contractAddress.withLeading0x(), stream, StandardCharsets.UTF_8);
+        FileOutputStream addressStream = new FileOutputStream(new File("insurechain.address"));
+        FileOutputStream abiStream = new FileOutputStream(new File("insurechain.abi"));
+        IOUtils.write(ethereum.getAbi(contractAddress).getAbi(), abiStream, StandardCharsets.UTF_8);
+        IOUtils.write(contractAddress.withLeading0x(), addressStream, StandardCharsets.UTF_8);
 
     }
 
