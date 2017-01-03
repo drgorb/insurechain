@@ -48,7 +48,7 @@ contract Insurechain is mortal {
     }
 
     struct Claim {
-        address retailer /*in theory another retailer then the one who sold the insurance can make a claim*/;
+        address retailer /*in theory another retailer than the one who sold the insurance can make a claim*/;
         uint amount;
         string description;
     }
@@ -61,6 +61,7 @@ contract Insurechain is mortal {
         WarrantyStatus status;
         uint price;
         mapping (uint => Claim) claims;
+        uint claimCount;
     }
 
     // mapping of insurance -> productId -> serialNumber -> Warranty
@@ -172,6 +173,11 @@ contract Insurechain is mortal {
         return (retailerList[index], retailers[retailerList[index]].companyName);
     }
 
+    function getRetailerBalances(address retailer, address insurance) constant returns (uint, uint, uint) {
+        PartnerRelations partnerRelation = retailers[retailer].partnerRelations[insurance];
+        return (partnerRelation.sales, partnerRelation.payments, partnerRelation.claims);
+    }
+
     function getRole(address user) constant returns (UserRole) {
         if(user == owner) return UserRole.Owner;
         if(retailers[user].status == RetailerStatus.Accepted) return UserRole.Retailer;
@@ -233,4 +239,31 @@ contract Insurechain is mortal {
         return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber);
     }
 
+    /**
+        create a new claim for an insured product
+        productId: The EAN13 that identifies the product
+        serialNumber: the particular product serial number
+    */
+    function createClaim(string productId, string serialNumber, address insurance, uint amount, string description) registeredRetailerOnly(insurance) {
+        Warranty warranty = warranties[insurance][productId][serialNumber];
+        /*create only works for existing and valid warranties*/
+        if(warranty.status != WarrantyStatus.Confirmed || warranty.startDate > now || warranty.endDate < now) throw;
+
+        Claim claim = warranty.claims[warranty.claimCount++];
+        claim.retailer = msg.sender;
+        claim.amount = amount;
+        claim.description = description;
+
+        /*increase the retailer's account*/
+        retailers[msg.sender].partnerRelations[insurance].claims += amount;
+    }
+
+    function getClaimCount(string productId, string serialNumber, address insurance) constant returns (uint) {
+        warranties[insurance][productId][serialNumber].claimCount;
+    }
+
+    function getClaim(string productId, string serialNumber, address insurance, uint idx) constant returns (address, uint, string) {
+        Claim claim = warranties[insurance][productId][serialNumber].claims[idx];
+        return (claim.retailer, claim.amount, claim.description);
+    }
 }

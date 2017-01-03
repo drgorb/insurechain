@@ -100,18 +100,20 @@ public class InsurechainTest {
         insureChainContractFromInsurance.setRequestState(retailerAccount, RegistrationState.Accepted).get();
         assertEquals(RegistrationState.Accepted, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
 
+        assertTrue((new RetailerStruct(retailerAccount, "a company name")).equals(insureChainContractFromAdmin.getRetailer(0)));
+
         assertEquals(UserRole.Owner, insureChainContractFromAdmin.getRole(mainAccount));
         assertEquals(UserRole.Insurance, insureChainContractFromAdmin.getRole(insuranceAccount));
         assertEquals(UserRole.Retailer, insureChainContractFromAdmin.getRole(retailerAccount));
 
-        Date startDate = Date.from(LocalDate.of(2017, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
+        Date startDate = Date.from(LocalDate.of(2016, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
-        insureChainContractFromRetailer.createWarranty("productId", "serialNumber", insuranceAccount, startDate, endDate, 4000 ).get();
-        insureChainContractFromInsurance.confirmWarranty("productId", "serialNumber", "policyNumber" ).get();
-        assertEquals(new Warranty(startDate, endDate,WarrantyStatus.Confirmed,"policyNumber" ), insureChainContractFromAdmin.getWarranty("productId","serialNumber", insuranceAccount));
+        insureChainContractFromRetailer.createWarranty("productId", "serialNumber", insuranceAccount, startDate, endDate, 4000).get();
+        insureChainContractFromInsurance.confirmWarranty("productId", "serialNumber", "policyNumber").get();
+        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber"), insureChainContractFromAdmin.getWarranty("productId", "serialNumber", insuranceAccount));
 
         insureChainContractFromInsurance.cancelWarranty("productId", "serialNumber").get();
 
-        assertEquals(new Warranty(startDate, endDate,WarrantyStatus.Canceled,"policyNumber" ), insureChainContractFromAdmin.getWarranty("productId","serialNumber", insuranceAccount));
+        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Canceled, "policyNumber"), insureChainContractFromAdmin.getWarranty("productId", "serialNumber", insuranceAccount));
     }
 }
