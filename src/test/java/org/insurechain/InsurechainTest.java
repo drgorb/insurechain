@@ -1,7 +1,6 @@
 package org.insurechain;
 
 import org.adridadou.ethereum.EthereumFacade;
-import org.adridadou.ethereum.keystore.StringSecureKey;
 import org.adridadou.ethereum.provider.PrivateEthereumFacadeProvider;
 import org.adridadou.ethereum.provider.PrivateNetworkConfig;
 import org.adridadou.ethereum.provider.StandaloneEthereumFacadeProvider;
@@ -17,8 +16,12 @@ import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
+import static org.adridadou.ethereum.keystore.AccountProvider.from;
 import static org.adridadou.ethereum.values.EthValue.ether;
 import static org.junit.Assert.*;
 
@@ -29,9 +32,9 @@ import static org.junit.Assert.*;
 public class InsurechainTest {
 
     private final StandaloneEthereumFacadeProvider provider = new StandaloneEthereumFacadeProvider();
-    private final EthAccount mainAccount = new StringSecureKey("mainAccount").decode("");
-    private final EthAccount insuranceAccount = new StringSecureKey("insuranceAccount").decode("");
-    private final EthAccount retailerAccount = new StringSecureKey("retailerAccount").decode("");
+    private final EthAccount mainAccount = from("mainAccount");
+    private final EthAccount insuranceAccount = from("insuranceAccount");
+    private final EthAccount retailerAccount = from("retailerAccount");
     private EthereumFacade ethereum;
     private SoliditySource soliditySource = SoliditySource.from(new File("contracts/Insurechain.sol"));
     private Insurechain insureChainContractFromAdmin;
@@ -54,9 +57,10 @@ public class InsurechainTest {
         );
         // add contracts to publish
         EthAddress contractAddress = ethereum.publishContract(soliditySource, "Insurechain", mainAccount).get();
-        insureChainContractFromAdmin = ethereum.createContractProxy(soliditySource, "Insurechain", contractAddress, mainAccount, Insurechain.class);
-        insureChainContractFromInsurance = ethereum.createContractProxy(soliditySource, "Insurechain", contractAddress, insuranceAccount, Insurechain.class);
-        insureChainContractFromRetailer = ethereum.createContractProxy(soliditySource, "Insurechain", contractAddress, retailerAccount, Insurechain.class);
+        EthereumFacade.Builder<Insurechain> contractBuilder = ethereum.createContractProxy(contractAddress, Insurechain.class);
+        insureChainContractFromAdmin = contractBuilder.forAccount(mainAccount);
+        insureChainContractFromInsurance = contractBuilder.forAccount(insuranceAccount);
+        insureChainContractFromRetailer = contractBuilder.forAccount(retailerAccount);
     }
 
     @Test
@@ -81,7 +85,7 @@ public class InsurechainTest {
         }
 
         /*the owner approves the insurance creation*/
-        insureChainContractFromAdmin.setInsuranceState(insuranceAccount, InsuranceStatus.Active.ordinal()).get();
+        insureChainContractFromAdmin.setInsuranceState(insuranceAccount, InsuranceStatus.Active).get();
         InsuranceStruct returnValues = new InsuranceStruct("Zurich", insuranceAccount.getAddress(), InsuranceStatus.Active.ordinal());
         Assert.assertEquals(true, returnValues.equals(insureChainContractFromInsurance.getInsurance(0)));
 
@@ -93,11 +97,21 @@ public class InsurechainTest {
         assertEquals(RegistrationState.Requested, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
 
         /*the insurer approves the registration request*/
-        insureChainContractFromInsurance.setRequestState(retailerAccount, RegistrationState.Accepted.ordinal()).get();
+        insureChainContractFromInsurance.setRequestState(retailerAccount, RegistrationState.Accepted).get();
         assertEquals(RegistrationState.Accepted, insureChainContractFromAdmin.getRequestState(retailerAccount, insuranceAccount));
 
         assertEquals(UserRole.Owner, insureChainContractFromAdmin.getRole(mainAccount));
         assertEquals(UserRole.Insurance, insureChainContractFromAdmin.getRole(insuranceAccount));
         assertEquals(UserRole.Retailer, insureChainContractFromAdmin.getRole(retailerAccount));
+
+        Date startDate = Date.from(LocalDate.of(2017, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
+        Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
+        insureChainContractFromRetailer.createWarranty("productId", "serialNumber", insuranceAccount, startDate, endDate, 4000 ).get();
+        insureChainContractFromInsurance.confirmWarranty("productId", "serialNumber", "policyNumber" ).get();
+        assertEquals(new Warranty(startDate, endDate,WarrantyStatus.Confirmed,"policyNumber" ), insureChainContractFromAdmin.getWarranty("productId","serialNumber", insuranceAccount));
+
+        insureChainContractFromInsurance.cancelWarranty("productId", "serialNumber").get();
+
+        assertEquals(new Warranty(startDate, endDate,WarrantyStatus.Canceled,"policyNumber" ), insureChainContractFromAdmin.getWarranty("productId","serialNumber", insuranceAccount));
     }
 }
