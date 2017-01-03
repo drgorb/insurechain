@@ -108,9 +108,10 @@ contract Insurechain is mortal {
 
     function createInsurance(string name) {
         Insurance insurance = insurances[msg.sender];
-        if(insurance.status != InsuranceStatus.Undefined) throw;
-
+        InsuranceStatus previousStatus = insurance.status;
         insurance.status = InsuranceStatus.Requested;
+        if(previousStatus != InsuranceStatus.Undefined) throw;
+
         insurance.name = name;
         insuranceList[insuranceCount++] = msg.sender;
 
@@ -231,5 +232,5 @@ contract Insurechain is mortal {
         Warranty warranty = warranties[insurance][productId][serialNumber];
         return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber);
     }
-    
+
 }
