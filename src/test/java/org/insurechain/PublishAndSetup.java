@@ -98,7 +98,7 @@ public class PublishAndSetup {
     private void initInsurances() {
         Lists.newArrayList(contract.get(zurich).createInsurance("Zurich"),
         contract.get(alianz).createInsurance("Alianz"),
-        contract.get(mobiliere).createInsurance("mobiliere")).forEach(waitForFuture);
+        contract.get(mobiliere).createInsurance("Mobiliere")).forEach(waitForFuture);
 
         insurances.stream().map(insurance -> contract.get(owner).setInsuranceState(insurance, InsuranceStatus.Active)).collect(Collectors.toList())
                 .forEach(waitForFuture);
@@ -114,10 +114,12 @@ public class PublishAndSetup {
     }
 
     private void writeToFile(EthAddress contractAddress) throws IOException {
-        FileOutputStream addressStream = new FileOutputStream(new File("insurechain.address"));
-        FileOutputStream abiStream = new FileOutputStream(new File("insurechain.abi"));
-        IOUtils.write(ethereum.getAbi(contractAddress).getAbi(), abiStream, StandardCharsets.UTF_8);
-        IOUtils.write(contractAddress.withLeading0x(), addressStream, StandardCharsets.UTF_8);
+        FileOutputStream contractDefinitions = new FileOutputStream(new File("src/app/contractDefinitions.js"));
+        final String json = "{" + "abi:" + ethereum.getAbi(contractAddress).getAbi() +
+                ", address: " + "\"" + contractAddress.withLeading0x() + "\"" +
+                "}";
+
+        IOUtils.write("let insurechain = " + json + "; export {insurechain}", contractDefinitions, StandardCharsets.UTF_8);
 
     }
 

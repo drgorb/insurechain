@@ -3,8 +3,9 @@ import {retailerList} from '../../shared/mock/mockData';
 function EthereumInsuranceService (EthereumHelperService, $q) {
     const insurechainContract = EthereumHelperService.insurechain;
     this.getInsurancesList = () => EthereumHelperService.toPromise(insurechainContract.insuranceCount).then((count) => {
+        console.log(count.toNumber());
         const promises = [];
-        for(let i = 0; i < count; i++) {
+        for(let i = 0; i < count.toNumber(); i++) {
             promises.push(EthereumHelperService.toPromise(insurechainContract.getInsurance, i));
         }
         return $q.all(promises);
