@@ -33,6 +33,7 @@ contract Insurechain is mortal {
         RetailerStatus status;
         uint sales /*the total amount of policies sold by retailer*/;
         uint payments /*the total amount paid by retailer*/;
+        uint claims /*the total amount the insurance has paid to the retailer in claims*/;
     }
 
     struct Insurance {
@@ -51,6 +52,7 @@ contract Insurechain is mortal {
         uint endDate;
         string policyNumber;
         WarrantyStatus status;
+        uint price;
     }
     // mapping of insurance -> productId -> serialNumber -> Warranty
     mapping(address => mapping( string => mapping( string => Warranty))) warranties;
@@ -186,7 +188,8 @@ contract Insurechain is mortal {
         warranty.status = WarrantyStatus.Created;
         warranty.startDate = startDate;
         warranty.endDate = endDate;
-
+        warranty.price = price;
+        retailers[msg.sender].partnerRelations[insurance].sales += price;
     }
     /**
         Confirms a warranty
