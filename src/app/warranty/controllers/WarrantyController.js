@@ -13,5 +13,9 @@ function WarrantyController($scope, $state) {
         $state.go('app.warranty.details', {id:1});
     }
 
+    $scope.showList = function (retailer) {
+        $state.go('app.warranty.list');
+    }
+
 }
 export default ['$scope','$state', WarrantyController]

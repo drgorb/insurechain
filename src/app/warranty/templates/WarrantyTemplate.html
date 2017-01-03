@@ -2,7 +2,7 @@
     <div layout-padding layout="column">
         <md-card flex-gt-sm="90" flex-gt-md="80">
             <md-card-content>
-                <form name="insuranceCreate">
+                <form name="warrantyForm" ng-submit="showList()">
                     <div layout-gt-sm="row" layout-padding>
                         <md-select placeholder="Select Retailer" ng-model="retailer">
                             <md-option ng-value="retailer" ng-repeat="retailer in retailers">{{retailer.name}}</md-option>
@@ -14,6 +14,9 @@
                             <md-option ng-value="productType" ng-repeat="productType in productTypes">{{productType.name}}</md-option>
                         </md-select>
                     </div>
+                    <md-button type="submit">
+                        Show List
+                    </md-button>
                 </form>
             </md-card-content>
         </md-card>
