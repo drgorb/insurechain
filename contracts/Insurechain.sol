@@ -47,15 +47,24 @@ contract Insurechain is mortal {
         RetailerStatus status/*in order to easily check for the existence of a retailer the first status is also set on the retailer itself*/;
     }
 
+    struct Claim {
+        address retailer /*in theory another retailer then the one who sold the insurance can make a claim*/;
+        uint amount;
+        string description;
+    }
+
     struct Warranty {
+        address retailer;
         uint startDate;
         uint endDate;
         string policyNumber;
         WarrantyStatus status;
         uint price;
+        mapping (uint => Claim) claims;
     }
+
     // mapping of insurance -> productId -> serialNumber -> Warranty
-    mapping(address => mapping( string => mapping( string => Warranty))) warranties;
+    mapping (address=>mapping( string=>mapping( string=>Warranty ))) warranties;
 
     mapping (address=>Retailer) retailers;
     mapping (uint=>address) retailerList;
@@ -107,7 +116,6 @@ contract Insurechain is mortal {
 
         InsuranceStatusChanged(msg.sender, InsuranceStatus.Requested);
     }
-
 
     function setInsuranceState(address insuranceAddress, InsuranceStatus status) ownerOnly {
         Insurance insurance = insurances[insuranceAddress];
@@ -171,7 +179,6 @@ contract Insurechain is mortal {
         return UserRole.Undefined;
     }
 
-
     /**
         Creates a new warranty.
         productId: The EAN13 that identifies the product
@@ -180,7 +187,7 @@ contract Insurechain is mortal {
         startDate: start date of the extended warranty
         endDate: start date of the extended warranty
         price: the price in cents
-    **/
+    */
     function createWarranty(string productId, string serialNumber, address insurance, uint startDate, uint endDate, uint price) registeredRetailerOnly(insurance) {
         Warranty warranty = warranties[insurance][productId][serialNumber];
         if(warranty.status != WarrantyStatus.Undefined) throw;
@@ -189,14 +196,16 @@ contract Insurechain is mortal {
         warranty.startDate = startDate;
         warranty.endDate = endDate;
         warranty.price = price;
+        warranty.retailer = msg.sender;
         retailers[msg.sender].partnerRelations[insurance].sales += price;
     }
+
     /**
         Confirms a warranty
         productId: The EAN13 that identifies the product
         serialNumber: the particular product serial number
         policyNumber: the policy number of the warranty
-    **/
+    */
     function confirmWarranty(string productId, string serialNumber, string policyNumber) insuranceOnly {
         Warranty warranty = warranties[msg.sender][productId][serialNumber];
         if(warranty.status != WarrantyStatus.Created) throw;
@@ -206,20 +215,21 @@ contract Insurechain is mortal {
     }
 
     /**
-            Confirms a warranty
-            productId: The EAN13 that identifies the product
-            serialNumber: the particular product serial number
-            policyNumber: the policy number of the warranty
-        **/
-        function cancelWarranty(string productId, string serialNumber) insuranceOnly {
-            Warranty warranty = warranties[msg.sender][productId][serialNumber];
-            if(warranty.status == WarrantyStatus.Undefined) throw;
+        Confirms a warranty
+        productId: The EAN13 that identifies the product
+        serialNumber: the particular product serial number
+        policyNumber: the policy number of the warranty
+    */
+    function cancelWarranty(string productId, string serialNumber) insuranceOnly {
+        Warranty warranty = warranties[msg.sender][productId][serialNumber];
+        if(warranty.status == WarrantyStatus.Undefined) throw;
 
-            warranty.status = WarrantyStatus.Canceled;
-        }
+        warranty.status = WarrantyStatus.Canceled;
+    }
 
     function getWarranty(string productId, string serialNumber, address insurance) constant returns (uint startDate, uint endDate, WarrantyStatus status, string policyNumber) {
         Warranty warranty = warranties[insurance][productId][serialNumber];
         return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber);
     }
+    
 }
