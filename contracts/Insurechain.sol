@@ -99,9 +99,10 @@ contract Insurechain is mortal {
 
     function createInsurance(string name) {
         Insurance insurance = insurances[msg.sender];
-        if(insurance.status != InsuranceStatus.Undefined) throw;
-
+        InsuranceStatus previousStatus = insurance.status;
         insurance.status = InsuranceStatus.Requested;
+        if(previousStatus != InsuranceStatus.Undefined) throw;
+
         insurance.name = name;
         insuranceList[insuranceCount++] = msg.sender;
 
@@ -170,8 +171,6 @@ contract Insurechain is mortal {
 
         return UserRole.Undefined;
     }
-
-
     /**
         Creates a new warranty.
         productId: The EAN13 that identifies the product

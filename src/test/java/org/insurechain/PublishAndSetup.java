@@ -86,9 +86,9 @@ public class PublishAndSetup {
 
     private void initRetailers() {
         Lists.newArrayList(
-                contract.get(digitec).requestRegistration("Digitec", zurich),
-                contract.get(interdiscount).requestRegistration("Interdiscount", zurich),
-                contract.get(melectronics).requestRegistration("Melectronics", zurich));
+                contract.get(digitec).requestRegistration("Digitec", digitec),
+                contract.get(interdiscount).requestRegistration("Interdiscount", interdiscount),
+                contract.get(melectronics).requestRegistration("Melectronics", melectronics));
 
         retailers.stream().map(retailer -> contract.get(zurich).setRequestState(retailer, RegistrationState.Accepted))
                 .collect(Collectors.toList())
