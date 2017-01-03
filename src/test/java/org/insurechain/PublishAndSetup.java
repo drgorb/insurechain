@@ -3,8 +3,6 @@ package org.insurechain;
 
 import com.google.common.collect.Lists;
 import org.adridadou.ethereum.EthereumFacade;
-import static org.adridadou.ethereum.keystore.AccountProvider.*;
-
 import org.adridadou.ethereum.provider.EthereumFacadeProvider;
 import org.adridadou.ethereum.provider.EthereumJConfigs;
 import org.adridadou.ethereum.values.EthAccount;
@@ -28,6 +26,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import static org.adridadou.ethereum.keystore.AccountProvider.fromPrivateKey;
 
 /**
  * Created by davidroon on 30.12.16.
@@ -60,10 +60,11 @@ public class PublishAndSetup {
         Date startDate = Date.from(LocalDate.of(2017, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
 
-        contract.get(digitec).createWarranty("ean13","productsn",zurich, startDate, endDate,4000);
+        contract.get(digitec).createWarranty("ean13", "productsn", zurich, startDate, endDate, 4000);
         contract.get(zurich).confirmWarranty("ean13", "productsn", "policyNumber");
 
     }
+
     private void p(EthAccount account) {
         System.out.println("balance for " + account.getAddress().withLeading0x() + ":" + ethereum.getBalance(account).inEth().toString() + " Eth");
     }
@@ -97,8 +98,8 @@ public class PublishAndSetup {
 
     private void initInsurances() {
         Lists.newArrayList(contract.get(zurich).createInsurance("Zurich"),
-        contract.get(alianz).createInsurance("Alianz"),
-        contract.get(mobiliere).createInsurance("Mobiliere")).forEach(waitForFuture);
+                contract.get(alianz).createInsurance("Alianz"),
+                contract.get(mobiliere).createInsurance("Mobiliere")).forEach(waitForFuture);
 
         insurances.stream().map(insurance -> contract.get(owner).setInsuranceState(insurance, InsuranceStatus.Active)).collect(Collectors.toList())
                 .forEach(waitForFuture);
@@ -108,7 +109,7 @@ public class PublishAndSetup {
         EthAddress contractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/Insurechain.sol")), "Insurechain", owner).get();
         writeToFile(contractAddress);
         EthereumFacade.Builder<Insurechain> contractBuilder = ethereum.createContractProxy(contractAddress, Insurechain.class);
-        contract.put(owner,contractBuilder.forAccount(owner));
+        contract.put(owner, contractBuilder.forAccount(owner));
         insurances.forEach(insurance -> contract.put(insurance, contractBuilder.forAccount(insurance)));
         retailers.forEach(retailer -> contract.put(retailer, contractBuilder.forAccount(retailer)));
     }
