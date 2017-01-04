@@ -20,6 +20,7 @@ import PermissionService from './main/services/PermissionService';
 
 import EthereumHelperService from './ethereum/services/EthereumHelperService';
 import EthereumRoleService from './ethereum/services/EthereumRoleService';
+import EthereumWarrantyService from './ethereum/services/EthereumWarrantyService';
 
 import homeModule from './home/Home';
 import warrantyModule from './warranty/Warranty';
@@ -51,6 +52,7 @@ export default angular.module(appModule, [
     .factory('PermissionService', PermissionService)
     .factory('EthereumHelperService', EthereumHelperService)
     .factory('EthereumRoleService', EthereumRoleService)
+    .factory('EthereumWarrantyService', EthereumWarrantyService)
 
     .config(['$locationProvider', '$urlRouterProvider' , '$stateProvider', function($locationProvider, $urlRouterProvider, $stateProvider) {
         $locationProvider.html5Mode(true);

@@ -1,21 +1,22 @@
-import {products, retailers, manufacturers, productTypes} from '../mock/mockData';
-function WarrantyController($scope, $state) {
+function WarrantyController($scope, $state, EthereumRetailersService) {
     $scope.retailer = null;
-    $scope.manufacturer = null;
-    $scope.productType = null;
 
-    $scope.retailers = retailers;
-    $scope.manufacturers = manufacturers;
-    $scope.productTypes = productTypes;
-    $scope.products = products;
+    $scope.retailers = null;
+    $scope.products = null;
 
-    $scope.goToProduct = function (product) {
-        $state.go('app.warranty.details', {id:1});
+    EthereumRetailersService
+        .getRetailerList()
+            .then(function (retailers) {
+                $scope.retailers = retailers;
+            })
+            .catch(logError);
+
+    $scope.showManufacturer = function (address) {
+        $state.go('app.warranty.list', {retailer: address});
+    };
+
+    function logError(err) {
+        console.log(err);
     }
-
-    $scope.showList = function (retailer) {
-        $state.go('app.warranty.list');
-    }
-
 }
-export default ['$scope','$state', WarrantyController]
+export default ['$scope','$state' , 'EthereumRetailersService', WarrantyController]

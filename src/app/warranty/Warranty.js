@@ -4,6 +4,7 @@ import angular from 'angular';
 import uirouter from 'angular-ui-router';
 
 import WarrantyController from './controllers/WarrantyController';
+import WarrantyListController from './controllers/WarrantyListController'
 import WarrantyDetailsController from './controllers/WarrantyDetailsController';
 import WarrantyCreateController from './controllers/WarrantyCreateController';
 
@@ -25,9 +26,9 @@ angular.module(warranty, [
         });
         $stateProvider.state({
             name: `${warranty}.list`,
-            url: '/product',
+            url: '/{retailer}',
             template: require('./templates/WarrantyListTemplate.html'),
-            controller: ('WarrantyController', WarrantyController)
+            controller: ('WarrantyListController', WarrantyListController)
         });
         $stateProvider.state({
             name: `${warranty}.details`,
