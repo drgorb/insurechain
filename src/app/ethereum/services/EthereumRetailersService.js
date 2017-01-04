@@ -1,6 +1,6 @@
 import {insuranceList, retailerList} from '../../shared/mock/mockData';
 
-function EthereumRetailersService ($q, $timeout, EthereumHelperService) {
+function EthereumRetailersService ($q, $timeout, EthereumInsuranceService, EthereumHelperService) {
     const insurechainContract = EthereumHelperService.insurechain;
     const toPromise = EthereumHelperService.toPromise;
     /**
@@ -36,7 +36,7 @@ function EthereumRetailersService ($q, $timeout, EthereumHelperService) {
      */
     this.setRequestStatus = (retailer, status) => EthereumHelperService.toPromise(insurechainContract.setRequestState, retailer, status);
 
-    this.getInsuranceId = () => $q.when(insuranceList);
+    this.getInsuranceId = () => EthereumInsuranceService.getInsurancesList();
 
     this.getRetailerList = (address) => {
         return $q.when(retailerList);
@@ -46,4 +46,4 @@ function EthereumRetailersService ($q, $timeout, EthereumHelperService) {
     return this;
 }
 
-export default ['$q', '$timeout', 'EthereumHelperService', EthereumRetailersService]
+export default ['$q', '$timeout','EthereumInsuranceService', 'EthereumHelperService', EthereumRetailersService]
