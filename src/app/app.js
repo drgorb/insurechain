@@ -45,7 +45,7 @@ export default angular.module(appModule, [
     insuranceModule,
     retailerModule,
     productModule,
-    warrantyModule,
+    warrantyModule
 ])
     .factory('UserService', UserService)
     .factory('PermissionService', PermissionService)
