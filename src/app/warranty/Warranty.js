@@ -25,10 +25,10 @@ angular.module(warranty, [
             controller: ('WarrantyController', WarrantyController)
         });
         $stateProvider.state({
-            name: `${warranty}.list`,
-            url: '/{retailer}',
-            template: require('./templates/WarrantyListTemplate.html'),
-            controller: ('WarrantyListController', WarrantyListController)
+            name: `${warranty}.create`,
+            url: '/create',
+            template: require('./templates/WarrantyCreateTemplate.html'),
+            controller: ('WarrantyCreateController', WarrantyCreateController)
         });
         $stateProvider.state({
             name: `${warranty}.details`,
@@ -37,10 +37,10 @@ angular.module(warranty, [
             controller: ('WarrantyDetailsController', WarrantyDetailsController)
         });
         $stateProvider.state({
-            name: `${warranty}.create`,
-            url: '/create',
-            template: require('./templates/WarrantyCreateTemplate.html'),
-            controller: ('WarrantyCreateController', WarrantyCreateController)
+            name: `${warranty}.list`,
+            url: '/{retailer}',
+            template: require('./templates/WarrantyListTemplate.html'),
+            controller: ('WarrantyListController', WarrantyListController)
         });
     }]);
 

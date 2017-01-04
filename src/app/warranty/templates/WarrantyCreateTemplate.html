@@ -1,15 +1,15 @@
 <md-card flex-gt-sm="90" flex-gt-md="80">
     <md-card-content>
-        <form name="warrantyCreateForm" ng-submit="showList()" layout="column">
+        <form name="warrantyCreateForm" ng-submit="createWarranty(warrantyCreate)" layout="column">
             <div layout="row">
                 <md-input-container>
                     <label>Select Insurance</label>
-                    <md-select name="companyInsuranceId" placeholder="Select Insurance" ng-model="warrantyCreate.insurances" required>
+                    <md-select name="insurances" placeholder="Select Insurance" ng-model="warrantyCreate.insurance" required>
                         <md-option ng-repeat="insurance in warrantyCreate.insurances" value="{{insurance.address}}">
                             {{insurance.name}}
                         </md-option>
                     </md-select>
-                    <div ng-messages="warrantyCreateForm.companyInsuranceId.$error">
+                    <div ng-messages="warrantyCreateForm.insurances.$error">
                         <div ng-message="required">This is required!</div>
                     </div>
                 </md-input-container>

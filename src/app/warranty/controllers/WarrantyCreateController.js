@@ -1,6 +1,4 @@
-import {products, retailers, manufacturers, productTypes} from '../mock/mockData';
-import {insuranceList} from '../../shared/mock/mockData'
-function WarrantyCreateController($scope) {
+function WarrantyCreateController($scope, EthereumWarrantyService) {
     $scope.warrantyCreate = {
         insurance: null,
         productManufacturer: null,
@@ -9,7 +7,22 @@ function WarrantyCreateController($scope) {
         price: null,
         startDate: new Date(),
         endDate: new Date(),
-        insurances: insuranceList,
+        insurances: null,
+    };
+
+    EthereumWarrantyService
+        .getRegisteredInsurances()
+        .then(function (insurances) {
+            $scope.warrantyCreate.insurances = insurances;
+        })
+        .catch(logError);
+
+    $scope.createWarranty = function (warranty) {
+        console.log(warranty)
+    };
+
+    function logError(err) {
+        console.log(err);
     }
 }
-export default ['$scope', WarrantyCreateController]
+export default ['$scope', 'EthereumWarrantyService', WarrantyCreateController]
