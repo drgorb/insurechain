@@ -1,0 +1,83 @@
+<md-card flex-gt-sm="90" flex-gt-md="80">
+    <md-card-content>
+        <form name="warrantyCreateForm" ng-submit="showList()" layout="column">
+            <div layout="row">
+                <md-input-container>
+                    <label>Select Insurance</label>
+                    <md-select name="companyInsuranceId" placeholder="Select Insurance" ng-model="warrantyCreate.insurances" required>
+                        <md-option ng-repeat="insurance in warrantyCreate.insurances" value="{{insurance.address}}">
+                            {{insurance.name}}
+                        </md-option>
+                    </md-select>
+                    <div ng-messages="warrantyCreateForm.companyInsuranceId.$error">
+                        <div ng-message="required">This is required!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <md-input-container>
+                    <label>Product Manufacturer</label>
+                    <input name="productManufacturer" ng-model="warrantyCreate.productManufacturer" required>
+                    <div ng-messages="warrantyCreateForm.productManufacturer.$error">
+                        <div ng-message="required">This is required!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <md-input-container>
+                    <label>Product Name</label>
+                    <input name="productName" ng-model="warrantyCreate.productName" required>
+                    <div ng-messages="warrantyCreateForm.productName.$error">
+                        <div ng-message="required">This is required!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <md-input-container>
+                    <label>Product Serial Number</label>
+                    <input name="productSerialNumber" ng-model="warrantyCreate.productSerialNumber" required>
+                    <div ng-messages="warrantyCreateForm.productSerialNumber.$error">
+                        <div ng-message="required">This is required!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <md-input-container>
+                    <label>Price</label>
+                    <input name="price" ng-model="warrantyCreate.price" required>
+                    <div ng-messages="warrantyCreateForm.price.$error">
+                        <div ng-message="required">This is required!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <md-input-container>
+                    <label>Start Date</label>
+                    <md-datepicker name="startDate" ng-model="warrantyCreate.startDate" md-placeholder="Start Date" md-open-on-focus ng-required></md-datepicker>
+                    <div ng-messages="warrantyCreateForm.startDate.$error">
+                        <div ng-message="required">This date is required!</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>End Date</label>
+                    <md-datepicker name="endDate" ng-model="warrantyCreate.endDate" md-placeholder="End Date" md-open-on-focus ng-required></md-datepicker>
+                    <div ng-messages="warrantyCreateForm.endDate.$error">
+                        <div ng-message="required">This date is required!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <md-button type="submit">
+                    Submit
+                </md-button>
+            </div>
+        </form>
+    </md-card-content>
+</md-card>

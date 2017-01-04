@@ -14,7 +14,7 @@ import RetailersEthereumService from "../ethereum/services/EthereumRetailersServ
 
 import ProductController from "./controllers/ProductController";
 
-const warranty = 'app.warranty';
+const warranty = 'app.product';
 
 angular.module(warranty, [
     uirouter
@@ -32,7 +32,7 @@ angular.module(warranty, [
     .config(['$stateProvider', function($stateProvider) {
         $stateProvider.state({
             name: warranty,
-            url: '/warranty',
+            url: 'product',
             template: require('./templates/productTemplate.html'),
             controller: ('ProductController', ProductController),
             controllerAs: 'app'

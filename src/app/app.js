@@ -20,11 +20,14 @@ import PermissionService from './main/services/PermissionService';
 
 import EthereumHelperService from './ethereum/services/EthereumHelperService';
 import EthereumRoleService from './ethereum/services/EthereumRoleService';
+import EthereumWarrantyService from './ethereum/services/EthereumWarrantyService';
 
 import homeModule from './home/Home';
-import warrantyModule from './product/Product';
+import warrantyModule from './warranty/Warranty';
 import retailerModule from './retailer/Retailer';
 import insuranceModule from './insurance/Insurance';
+import productModule from './product/Product';
+
 
 
 const appModule = 'app';
@@ -42,12 +45,14 @@ export default angular.module(appModule, [
     homeModule,
     insuranceModule,
     retailerModule,
-    warrantyModule,
+    productModule,
+    warrantyModule
 ])
     .factory('UserService', UserService)
     .factory('PermissionService', PermissionService)
     .factory('EthereumHelperService', EthereumHelperService)
     .factory('EthereumRoleService', EthereumRoleService)
+    .factory('EthereumWarrantyService', EthereumWarrantyService)
 
     .config(['$locationProvider', '$urlRouterProvider' , '$stateProvider', function($locationProvider, $urlRouterProvider, $stateProvider) {
         $locationProvider.html5Mode(true);
