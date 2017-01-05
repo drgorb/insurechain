@@ -3,15 +3,11 @@ package org.insurechain;
 import org.adridadou.ethereum.EthereumFacade;
 import org.adridadou.ethereum.provider.PrivateEthereumFacadeProvider;
 import org.adridadou.ethereum.provider.PrivateNetworkConfig;
-import org.adridadou.ethereum.provider.StandaloneEthereumFacadeProvider;
 import org.adridadou.ethereum.values.EthAccount;
 import org.adridadou.ethereum.values.EthAddress;
 import org.adridadou.ethereum.values.SoliditySource;
 import org.adridadou.exception.EthereumApiException;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 
 import java.io.File;
@@ -31,7 +27,6 @@ import static org.junit.Assert.*;
  */
 public class InsurechainTest {
 
-    private final StandaloneEthereumFacadeProvider provider = new StandaloneEthereumFacadeProvider();
     private final EthAccount mainAccount = from("mainAccount");
     private final EthAccount insuranceAccount = from("insuranceAccount");
     private final EthAccount retailerAccount = from("retailerAccount");
@@ -53,6 +48,11 @@ public class InsurechainTest {
     public final ExpectedException exception = ExpectedException.none();
 
     public InsurechainTest() throws Exception {
+    }
+
+    @After
+    public void after() {
+        ethereum.shutdown();
     }
 
     @Before
@@ -130,7 +130,7 @@ public class InsurechainTest {
         retailerManagerInsurance.setRequestState(retailerAccount, RegistrationState.Accepted).get();
         assertEquals(RegistrationState.Accepted, retailerManagerInsurance.getRequestState(retailerAccount, insuranceAccount));
 
-//        assertTrue((new RetailerStruct(retailerAccount, "a company name")).equals(insureChainAdmin.getRetailer(0)));
+        assertTrue((new RetailerStruct(retailerAccount.getAddress(), "a company name")).equals(insureChainContractFromAdmin.getRetailer(0)));
 
         assertEquals(UserRole.Owner, insureChainAdmin.getRole(mainAccount));
         assertEquals(UserRole.Insurance, insureChainAdmin.getRole(insuranceAccount));

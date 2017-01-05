@@ -1,15 +1,15 @@
 package org.insurechain;
 
-import org.adridadou.ethereum.values.EthAccount;
+import org.adridadou.ethereum.values.EthAddress;
 
 /**
  * Created by davidroon on 02.01.17.
  */
 public class RetailerStruct {
-    private EthAccount retailer;
+    private EthAddress retailer;
     private String companyName;
 
-    public RetailerStruct(EthAccount retailer, String companyName) {
+    public RetailerStruct(EthAddress retailer, String companyName) {
         this.retailer = retailer;
         this.companyName = companyName;
     }
