@@ -41,7 +41,13 @@ angular.module(warranty, [
             name: `${warranty}.details`,
             url: '/product/{id}',
             template: require('./templates/WarrantyDetailsTemplate.html'),
-            controller: ('WarrantyDetailsController', WarrantyDetailsController)
+            controller: ('WarrantyDetailsController', WarrantyDetailsController),
+            data: {
+                permissions: {
+                    only: ['RETAILER'],
+                    redirectTo: 'app.home'
+                }
+            }
         });
     }]);
 
