@@ -23,85 +23,27 @@ contract mortal is owned {
     }
 }
 
-contract Insurechain is mortal {
+contract stateful {
     enum RetailerStatus {Undefined, Requested, Accepted, Rejected, Terminated}
     enum InsuranceStatus {Undefined, Requested, Active, Terminated}
     enum WarrantyStatus {Undefined, Created, Confirmed, Canceled}
     enum UserRole {Undefined, Retailer, Insurance, Owner}
+}
 
-    struct PartnerRelations {
-        RetailerStatus status;
-        uint sales /*the total amount of policies sold by retailer*/;
-        uint payments /*the total amount paid by retailer*/;
-        uint claims /*the total amount the insurance has paid to the retailer in claims*/;
-    }
-
+contract InsuranceManager is owned, stateful {
     struct Insurance {
         string name;
         InsuranceStatus status;
     }
 
-    struct Retailer {
-        string companyName;
-        mapping (address=>PartnerRelations) partnerRelations /*the mapping holds the relation of the partner with each insurance company*/;
-        RetailerStatus status/*in order to easily check for the existence of a retailer the first status is also set on the retailer itself*/;
-    }
-
-    struct Claim {
-        address retailer /*in theory another retailer than the one who sold the insurance can make a claim*/;
-        uint amount;
-        string description;
-    }
-
-    struct Warranty {
-        address retailer;
-        uint startDate;
-        uint endDate;
-        string policyNumber;
-        WarrantyStatus status;
-        uint price;
-        mapping (uint => Claim) claims;
-        uint claimCount;
-    }
-
-    // mapping of insurance -> productId -> serialNumber -> Warranty
-    mapping (address=>mapping( string=>mapping( string=>Warranty ))) warranties;
-
-    mapping (address=>Retailer) retailers;
-    mapping (uint=>address) retailerList;
-    uint public retailerCount;
-
     mapping (address => Insurance) insurances;
     mapping (uint=>address) insuranceList;
     uint public insuranceCount;
-
-    event RetailerRequest(
-        string indexed companyName,
-        address retailerAddress,
-        address indexed insurance
-    );
-
-    event RetailerStatusChanged(
-        address indexed retailer,
-        address indexed insurance,
-        RetailerStatus status
-    );
 
     event InsuranceStatusChanged(
         address indexed insurance,
         InsuranceStatus status
     );
-
-    modifier insuranceOnly {
-        if(!isInsurance(msg.sender)) throw;
-        _;
-    }
-
-    modifier registeredRetailerOnly(address insurance) {
-        if(!isInsurance(insurance)) throw;
-        if(retailers[msg.sender].partnerRelations[insurance].status != RetailerStatus.Accepted) throw;
-        _;
-    }
 
     function isInsurance(address insurance) constant returns (bool) {
         return insurances[insurance].status != InsuranceStatus.Undefined;
@@ -126,10 +68,65 @@ contract Insurechain is mortal {
         insurance.status = status;
     }
 
-    function getInsurance(uint index) constant returns (string, address, InsuranceStatus) {
+    function getInsurance(uint index) constant returns (string name, address, InsuranceStatus) {
         Insurance insurance = insurances[insuranceList[index]];
         return (insurance.name, insuranceList[index], insurance.status);
     }
+
+    function getInsuranceStatus(address insuranceAddress) constant returns (InsuranceStatus) {
+        return insurances[insuranceAddress].status;
+    }
+
+}
+
+contract RetailerManager is owned, stateful {
+    InsuranceManager insuranceManager;
+
+    function RetailerManager(address _insuranceManager){
+        insuranceManager = InsuranceManager(_insuranceManager);
+    }
+    
+    function setSubContractAddresses (address _insuranceManager) ownerOnly {
+        insuranceManager = InsuranceManager(_insuranceManager);
+    }
+
+    struct PartnerRelations {
+        RetailerStatus status;
+        uint sales /*the total amount of policies sold by retailer*/;
+        uint payments /*the total amount paid by retailer*/;
+        uint claims /*the total amount the insurance has paid to the retailer in claims*/;
+    }
+
+    modifier insuranceOnly {
+        if(!isInsurance(msg.sender)) throw;
+        _;
+    }
+
+    function isInsurance(address insurance) constant returns (bool) {
+        return insuranceManager.getInsuranceStatus(insurance) != InsuranceStatus.Undefined;
+    }
+
+    struct Retailer {
+        string companyName;
+        mapping (address=>PartnerRelations) partnerRelations /*the mapping holds the relation of the partner with each insurance company*/;
+        RetailerStatus status/*in order to easily check for the existence of a retailer the first status is also set on the retailer itself*/;
+    }
+
+    mapping (address=>Retailer) retailers;
+    mapping (uint=>address) retailerList;
+    uint public retailerCount;
+
+    event RetailerRequest(
+        string indexed companyName,
+        address retailerAddress,
+        address indexed insurance
+    );
+
+    event RetailerStatusChanged(
+        address indexed retailer,
+        address indexed insurance,
+        RetailerStatus status
+    );
 
     /**
     the retailer send a transaction to request registration with an insurer
@@ -138,7 +135,7 @@ contract Insurechain is mortal {
         Retailer retailer = retailers[msg.sender];
         retailer.companyName = companyName;
         /*make sure the insurance company exists*/
-        if(insurances[insurance].status != InsuranceStatus.Active) {
+        if(insuranceManager.getInsuranceStatus(insurance) != InsuranceStatus.Active) {
             throw;
         }
         /*make sure no previous request was made*/
@@ -166,11 +163,19 @@ contract Insurechain is mortal {
         RetailerStatusChanged(retailer, msg.sender, status);
     }
 
+    function getRetailerStatus(address retailer, address insurance) returns (RetailerStatus){
+        return retailers[retailer].partnerRelations[insurance].status;
+    }
+
+    function getRetailerStatus(address retailer) returns (RetailerStatus){
+        return retailers[retailer].status;
+    }
+
     /**
     get the nth retailer in the list
     */
-    function getRetailer(uint index) constant returns (address, string) {
-        return (retailerList[index], retailers[retailerList[index]].companyName);
+    function getRetailer(uint index) constant returns (address, string, RetailerStatus) {
+        return (retailerList[index], retailers[retailerList[index]].companyName, retailers[retailerList[index]].status);
     }
 
     function getRetailerBalances(address retailer, address insurance) constant returns (uint, uint, uint) {
@@ -178,10 +183,68 @@ contract Insurechain is mortal {
         return (partnerRelation.sales, partnerRelation.payments, partnerRelation.claims);
     }
 
+    function increaseSalesBalance(address retailer, address insurance, uint price) {
+        retailers[retailer].partnerRelations[insurance].sales += price;
+    }
+
+    function increaseClaimsBalance(address retailer, address insurance, uint amount) {
+        retailers[retailer].partnerRelations[insurance].claims += amount;        
+    }
+}
+
+contract Insurechain is mortal, stateful{
+    InsuranceManager insuranceManager;
+    RetailerManager retailerManager;
+
+    function Insurechain(address _insuranceManager, address _retailerManager) {
+        insuranceManager = InsuranceManager(_insuranceManager);
+        retailerManager = RetailerManager(_retailerManager);
+    }
+
+    function setSubContractAddresses (address _insuranceManager, address _retailerManager) ownerOnly {
+        insuranceManager = InsuranceManager(_insuranceManager);
+        retailerManager = RetailerManager(_retailerManager);
+    }
+
+    struct Claim {
+        address retailer /*in theory another retailer than the one who sold the insurance can make a claim*/;
+        uint amount;
+        string description;
+    }
+
+    struct Warranty {
+        address retailer;
+        uint startDate;
+        uint endDate;
+        string policyNumber;
+        WarrantyStatus status;
+        uint price;
+        mapping (uint => Claim) claims;
+        uint claimCount;
+    }
+
+    // mapping of insurance -> productId -> serialNumber -> Warranty
+    mapping (address=>mapping( string=>mapping( string=>Warranty ))) warranties;
+
+    modifier insuranceOnly {
+        if(!isInsurance(msg.sender)) throw;
+        _;
+    }
+
+    function isInsurance(address insurance) constant returns (bool) {
+        return insuranceManager.getInsuranceStatus(insurance) != InsuranceStatus.Undefined;
+    }
+
+    modifier registeredRetailerOnly(address insurance) {
+        if(!isInsurance(insurance)) throw;
+        if(retailerManager.getRetailerStatus(msg.sender, insurance) != RetailerStatus.Accepted) throw;
+        _;
+    }
+
     function getRole(address user) constant returns (UserRole) {
         if(user == owner) return UserRole.Owner;
-        if(retailers[user].status == RetailerStatus.Accepted) return UserRole.Retailer;
-        if(insurances[user].status == InsuranceStatus.Active) return UserRole.Insurance;
+        if(retailerManager.getRetailerStatus(user) == RetailerStatus.Accepted) return UserRole.Retailer;
+        if(insuranceManager.getInsuranceStatus(user) == InsuranceStatus.Active) return UserRole.Insurance;
 
         return UserRole.Undefined;
     }
@@ -204,7 +267,7 @@ contract Insurechain is mortal {
         warranty.endDate = endDate;
         warranty.price = price;
         warranty.retailer = msg.sender;
-        retailers[msg.sender].partnerRelations[insurance].sales += price;
+        retailerManager.increaseSalesBalance(msg.sender, insurance, price);        
     }
 
     /**
@@ -255,7 +318,7 @@ contract Insurechain is mortal {
         claim.description = description;
 
         /*increase the retailer's account*/
-        retailers[msg.sender].partnerRelations[insurance].claims += amount;
+        retailerManager.increaseClaimsBalance(msg.sender, insurance, amount);
     }
 
     function getClaimCount(string productId, string serialNumber, address insurance) constant returns (uint) {
