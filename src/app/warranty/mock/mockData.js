@@ -1,5 +1,6 @@
 let products = [
     {
+        id: 1,
         manufacturer: 'Samsung',
         name: 'Galaxy Edge 7',
         productType: 'Phone',
@@ -8,6 +9,7 @@ let products = [
         description: 'It\'s a phone'
     },
     {
+        id: 2,
         manufacturer: 'Samsung',
         name: 'Galaxy Edge 8',
         productType: 'Phone',
@@ -16,6 +18,7 @@ let products = [
         description: 'It\'s a phone'
     },
     {
+        id: 3,
         manufacturer: 'Samsung',
         name: 'Galaxy Edge 9',
         productType: 'Phone',
@@ -24,6 +27,7 @@ let products = [
         description: 'It\'s a phone'
     },
     {
+        id: 4,
         manufacturer: 'Samsung',
         name: 'Galaxy Edge 10',
         productType: 'Phone',
@@ -32,6 +36,7 @@ let products = [
         description: 'It\'s a phone'
     },
     {
+        id: 5,
         manufacturer: 'Samsung',
         name: 'Galaxy Edge 11',
         productType: 'Phone',

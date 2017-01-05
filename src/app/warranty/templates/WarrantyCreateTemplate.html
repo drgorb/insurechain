@@ -47,6 +47,16 @@
 
             <div layout="row">
                 <md-input-container>
+                    <label>Product Id</label>
+                    <input name="productId" ng-model="warrantyCreate.productId" required>
+                    <div ng-messages="warrantyCreateForm.productId.$error">
+                        <div ng-message="required">This is required!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <md-input-container>
                     <label>Price</label>
                     <input name="price" ng-model="warrantyCreate.price" required>
                     <div ng-messages="warrantyCreateForm.price.$error">

@@ -25,7 +25,15 @@ function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceServic
             })
     };
     this.createWarranty = (warranty) => {
-        console.log(warranty);
+        return EthereumHelperService
+            .toPromise(insurechainContract.createWarranty,
+                warranty.productId,
+                warranty.productSerialNumber,
+                warranty.insurance,
+                warranty.startDate.getTime(),
+                warranty.endDate.getTime(),
+                warranty.price
+            );
     };
 
     return this;

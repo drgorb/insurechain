@@ -4,6 +4,7 @@ function WarrantyCreateController($scope, EthereumWarrantyService) {
         productManufacturer: null,
         productName: null,
         productSerialNumber: null,
+        productId: null,
         price: null,
         startDate: new Date(),
         endDate: new Date(),
@@ -18,7 +19,8 @@ function WarrantyCreateController($scope, EthereumWarrantyService) {
         .catch(logError);
 
     $scope.createWarranty = function (warranty) {
-        console.log(warranty)
+        EthereumWarrantyService
+            .createWarranty(warranty)
     };
 
     function logError(err) {
