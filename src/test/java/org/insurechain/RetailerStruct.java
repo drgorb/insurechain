@@ -8,10 +8,12 @@ import org.adridadou.ethereum.values.EthAddress;
 public class RetailerStruct {
     private EthAddress retailer;
     private String companyName;
+    private RetailerStatus status;
 
-    public RetailerStruct(EthAddress retailer, String companyName) {
+    public RetailerStruct(EthAddress retailer, String companyName, RetailerStatus status) {
         this.retailer = retailer;
         this.companyName = companyName;
+        this.status = status;
     }
 
     @Override

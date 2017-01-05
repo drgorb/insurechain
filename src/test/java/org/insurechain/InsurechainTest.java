@@ -130,7 +130,8 @@ public class InsurechainTest {
         retailerManagerInsurance.setRequestState(retailerAccount, RegistrationState.Accepted).get();
         assertEquals(RegistrationState.Accepted, retailerManagerInsurance.getRequestState(retailerAccount, insuranceAccount));
 
-        assertTrue((new RetailerStruct(retailerAccount.getAddress(), "a company name")).equals(insureChainContractFromAdmin.getRetailer(0)));
+        assertTrue((new RetailerStruct(retailerAccount.getAddress(), "a company name", RetailerStatus.Accepted))
+                .equals(retailerManagerInsurance.getRetailer(0)));
 
         assertEquals(UserRole.Owner, insureChainAdmin.getRole(mainAccount));
         assertEquals(UserRole.Insurance, insureChainAdmin.getRole(insuranceAccount));

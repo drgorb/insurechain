@@ -1,3 +1,3 @@
 package org.insurechain;
 
-public enum InsuranceStatus {Undefined, Requested, Active, Terminated}
+public enum RetailerStatus {Undefined, Requested, Accepted, Rejected, Terminated}
