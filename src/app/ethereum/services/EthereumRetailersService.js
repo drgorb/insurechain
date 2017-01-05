@@ -11,7 +11,7 @@ function EthereumRetailersService ($q, $timeout, EthereumInsuranceService, Ether
      */
     this.requestRegistration = (companyName, insurance) => {
         console.log ('requesting registration for ', companyName);
-        return toPromise(insurechainContract.requestRegistration, companyName, insurance);
+        return EthereumHelperService.toPromise(insurechainContract.requestRegistration, companyName, insurance);
     };
 
     this.getRegistrationStatus = (insurance) => {
