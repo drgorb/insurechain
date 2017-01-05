@@ -35,19 +35,19 @@ angular.module(warranty, [
             name: `${warranty}.create`,
             url: '/create',
             template: require('./templates/WarrantyCreateTemplate.html'),
-            controller: ('WarrantyCreateController', WarrantyCreateController)
-        });
-        $stateProvider.state({
-            name: `${warranty}.details`,
-            url: '/product/{id}',
-            template: require('./templates/WarrantyDetailsTemplate.html'),
-            controller: ('WarrantyDetailsController', WarrantyDetailsController),
+            controller: ('WarrantyCreateController', WarrantyCreateController),
             data: {
                 permissions: {
                     only: ['RETAILER'],
                     redirectTo: 'app.home'
                 }
             }
+        });
+        $stateProvider.state({
+            name: `${warranty}.details`,
+            url: '/product/{id}',
+            template: require('./templates/WarrantyDetailsTemplate.html'),
+            controller: ('WarrantyDetailsController', WarrantyDetailsController)
         });
     }]);
 
