@@ -47,7 +47,19 @@ public class PublishAndSetup {
     private final List<EthAccount> insurances = Lists.newArrayList(alianz, zurich, mobiliere);
     private final List<EthAccount> retailers = Lists.newArrayList(digitec, interdiscount, melectronics);
 
-    private final Map<EthAccount, Insurechain> contract = new HashMap<>();
+    private class Contracts {
+        public Insurechain ic;
+        public InsuranceManager im;
+        public RetailerManager rm;
+
+        public Contracts(Insurechain ic, InsuranceManager im, RetailerManager rm) {
+            this.ic = ic;
+            this.im = im;
+            this.rm = rm;
+        }
+    }
+
+    private final Map<EthAccount, Contracts> contract = new HashMap<>();
     private EthereumFacade ethereum;
 
     @Test
@@ -60,8 +72,8 @@ public class PublishAndSetup {
         Date startDate = Date.from(LocalDate.of(2017, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
 
-        contract.get(digitec).createWarranty("ean13", "productsn", zurich, startDate, endDate, 4000);
-        contract.get(zurich).confirmWarranty("ean13", "productsn", "policyNumber");
+        contract.get(digitec).ic.createWarranty("ean13", "productsn", zurich, startDate, endDate, 4000);
+        contract.get(zurich).ic.confirmWarranty("ean13", "productsn", "policyNumber");
 
     }
 
@@ -87,31 +99,44 @@ public class PublishAndSetup {
 
     private void initRetailers() {
         Lists.newArrayList(
-                contract.get(digitec).requestRegistration("Digitec", digitec),
-                contract.get(interdiscount).requestRegistration("Interdiscount", interdiscount),
-                contract.get(melectronics).requestRegistration("Melectronics", melectronics));
+                contract.get(digitec).rm.requestRegistration("Digitec", zurich),
+                contract.get(interdiscount).rm.requestRegistration("Interdiscount", zurich),
+                contract.get(melectronics).rm.requestRegistration("Melectronics", zurich));
 
-        retailers.stream().map(retailer -> contract.get(zurich).setRequestState(retailer, RegistrationState.Accepted))
+        retailers.stream().map(retailer -> contract.get(zurich).rm.setRequestState(retailer, RegistrationState.Accepted))
                 .collect(Collectors.toList())
                 .forEach(waitForFuture);
     }
 
     private void initInsurances() {
-        Lists.newArrayList(contract.get(zurich).createInsurance("Zurich"),
-                contract.get(alianz).createInsurance("Alianz"),
-                contract.get(mobiliere).createInsurance("Mobiliere")).forEach(waitForFuture);
+        Lists.newArrayList(contract.get(zurich).im.createInsurance("Zurich"),
+                contract.get(alianz).im.createInsurance("Alianz"),
+                contract.get(mobiliere).im.createInsurance("Mobiliere")).forEach(waitForFuture);
 
-        insurances.stream().map(insurance -> contract.get(owner).setInsuranceState(insurance, InsuranceStatus.Active)).collect(Collectors.toList())
+        insurances.stream().map(insurance -> contract.get(owner).im
+                .setInsuranceState(insurance, InsuranceStatus.Active)).collect(Collectors.toList())
                 .forEach(waitForFuture);
     }
 
     private void initContractInterfaces() throws InterruptedException, ExecutionException, IOException {
-        EthAddress contractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/Insurechain.sol")), "Insurechain", owner).get();
-        writeToFile(contractAddress);
-        EthereumFacade.Builder<Insurechain> contractBuilder = ethereum.createContractProxy(contractAddress, Insurechain.class);
-        contract.put(owner, contractBuilder.forAccount(owner));
-        insurances.forEach(insurance -> contract.put(insurance, contractBuilder.forAccount(insurance)));
-        retailers.forEach(retailer -> contract.put(retailer, contractBuilder.forAccount(retailer)));
+        EthAddress icContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "Insurechain", owner).get();
+        EthAddress imContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "Insurechain", owner).get();
+        EthAddress rmContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "Insurechain", owner).get();
+        writeToFile(icContractAddress);
+
+        EthereumFacade.Builder<Insurechain> icContractBuilder = ethereum.createContractProxy(icContractAddress, Insurechain.class);
+        EthereumFacade.Builder<InsuranceManager> imContractBuilder = ethereum.createContractProxy(imContractAddress, InsuranceManager.class);
+        EthereumFacade.Builder<RetailerManager> rmContractBuilder = ethereum.createContractProxy(rmContractAddress, RetailerManager.class);
+
+        contract.put(owner, new Contracts(icContractBuilder.forAccount(owner),
+                imContractBuilder.forAccount(owner),
+                rmContractBuilder.forAccount(owner)));
+        insurances.forEach(insurance -> contract.put(insurance, new Contracts(icContractBuilder.forAccount(insurance),
+                imContractBuilder.forAccount(insurance),
+                rmContractBuilder.forAccount(insurance))));
+        retailers.forEach(retailer -> contract.put(retailer, new Contracts(icContractBuilder.forAccount(retailer),
+                imContractBuilder.forAccount(retailer),
+                rmContractBuilder.forAccount(retailer))));
     }
 
     private void writeToFile(EthAddress contractAddress) throws IOException {
