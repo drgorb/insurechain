@@ -1,19 +1,4 @@
-function InsuranceCreateController(EthereumInsuranceService, $scope) {
-    $scope.insurance = {
-        insuranceId: '',
-        insuranceAddress: '',
-        insuranceName: ''
-    }
+function InsuranceCreateController($scope) {
 
-    $scope.sendRequest = function(insurance) {
-        EthereumInsuranceService
-            .regsiterInsurance(insurance.insuranceName)
-            .then(function (result) {
-                $scope.showToast(result)
-            })
-            .catch(function (err) {
-                $scope.showToast(err)
-            })
-    }
 }
-export default ['EthereumInsuranceService', '$scope', InsuranceCreateController]
+export default ['$scope', InsuranceCreateController]

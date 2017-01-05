@@ -2,7 +2,7 @@ function WarrantyListController($scope, $state, $stateParams, EthereumWarrantySe
     $scope.products = null;
 
     EthereumWarrantyService
-        .getAllProducts($stateParams.retailer)
+        .getAllProducts()
         .then(function (products) {
             $scope.products = products;
         })

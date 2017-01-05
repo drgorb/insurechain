@@ -6,9 +6,9 @@ function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceServic
     const insurechainContract = EthereumHelperService.insurechain;
 
     this.getRetailerList = (insurance) => $q.when(retailerList);
-    this.getAllProducts = (retailer) => $q.when(products);
-    this.getProduct = (product) => {
-        let elem = _.findWhere(products, {'serial': product});
+    this.getAllProducts = () => $q.when(products);
+    this.getProduct = (serial) => {
+        let elem = _.findWhere(products, {'serial': serial});
         const defer = $q.defer ();
         if(elem) {
             defer.resolve(elem);

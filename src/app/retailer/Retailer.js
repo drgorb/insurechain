@@ -8,6 +8,8 @@ import RetailerController from "./controllers/RetailerController";
 import RetailerCreateController from "./controllers/RetailerCreateController";
 import RetailerConfirmationController from "./controllers/RetailerConfirmationController";
 
+import RetailerCreateComponent from './components/retailerCreate/RetailerCreateComponent';
+
 import EthereumRetailersService from "../ethereum/services/EthereumRetailersService";
 
 
@@ -17,41 +19,44 @@ angular.module(retailer, [
     uirouter,
     ngAria,
 ])
+    .component(RetailerCreateComponent.name, RetailerCreateComponent.config)
+
     .factory('EthereumRetailersService', EthereumRetailersService)
+
     .config(['$stateProvider', '$urlRouterProvider', '$mdToastProvider', function($stateProvider, $urlRouterProvider) {
         $urlRouterProvider.when('retailer', 'retailer.create');
         $stateProvider
             .state({
                 name: retailer,
-                url: 'retailer',
+                url: '',
                 template: require('./templates/RetailerTemplate.html'),
                 controller: ('RetailerController', RetailerController),
-                redirect: `${retailer}.create`
-            })
-            .state({
-                name: `${retailer}.create`,
-                url: '/create',
-                template: require('./templates/RetailerCreateTemplate.html'),
-                controller: ('RetailerCreateController', RetailerCreateController),
-                data: {
-                    permissions: {
-                        only: ['UNDEFINED', 'RETAILER', 'INSURANCE', 'OWNER'],
-                        redirectTo: 'app.home'
-                    }
-                }
+                redirect: `${retailer}.confirmation`
             })
             .state({
                 name: `${retailer}.confirmation`,
-                url: '/confirmation',
+                url: 'retailer',
                 template: require('./templates/RetailerConfirmationTemplate.html'),
                 controller: ('RetailerConfirmationController', RetailerConfirmationController),
                 data: {
                     permissions: {
-                        only: ['INSURANCE', 'OWNER'],
+                        only: ['INSURANCE'],
                         redirectTo: 'app.home'
                     }
                 }
             })
-    }])
+            .state({
+                name: `${retailer}.create`,
+                url: 'retailer/create',
+                template: require('./templates/RetailerCreateTemplate.html'),
+                controller: ('RetailerCreateController', RetailerCreateController),
+                data: {
+                    permissions: {
+                        only: ['UNDEFINED'],
+                        redirectTo: 'app.home'
+                    }
+                }
+            })
+    }]);
 
 export default retailer
