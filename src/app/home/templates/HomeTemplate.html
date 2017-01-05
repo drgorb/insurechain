@@ -1,7 +1,25 @@
-<ui-view layout="column" layout-fill layout-padding>
-    <md-card flex-gt-sm="90" flex-gt-md="80">
-        <md-card-content>
-            {{title}}
-        </md-card-content>
-    </md-card>
-</ui-view>
+<md-content class="md-padding" layout-xs="column" layout="row">
+    <div flex-xs flex-gt-xs="50" layout="column"  permission
+         permission-only="['UNDEFINED']">
+        <md-card>
+            <md-card-title layout="row">
+                <h3>Are you a Ratailer?</h3>
+            </md-card-title>
+            <md-card-content>
+                <retailer-create></retailer-create>
+            </md-card-content>
+        </md-card>
+    </div>
+
+    <div flex-xs flex-gt-xs="50" layout="column" permission
+         permission-only="['UNDEFINED']">
+        <md-card>
+            <md-card-title layout="row">
+                <h3>Are you a Insurer?</h3>
+            </md-card-title>
+            <md-card-content>
+                <insurance-create></insurance-create>
+            </md-card-content>
+        </md-card>
+    </div>
+</md-content>

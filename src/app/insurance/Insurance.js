@@ -7,6 +7,8 @@ import InsuranceController from './controllers/InsuranceController';
 import InsuranceCreateController from './controllers/InsuranceCreateController';
 import InsuranceConfirmationController from './controllers/InsuranceConfirmationController';
 
+import InsuranceCreateComponent from './components/insuranceCreate/InsuranceCreateComponent'
+
 import EthereumInsuranceService from '../ethereum/services/EthereumInsuranceService';
 
 const insurance = 'app.insurance';
@@ -14,6 +16,8 @@ const insurance = 'app.insurance';
 angular.module(insurance, [
     uirouter
 ])
+    .component(InsuranceCreateComponent.name, InsuranceCreateComponent.config)
+
     .factory('EthereumInsuranceService', EthereumInsuranceService)
 
     .config(['$stateProvider', '$urlRouterProvider', '$mdToastProvider', function($stateProvider, $urlRouterProvider) {
@@ -21,31 +25,31 @@ angular.module(insurance, [
         $stateProvider
             .state({
                 name: insurance,
-                url: 'insurance',
+                url: '',
                 template: require('./templates/InsuranceTemplate.html'),
                 controller: ('InsuranceController', InsuranceController),
-                redirect: `${insurance}.create`
-            })
-            .state({
-                name: `${insurance}.create`,
-                url: '/create',
-                template: require('./templates/InsuranceCreateTemplate.html'),
-                controller: ('InsuranceCreateController', InsuranceCreateController),
-                data: {
-                    permissions: {
-                        only: ['UNDEFINED', 'OWNER'],
-                        redirectTo: 'app.home'
-                    }
-                }
+                redirect: `${insurance}.confirmation`
             })
             .state({
                 name: `${insurance}.confirmation`,
-                url: '/confirmation',
+                url: 'insurance',
                 template: require('./templates/InsuranceConfirmationTemplate.html'),
                 controller: ('InsuranceConfirmationController', InsuranceConfirmationController),
                 data: {
                     permissions: {
                         only: ['OWNER'],
+                        redirectTo: 'app.home'
+                    }
+                }
+            })
+            .state({
+                name: `${insurance}.create`,
+                url: 'insurance/create',
+                template: require('./templates/InsuranceCreateTemplate.html'),
+                controller: ('InsuranceCreateController', InsuranceCreateController),
+                data: {
+                    permissions: {
+                        only: ['UNDEFINED'],
                         redirectTo: 'app.home'
                     }
                 }

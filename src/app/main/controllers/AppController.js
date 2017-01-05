@@ -22,13 +22,13 @@ function AppController(
             link : 'app.insurance',
             title: 'Insurance',
             icon: 'dashboard',
-            permissionRoles: ['UNDEFINED', 'OWNER']
+            permissionRoles: ['OWNER']
         },
         {
             link : 'app.retailer',
             title: 'Retailer',
             icon: 'dashboard',
-            permissionRoles: ['UNDEFINED', 'RETAILER', 'INSURANCE', 'OWNER']
+            permissionRoles: ['INSURANCE']
         },
         {
             link : 'app.warranty',

@@ -1,29 +1,10 @@
 <div layout="column">
     <md-content class="md-padding" permission
-                permission-only="['OWNER', 'RETAILER']">
+                permission-only="['RETAILER']">
         <md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
             <md-nav-item md-nav-sref="app.warranty.create" name="warranty.create">Create Warranty</md-nav-item>
         </md-nav-bar>
     </md-content>
-    <div layout-padding layout="column">
-        <md-card flex-gt-sm="90" flex-gt-md="80" style="position: relative">
-            <md-card-content>
-                <form name="warrantyForm">
-                    <md-input-container class="md-block">
-                        <label>Select Retailer</label>
-                        <md-select name="retailer" placeholder="Select Retailer" ng-model="retailer"  ng-change="showManufacturer(retailer)" required>
-                            <md-option ng-repeat="retailer in retailers" ng-value="retailer.address">
-                                {{retailer.name}}
-                            </md-option>
-                        </md-select>
-                        <div ng-messages="warrantyForm.retailer.$error">
-                            <div ng-message="required">This is required!</div>
-                        </div>
-                    </md-input-container>
-                </form>
-            </md-card-content>
-        </md-card>
-    </div>
     <ui-view layout="column" layout-padding></ui-view>
 </div>
 <warranty-search></warranty-search>

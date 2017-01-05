@@ -22,25 +22,32 @@ angular.module(warranty, [
             name: warranty,
             url: 'warranty?showSearch',
             template: require('./templates/WarrantyTemplate.html'),
-            controller: ('WarrantyController', WarrantyController)
+            controller: ('WarrantyController', WarrantyController),
+            redirect: `${warranty}.list`
+        });
+        $stateProvider.state({
+            name: `${warranty}.list`,
+            url: '',
+            template: require('./templates/WarrantyListTemplate.html'),
+            controller: ('WarrantyListController', WarrantyListController)
         });
         $stateProvider.state({
             name: `${warranty}.create`,
             url: '/create',
             template: require('./templates/WarrantyCreateTemplate.html'),
-            controller: ('WarrantyCreateController', WarrantyCreateController)
+            controller: ('WarrantyCreateController', WarrantyCreateController),
+            data: {
+                permissions: {
+                    only: ['RETAILER'],
+                    redirectTo: 'app.home'
+                }
+            }
         });
         $stateProvider.state({
             name: `${warranty}.details`,
             url: '/product/{id}',
             template: require('./templates/WarrantyDetailsTemplate.html'),
             controller: ('WarrantyDetailsController', WarrantyDetailsController)
-        });
-        $stateProvider.state({
-            name: `${warranty}.list`,
-            url: '/{retailer}',
-            template: require('./templates/WarrantyListTemplate.html'),
-            controller: ('WarrantyListController', WarrantyListController)
         });
     }]);
 
