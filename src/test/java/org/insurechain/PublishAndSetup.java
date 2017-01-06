@@ -18,10 +18,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -95,6 +92,18 @@ public class PublishAndSetup {
     public void before() {
         provider.extendConfig().fastSync(true);
         ethereum = provider.create();
+/*
+        ethereum = new PrivateEthereumFacadeProvider().create(PrivateNetworkConfig.config()
+                .reset(true)
+                .initialBalance(owner, ether(100))
+                .initialBalance(alianz, ether(100))
+                .initialBalance(zurich, ether(100))
+                .initialBalance(mobiliere, ether(100))
+                .initialBalance(digitec, ether(100))
+                .initialBalance(interdiscount, ether(100))
+                .initialBalance(melectronics, ether(100))
+        );
+*/
     }
 
     private void initRetailers() {
@@ -103,9 +112,13 @@ public class PublishAndSetup {
                 contract.get(interdiscount).rm.requestRegistration("Interdiscount", zurich),
                 contract.get(melectronics).rm.requestRegistration("Melectronics", zurich));
 
-        retailers.stream().map(retailer -> contract.get(zurich).rm.setRequestState(retailer, RegistrationState.Accepted))
-                .collect(Collectors.toList())
-                .forEach(waitForFuture);
+        insurances.stream().map(insurance -> {
+                retailers.stream().map(retailer ->
+                        contract.get(insurance).rm.setRequestState(retailer, RegistrationState.Accepted))
+                        .collect(Collectors.toList())
+                        .forEach(waitForFuture);
+                return null;
+        });
     }
 
     private void initInsurances() {
@@ -120,9 +133,18 @@ public class PublishAndSetup {
 
     private void initContractInterfaces() throws InterruptedException, ExecutionException, IOException {
         EthAddress icContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "Insurechain", owner).get();
-        EthAddress imContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "Insurechain", owner).get();
-        EthAddress rmContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "Insurechain", owner).get();
-        writeToFile(icContractAddress);
+        EthAddress imContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "InsuranceManager", owner).get();
+        EthAddress rmContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "RetailerManager", owner).get();
+
+        String icJson = getJson(icContractAddress, "insureChain");
+        String imJson = getJson(imContractAddress, "insuranceManager");
+        String rmJson = getJson(rmContractAddress, "retailerManager");
+
+        String definitions = icJson + "\n" + imJson + "\n" + rmJson + "\n";
+
+        FileOutputStream contractDefinitions = new FileOutputStream(new File("src/app/contractDefinitions.js"));
+        IOUtils.write(definitions + "export {insureChain, insuranceManager, retailerManager};"
+                , contractDefinitions, StandardCharsets.UTF_8);
 
         EthereumFacade.Builder<Insurechain> icContractBuilder = ethereum.createContractProxy(icContractAddress, Insurechain.class);
         EthereumFacade.Builder<InsuranceManager> imContractBuilder = ethereum.createContractProxy(imContractAddress, InsuranceManager.class);
@@ -131,21 +153,28 @@ public class PublishAndSetup {
         contract.put(owner, new Contracts(icContractBuilder.forAccount(owner),
                 imContractBuilder.forAccount(owner),
                 rmContractBuilder.forAccount(owner)));
+        CompletableFuture<Void> setMainRel = contract.get(owner).ic.setSubContractAddresses(imContractAddress, rmContractAddress);
+        CompletableFuture<Void> setRetailerRel = contract.get(owner).rm.setSubContractAddresses(imContractAddress);
+
         insurances.forEach(insurance -> contract.put(insurance, new Contracts(icContractBuilder.forAccount(insurance),
                 imContractBuilder.forAccount(insurance),
                 rmContractBuilder.forAccount(insurance))));
         retailers.forEach(retailer -> contract.put(retailer, new Contracts(icContractBuilder.forAccount(retailer),
                 imContractBuilder.forAccount(retailer),
                 rmContractBuilder.forAccount(retailer))));
+
+        /*do not continue before these two transactions have finished*/
+        setMainRel.get();
+        setRetailerRel.get();
     }
 
-    private void writeToFile(EthAddress contractAddress) throws IOException {
-        FileOutputStream contractDefinitions = new FileOutputStream(new File("src/app/contractDefinitions.js"));
+    private String getJson(EthAddress contractAddress, String name) throws IOException {
         final String json = "{" + "abi:" + ethereum.getAbi(contractAddress).getAbi() +
                 ", address: " + "\"" + contractAddress.withLeading0x() + "\"" +
                 "}";
 
-        IOUtils.write("let insurechain = " + json + "; export {insurechain}", contractDefinitions, StandardCharsets.UTF_8);
+        ArrayList<String> retVals = new ArrayList<String>();
+        return "let " + name + " = " + json + ";";
 
     }
 
