@@ -20,9 +20,9 @@ public interface RetailerManager {
 
     Long retailerCount();
 
-    RetailerStruct getRetailer(Integer index);
+    RetailerStruct getRetailer(Integer index, EthAccount insurance);
 
-    RetailerStruct getRetailerByAddress(EthAccount retailer);
+    RetailerStruct getRetailerByAddress(EthAccount retailer, EthAccount insurance);
 
     RetailerBalance getRetailerBalances(EthAccount retailer, EthAccount insurance);
 

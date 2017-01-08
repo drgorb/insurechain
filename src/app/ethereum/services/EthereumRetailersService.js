@@ -1,4 +1,3 @@
-import {retailerList} from '../../shared/mock/mockData';
 
 function EthereumRetailersService ($q, EthereumInsuranceService, EthereumHelperService) {
     const contract = EthereumHelperService.retailerManager;
@@ -23,8 +22,23 @@ function EthereumRetailersService ($q, EthereumInsuranceService, EthereumHelperS
 
     this.getInsuranceId = () => EthereumInsuranceService.getInsurancesList();
 
-    this.getRetailerList = (address) => {
-        return $q.when(retailerList);
+    this.getRetailerList = function(insuranceAddress) {
+        return EthereumHelperService.toPromise(contract.retailerCount).then((count) => {
+            const promises = [];
+            for(let i = 0; i < count.toNumber(); i++) {
+                promises.push(EthereumHelperService.toPromise(contract.getRetailer, i, insuranceAddress));
+            }
+            return $q.all(promises);
+        }).then((retailers) => {
+            return retailers.map((retailer) => {
+                return {
+                    address: retailer[0],
+                    name: retailer[1],
+                    status: retailer[2].toNumber(),
+                    insuranceStatus: retailer[3].toNumber()
+                };
+            })
+        });
     };
 
 
