@@ -10,12 +10,16 @@ public class Warranty {
     private Date endDate;
     private WarrantyStatus status;
     private String policyNumber;
+    private Integer price;
+    private Integer claimCount;
 
-    public Warranty(Date startDate, Date endDate, WarrantyStatus status, String policyNumber) {
+    public Warranty(Date startDate, Date endDate, WarrantyStatus status, String policyNumber, Integer price, Integer claimCount) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.status = status;
         this.policyNumber = policyNumber;
+        this.price = price;
+        this.claimCount = claimCount;
     }
 
     @Override
@@ -25,18 +29,22 @@ public class Warranty {
 
         Warranty warranty = (Warranty) o;
 
-        if (startDate != null ? !startDate.equals(warranty.startDate) : warranty.startDate != null) return false;
-        if (endDate != null ? !endDate.equals(warranty.endDate) : warranty.endDate != null) return false;
+        if (!startDate.equals(warranty.startDate)) return false;
+        if (!endDate.equals(warranty.endDate)) return false;
         if (status != warranty.status) return false;
-        return policyNumber != null ? policyNumber.equals(warranty.policyNumber) : warranty.policyNumber == null;
+        if (!policyNumber.equals(warranty.policyNumber)) return false;
+        if (!price.equals(warranty.price)) return false;
+        return claimCount.equals(warranty.claimCount);
     }
 
     @Override
     public int hashCode() {
-        int result = startDate != null ? startDate.hashCode() : 0;
-        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (policyNumber != null ? policyNumber.hashCode() : 0);
+        int result = startDate.hashCode();
+        result = 31 * result + endDate.hashCode();
+        result = 31 * result + status.hashCode();
+        result = 31 * result + policyNumber.hashCode();
+        result = 31 * result + price.hashCode();
+        result = 31 * result + claimCount.hashCode();
         return result;
     }
 
@@ -47,6 +55,8 @@ public class Warranty {
                 ", endDate=" + endDate +
                 ", status=" + status +
                 ", policyNumber='" + policyNumber + '\'' +
+                ", price=" + price +
+                ", claimCount=" + claimCount +
                 '}';
     }
 }

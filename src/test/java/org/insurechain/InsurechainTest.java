@@ -147,12 +147,22 @@ public class InsurechainTest {
 
         Date startDate = Date.from(LocalDate.of(2016, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
-        insureChainRetailer.createWarranty("productId", "serialNumber", insuranceAccount, startDate, endDate, 4000).get();
-        insureChainInsurance.confirmWarranty("productId", "serialNumber", "policyNumber").get();
-        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber"), insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccount));
+        Integer warrantyPrice = insureChainRetailer.getWarrantyQuote("productId", insuranceAccount, startDate,
+                endDate, 4000);
+        insureChainRetailer.createWarranty("productId", "serialNumber", insuranceAccount, startDate,
+                endDate, 4000).get();
+        insureChainInsurance.confirmWarranty("productId", "serialNumber",
+                "policyNumber").get();
+        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 0),
+                insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccount));
 
-        insureChainInsurance.cancelWarranty("productId", "serialNumber").get();
+        assertTrue(insureChainAdmin.isRegisteredRetailer(insuranceAccount, retailerAccount));
+        insureChainRetailer.createClaim("ean13", "productSN", insuranceAccount, 200,
+                "replace device").get();
 
-        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Canceled, "policyNumber"), insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccount));
+        insureChainRetailer.cancelWarranty("productId", "serialNumber", insuranceAccount).get();
+
+        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Canceled, "policyNumber", warrantyPrice, 1),
+                insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccount));
     }
 }

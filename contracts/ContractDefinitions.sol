@@ -27,7 +27,7 @@ contract PriceCalculator {
     function getWarrantyPrice(string productId, uint startDate, uint endDate, uint productPrice) constant returns (uint) {
         uint yrs = (endDate - startDate) / 1 years;
         /*the price is allways 5% per year*/
-        return productPrice * yrs / 100;
+        return productPrice * yrs / 20;
     }
 }
 
@@ -39,7 +39,7 @@ contract stateful {
 }
 
 contract related is stateful{
-        struct PartnerRelations {
+    struct PartnerRelations {
         RetailerStatus status;
         uint sales /*the total amount of policies sold by retailer*/;
         uint payments /*the total amount paid by retailer*/;
@@ -103,6 +103,29 @@ contract InsuranceManager is owned, related {
         return insurance.priceCalculator.getWarrantyPrice(productId, startDate, endDate, productPrice);
     }
 
+    function increaseSalesBalance(address insurance, address retailer, uint amount) {
+        insurances[insurance].retailers[retailer].sales += amount;
+    }
+
+    function decreaseSalesBalance(address insurance, address retailer, uint amount) {
+        insurances[insurance].retailers[retailer].sales -= amount;
+    }
+
+    function increasePaymentsBalance(address insurance, address retailer, uint amount) {
+        insurances[insurance].retailers[retailer].payments += amount;
+    }
+
+    function decreasePaymentsBalance(address insurance, address retailer, uint amount) {
+        insurances[insurance].retailers[retailer].payments -= amount;
+    }
+
+    function increaseClaimsBalance(address insurance, address retailer, uint amount) {
+        insurances[insurance].retailers[retailer].claims += amount;
+    }
+
+    function decreaseClaimsBalance(address insurance, address retailer, uint amount) {
+        insurances[insurance].retailers[retailer].claims -= amount;
+    }
 }
 
 contract RetailerManager is owned, related {
@@ -213,8 +236,24 @@ contract RetailerManager is owned, related {
         retailers[retailer].partnerRelations[insurance].sales += price;
     }
 
+    function decreaseSalesBalance(address retailer, address insurance, uint price) {
+        retailers[retailer].partnerRelations[insurance].sales -= price;
+    }
+
+    function increasePaymentsBalance(address retailer, address insurance, uint amount) {
+        retailers[retailer].partnerRelations[insurance].payments += amount;
+    }
+
+    function decreasePaymentsBalance(address retailer, address insurance, uint amount) {
+        retailers[retailer].partnerRelations[insurance].payments -= amount;
+    }
+
     function increaseClaimsBalance(address retailer, address insurance, uint amount) {
         retailers[retailer].partnerRelations[insurance].claims += amount;
+    }
+
+    function decreaseClaimsBalance(address retailer, address insurance, uint amount) {
+        retailers[retailer].partnerRelations[insurance].claims -= amount;
     }
 }
 
@@ -263,9 +302,12 @@ contract Insurechain is mortal, stateful{
     }
 
     modifier registeredRetailerOnly(address insurance) {
-        if(!isInsurance(insurance)) throw;
-        if(retailerManager.getRetailerStatus(msg.sender, insurance) != RetailerStatus.Accepted) throw;
+        if(!isRegisteredRetailer(insurance, msg.sender)) throw;
         _;
+    }
+
+    function isRegisteredRetailer(address insurance, address retailer) constant returns (bool) {
+        return isInsurance(insurance) && retailerManager.getRetailerStatus(msg.sender, insurance) == RetailerStatus.Accepted;
     }
 
     function getRole(address user) constant returns (UserRole) {
@@ -274,6 +316,11 @@ contract Insurechain is mortal, stateful{
         if(insuranceManager.getInsuranceStatus(user) == InsuranceStatus.Active) return UserRole.Insurance;
 
         return UserRole.Undefined;
+    }
+
+    function getWarrantyQuote(string productId, address insurance, uint startDate, uint endDate, uint productPrice) 
+                              constant returns(uint warrantyPrice) {
+        return insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
     }
 
     /**
@@ -294,8 +341,9 @@ contract Insurechain is mortal, stateful{
         warranty.endDate = endDate;
         warranty.productPrice = productPrice;
         warranty.retailer = msg.sender;
-        uint price = insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
-        retailerManager.increaseSalesBalance(msg.sender, insurance, price);
+        warranty.warrantyPrice = insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
+        retailerManager.increaseSalesBalance(msg.sender, insurance, warranty.warrantyPrice);
+        insuranceManager.increaseSalesBalance(insurance, msg.sender, warranty.warrantyPrice);
     }
 
     /**
@@ -313,21 +361,25 @@ contract Insurechain is mortal, stateful{
     }
 
     /**
-        Confirms a warranty
+        Cacnels a warranty
         productId: The EAN13 that identifies the product
         serialNumber: the particular product serial number
         policyNumber: the policy number of the warranty
     */
-    function cancelWarranty(string productId, string serialNumber) insuranceOnly {
-        Warranty warranty = warranties[msg.sender][productId][serialNumber];
-        if(warranty.status == WarrantyStatus.Undefined) throw;
+    function cancelWarranty(string productId, string serialNumber, address insuranceAddress) registeredRetailerOnly(insuranceAddress) {
+        Warranty warranty = warranties[insuranceAddress][productId][serialNumber];
+        /*a warranty can only be canceled if it exists and no claims have been made*/
+        if(warranty.status == WarrantyStatus.Undefined || warranty.claimCount > 0) throw;
 
         warranty.status = WarrantyStatus.Canceled;
+        retailerManager.decreaseSalesBalance(msg.sender, insuranceAddress, warranty.warrantyPrice);
+        insuranceManager.decreaseSalesBalance(insuranceAddress, msg.sender, warranty.warrantyPrice);
     }
 
-    function getWarranty(string productId, string serialNumber, address insurance) constant returns (uint startDate, uint endDate, WarrantyStatus status, string policyNumber) {
+    function getWarranty(string productId, string serialNumber, address insurance) constant returns (uint startDate, uint endDate, WarrantyStatus status, 
+                         string policyNumber, uint warrantyPrice, uint claimCount) {
         Warranty warranty = warranties[insurance][productId][serialNumber];
-        return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber);
+        return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.warrantyPrice, warranty.claimCount);
     }
 
     /**
@@ -347,13 +399,10 @@ contract Insurechain is mortal, stateful{
 
         /*increase the retailer's account*/
         retailerManager.increaseClaimsBalance(msg.sender, insurance, amount);
+        insuranceManager.increaseClaimsBalance(insurance, msg.sender, amount);
     }
 
-    function getClaimCount(string productId, string serialNumber, address insurance) constant returns (uint) {
-        warranties[insurance][productId][serialNumber].claimCount;
-    }
-
-    function getClaim(string productId, string serialNumber, address insurance, uint idx) constant returns (address, uint, string) {
+    function getClaim(string productId, string serialNumber, address insurance, uint idx) constant returns (address retailer, uint amount, string description) {
         Claim claim = warranties[insurance][productId][serialNumber].claims[idx];
         return (claim.retailer, claim.amount, claim.description);
     }
