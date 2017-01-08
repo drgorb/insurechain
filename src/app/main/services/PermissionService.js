@@ -8,6 +8,14 @@ function PermissionService(PermRoleStore) {
                     'INSURANCE': ['UserService', '$rootScope', (UserService, $rootScope) => UserService.checkRole(2, $rootScope.userRole)],
                     'OWNER': ['UserService', '$rootScope', (UserService, $rootScope) => UserService.checkRole(3, $rootScope.userRole)]
                 });
+        },
+        getUserRoleName: function(userRole) {
+            switch(userRole) {
+                case 0 : return 'UNDEFINED';
+                case 1 : return 'RETAILER';
+                case 2 : return 'INSURANCE';
+                case 3 : return 'OWNER';
+            }
         }
     }
 }
