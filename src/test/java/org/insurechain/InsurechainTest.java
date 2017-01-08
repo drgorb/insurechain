@@ -71,9 +71,12 @@ public class InsurechainTest {
         EthAddress insureChainAddress = ethereum.publishContract(soliditySource, "Insurechain",
                 mainAccount).get();
 
-        EthereumFacade.Builder<Insurechain> insurechainContractBuilder = ethereum.createContractProxy(insureChainAddress, Insurechain.class);
-        EthereumFacade.Builder<InsuranceManager> insuranceManagerContractBuilder = ethereum.createContractProxy(insuranceManagerAddress, InsuranceManager.class);
-        EthereumFacade.Builder<RetailerManager> retailerManagerContractBuilder = ethereum.createContractProxy(retailermanagerAddress, RetailerManager.class);
+        EthereumFacade.Builder<Insurechain> insurechainContractBuilder =
+                ethereum.createContractProxy(insureChainAddress, Insurechain.class);
+        EthereumFacade.Builder<InsuranceManager> insuranceManagerContractBuilder =
+                ethereum.createContractProxy(insuranceManagerAddress, InsuranceManager.class);
+        EthereumFacade.Builder<RetailerManager> retailerManagerContractBuilder =
+                ethereum.createContractProxy(retailermanagerAddress, RetailerManager.class);
 
         insureChainAdmin = insurechainContractBuilder.forAccount(mainAccount);
         insureChainAdmin.setSubContractAddresses(insuranceManagerAddress, retailermanagerAddress);
@@ -132,6 +135,8 @@ public class InsurechainTest {
 
         assertTrue((new RetailerStruct(retailerAccount.getAddress(), "a company name", RetailerStatus.Accepted))
                 .equals(retailerManagerInsurance.getRetailer(0)));
+        assertTrue((new RetailerStruct(retailerAccount.getAddress(), "a company name", RetailerStatus.Accepted))
+                .equals(retailerManagerInsurance.getRetailerByAddress(retailerAccount)));
 
         assertEquals(UserRole.Owner, insureChainAdmin.getRole(mainAccount));
         assertEquals(UserRole.Insurance, insureChainAdmin.getRole(insuranceAccount));

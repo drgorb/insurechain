@@ -22,6 +22,8 @@ public interface RetailerManager {
 
     RetailerStruct getRetailer(Integer index);
 
+    RetailerStruct getRetailerByAddress(EthAccount retailer);
+
     RetailerBalance getRetailerBalances(EthAccount retailer, EthAccount insurance);
 
     Boolean isInsurance(EthAccount insurance);

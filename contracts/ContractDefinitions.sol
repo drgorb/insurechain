@@ -178,6 +178,10 @@ contract RetailerManager is owned, stateful {
         return (retailerList[index], retailers[retailerList[index]].companyName, retailers[retailerList[index]].status);
     }
 
+    function getRetailerByAddress(address retailerAddress) constant returns (address, string, RetailerStatus) {
+        return (retailerAddress, retailers[retailerAddress].companyName, retailers[retailerAddress].status);
+    }
+
     function getRetailerBalances(address retailer, address insurance) constant returns (uint, uint, uint) {
         PartnerRelations partnerRelation = retailers[retailer].partnerRelations[insurance];
         return (partnerRelation.sales, partnerRelation.payments, partnerRelation.claims);
