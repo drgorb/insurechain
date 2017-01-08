@@ -3,7 +3,6 @@ function RetailerConfirmationController(EthereumRetailersService, $scope) {
     EthereumRetailersService
         .getRetailerList(web3.eth.accounts)
         .then(function(retailers) {
-            console.log(retailers);
             $scope.retailers = retailers;
         });
 

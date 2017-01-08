@@ -6,9 +6,11 @@ function AppController(
     $state,
     $interval,
     userAddress,
-    userRole)
+    userRole,
+    PermissionService)
 {
     $rootScope.userRole = userRole;
+    $rootScope.userRoleName = PermissionService.getUserRoleName(userRole);
     $scope.user = userAddress;
 
     $scope.menu = [
@@ -65,5 +67,6 @@ export default [
     '$interval',
     'userAddress',
     'userRole',
+    'PermissionService',
     AppController
 ]

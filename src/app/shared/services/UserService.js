@@ -25,7 +25,7 @@ function UserService ($q, EthereumRoleService) {
                         return EthereumRoleService.getRole(address);
                     })
                     .then(function (role) {
-                        (role.c[0] == roleID) ? defer.resolve() : defer.reject();
+                        (role.toNumber() == roleID) ? defer.resolve() : defer.reject();
                     });
             }
             return defer.promise;
