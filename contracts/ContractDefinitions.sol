@@ -93,6 +93,11 @@ contract InsuranceManager is owned, related {
         return (insurance.name, insuranceList[index], insurance.status);
     }
 
+    function getInsuranceByAddress(address insuranceAddress) constant returns (string name, address, InsuranceStatus) {
+            Insurance insurance = insurances[insuranceAddress];
+            return (insurance.name, insuranceAddress, insurance.status);
+        }
+
     function getInsuranceStatus(address insuranceAddress) constant returns (InsuranceStatus) {
         return insurances[insuranceAddress].status;
     }

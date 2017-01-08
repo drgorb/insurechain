@@ -1,5 +1,26 @@
 
 function EthereumRetailersService ($q, EthereumInsuranceService, EthereumHelperService) {
+
+    function getStatusName(status) {
+        switch(status) {
+            case 0 : return 'UNDEFINED';
+            case 1 : return 'Requested';
+            case 2 : return 'Accepted';
+            case 3 : return 'Rejected';
+            case 4 : return 'Terminated';
+        }
+    }
+
+    function mapRetailer(retailer) {
+        return {
+            address: retailer[0],
+            name: retailer[1],
+            status: retailer[2].toNumber(),
+            statusName: getStatusName(retailer[3].toNumber()),
+            insuranceStatus: retailer[3].toNumber()
+        };
+    }
+
     const contract = EthereumHelperService.retailerManager;
     /**
      * in fact this creates the partner relation between the retailer and the insurance with a status 'Requested'
@@ -22,6 +43,12 @@ function EthereumRetailersService ($q, EthereumInsuranceService, EthereumHelperS
 
     this.getInsuranceId = () => EthereumInsuranceService.getInsurancesList();
 
+    this.getRetailer = function(retailerAddress) {
+        return EthereumHelperService
+            .toPromise(contract.getRetailerByAddress, retailerAddress)
+            .then(mapRetailer);
+    };
+
     this.getRetailerList = function(insuranceAddress) {
         return EthereumHelperService.toPromise(contract.retailerCount).then((count) => {
             const promises = [];
@@ -30,18 +57,10 @@ function EthereumRetailersService ($q, EthereumInsuranceService, EthereumHelperS
             }
             return $q.all(promises);
         }).then((retailers) => {
-            return retailers.map((retailer) => {
-                return {
-                    address: retailer[0],
-                    name: retailer[1],
-                    status: retailer[2].toNumber(),
-                    insuranceStatus: retailer[3].toNumber()
-                };
-            })
+            return retailers.map(mapRetailer)
+                .filter(retailer => retailer.insuranceStatus != 0);
         });
     };
-
-
     return this;
 }
 
