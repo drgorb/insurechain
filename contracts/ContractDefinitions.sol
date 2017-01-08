@@ -25,9 +25,9 @@ contract mortal is owned {
 
 contract PriceCalculator {
     function getWarrantyPrice(string productId, uint startDate, uint endDate, uint productPrice) constant returns (uint) {
-        uint yrs = (endDate - startDate) / 360 / 86400;
+        uint yrs = (endDate - startDate) / 1 years;
         /*the price is allways 5% per year*/
-        return productPrice * 5 * yrs / 100;
+        return productPrice * yrs / 100;
     }
 }
 
@@ -111,7 +111,7 @@ contract RetailerManager is owned, related {
     function RetailerManager(address _insuranceManager){
         insuranceManager = InsuranceManager(_insuranceManager);
     }
-    
+
     function setSubContractAddresses (address _insuranceManager) ownerOnly {
         insuranceManager = InsuranceManager(_insuranceManager);
     }
@@ -193,12 +193,15 @@ contract RetailerManager is owned, related {
     /**
     get the nth retailer in the list
     */
-    function getRetailer(uint index) constant returns (address, string, RetailerStatus) {
-        return (retailerList[index], retailers[retailerList[index]].companyName, retailers[retailerList[index]].status);
+    function getRetailer(uint index, address insuranceAddress) constant returns (address, string, RetailerStatus, RetailerStatus) {
+        address retailerAddress = retailerList[index];
+        Retailer retailer = retailers[retailerAddress];
+        return (retailerAddress, retailer.companyName, retailer.status, retailer.partnerRelations[insuranceAddress].status);
     }
 
-    function getRetailerByAddress(address retailerAddress) constant returns (address, string, RetailerStatus) {
-        return (retailerAddress, retailers[retailerAddress].companyName, retailers[retailerAddress].status);
+    function getRetailerByAddress(address retailerAddress, address insuranceAddress) constant returns (address, string, RetailerStatus, RetailerStatus) {
+        Retailer retailer = retailers[retailerAddress];
+        return (retailerAddress, retailer.companyName, retailer.status, retailer.partnerRelations[insuranceAddress].status);
     }
 
     function getRetailerBalances(address retailer, address insurance) constant returns (uint, uint, uint) {
@@ -211,7 +214,7 @@ contract RetailerManager is owned, related {
     }
 
     function increaseClaimsBalance(address retailer, address insurance, uint amount) {
-        retailers[retailer].partnerRelations[insurance].claims += amount;        
+        retailers[retailer].partnerRelations[insurance].claims += amount;
     }
 }
 
@@ -292,7 +295,7 @@ contract Insurechain is mortal, stateful{
         warranty.productPrice = productPrice;
         warranty.retailer = msg.sender;
         uint price = insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
-        retailerManager.increaseSalesBalance(msg.sender, insurance, price);        
+        retailerManager.increaseSalesBalance(msg.sender, insurance, price);
     }
 
     /**

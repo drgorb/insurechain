@@ -72,11 +72,11 @@ public class InsurechainTest {
                 mainAccount).get();
 
         EthereumFacade.Builder<Insurechain> insurechainContractBuilder =
-                ethereum.createContractProxy(insureChainAddress, Insurechain.class);
+                ethereum.createContractProxy(soliditySource, "Insurechain", insureChainAddress, Insurechain.class);
         EthereumFacade.Builder<InsuranceManager> insuranceManagerContractBuilder =
-                ethereum.createContractProxy(insuranceManagerAddress, InsuranceManager.class);
+                ethereum.createContractProxy(soliditySource, "InsuranceManager", insuranceManagerAddress, InsuranceManager.class);
         EthereumFacade.Builder<RetailerManager> retailerManagerContractBuilder =
-                ethereum.createContractProxy(retailermanagerAddress, RetailerManager.class);
+                ethereum.createContractProxy(soliditySource, "RetailerManager", retailermanagerAddress, RetailerManager.class);
 
         insureChainAdmin = insurechainContractBuilder.forAccount(mainAccount);
         insureChainAdmin.setSubContractAddresses(insuranceManagerAddress, retailermanagerAddress);
@@ -136,10 +136,10 @@ public class InsurechainTest {
         retailerManagerInsurance.setRequestState(retailerAccount, RegistrationState.Accepted).get();
         assertEquals(RegistrationState.Accepted, retailerManagerInsurance.getRequestState(retailerAccount, insuranceAccount));
 
-        assertTrue((new RetailerStruct(retailerAccount.getAddress(), "a company name", RetailerStatus.Accepted))
-                .equals(retailerManagerInsurance.getRetailer(0)));
-        assertTrue((new RetailerStruct(retailerAccount.getAddress(), "a company name", RetailerStatus.Accepted))
-                .equals(retailerManagerInsurance.getRetailerByAddress(retailerAccount)));
+        assertTrue((new RetailerStruct(retailerAccount.getAddress(), "a company name", RetailerStatus.Accepted, RetailerStatus.Accepted))
+                .equals(retailerManagerInsurance.getRetailer(0, insuranceAccount )));
+        assertTrue((new RetailerStruct(retailerAccount.getAddress(), "a company name", RetailerStatus.Accepted, RetailerStatus.Accepted))
+                .equals(retailerManagerInsurance.getRetailerByAddress(retailerAccount, insuranceAccount)));
 
         assertEquals(UserRole.Owner, insureChainAdmin.getRole(mainAccount));
         assertEquals(UserRole.Insurance, insureChainAdmin.getRole(insuranceAccount));

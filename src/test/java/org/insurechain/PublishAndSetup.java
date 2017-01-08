@@ -30,6 +30,9 @@ import static org.adridadou.ethereum.keystore.AccountProvider.fromPrivateKey;
  * Created by davidroon on 30.12.16.
  */
 public class PublishAndSetup {
+
+    private final SoliditySource soliditySource = SoliditySource.from(new File("contracts/ContractDefinitions.sol"));
+
     private final EthereumFacadeProvider.Builder provider = EthereumFacadeProvider
             .forNetwork(EthereumJConfigs.ropsten());
 
@@ -135,7 +138,6 @@ public class PublishAndSetup {
     }
 
     private void initContractInterfaces() throws InterruptedException, ExecutionException, IOException {
-        SoliditySource soliditySource = SoliditySource.from(new File("contracts/ContractDefinitions.sol"));
         EthAddress imContractAddress = ethereum.publishContract(soliditySource, "InsuranceManager",
                 owner).get();
         EthAddress rmContractAddress = ethereum.publishContract(soliditySource, "RetailerManager",
@@ -145,9 +147,9 @@ public class PublishAndSetup {
         priceCalculatorAddress = ethereum.publishContract(soliditySource, "PriceCalculator",
                 owner).get();
 
-        String icJson = getJson(icContractAddress, "insureChain");
-        String imJson = getJson(imContractAddress, "insuranceManager");
-        String rmJson = getJson(rmContractAddress, "retailerManager");
+        String icJson = getJson(icContractAddress, "insureChain", "Insurechain");
+        String imJson = getJson(imContractAddress, "insuranceManager", "InsuranceManager");
+        String rmJson = getJson(rmContractAddress, "retailerManager", "RetailerManager");
 
         String definitions = icJson + "\n" + imJson + "\n" + rmJson + "\n";
 
@@ -155,9 +157,9 @@ public class PublishAndSetup {
         IOUtils.write(definitions + "export {insureChain, insuranceManager, retailerManager};"
                 , contractDefinitions, StandardCharsets.UTF_8);
 
-        EthereumFacade.Builder<Insurechain> icContractBuilder = ethereum.createContractProxy(icContractAddress, Insurechain.class);
-        EthereumFacade.Builder<InsuranceManager> imContractBuilder = ethereum.createContractProxy(imContractAddress, InsuranceManager.class);
-        EthereumFacade.Builder<RetailerManager> rmContractBuilder = ethereum.createContractProxy(rmContractAddress, RetailerManager.class);
+        EthereumFacade.Builder<Insurechain> icContractBuilder = ethereum.createContractProxy(soliditySource, "Insurechain", icContractAddress, Insurechain.class);
+        EthereumFacade.Builder<InsuranceManager> imContractBuilder = ethereum.createContractProxy(soliditySource, "InsuranceManager",imContractAddress, InsuranceManager.class);
+        EthereumFacade.Builder<RetailerManager> rmContractBuilder = ethereum.createContractProxy(soliditySource, "RetailerManager",rmContractAddress, RetailerManager.class);
 
         contract.put(owner, new Contracts(icContractBuilder.forAccount(owner),
                 imContractBuilder.forAccount(owner),
@@ -175,8 +177,8 @@ public class PublishAndSetup {
                 rmContractBuilder.forAccount(retailer))));
     }
 
-    private String getJson(EthAddress contractAddress, String name) throws IOException {
-        final String json = "{" + "abi:" + ethereum.getAbi(contractAddress).getAbi() +
+    private String getJson(EthAddress contractAddress, String name, String contractName) throws IOException {
+        final String json = "{" + "abi:" + ethereum.getAbi(soliditySource, contractName).getAbi() +
                 ", address: " + "\"" + contractAddress.withLeading0x() + "\"" +
                 "}";
 
