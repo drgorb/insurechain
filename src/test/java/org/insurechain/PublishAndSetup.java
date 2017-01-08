@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.adridadou.ethereum.keystore.AccountProvider.fromPrivateKey;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by davidroon on 30.12.16.
@@ -71,6 +72,8 @@ public class PublishAndSetup {
         initInsurances();
         initRetailers();
 
+        assertEquals(RegistrationState.Accepted, contract.get(zurich).rm.getRequestState(digitec,zurich));
+
         Date startDate = Date.from(LocalDate.of(2017, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
 
@@ -115,15 +118,13 @@ public class PublishAndSetup {
         Lists.newArrayList(
                 contract.get(digitec).rm.requestRegistration("Digitec", zurich),
                 contract.get(interdiscount).rm.requestRegistration("Interdiscount", zurich),
-                contract.get(melectronics).rm.requestRegistration("Melectronics", zurich));
+                contract.get(melectronics).rm.requestRegistration("Melectronics", zurich))
+                .forEach(waitForFuture);
 
-        insurances.stream().map(insurance -> {
-            retailers.stream().map(retailer ->
-                    contract.get(insurance).rm.setRequestState(retailer, RegistrationState.Accepted))
-                    .collect(Collectors.toList())
-                    .forEach(waitForFuture);
-            return null;
-        });
+
+        retailers.stream().map(retailer ->
+            contract.get(zurich).rm.setRequestState(retailer, RegistrationState.Accepted))
+            .forEach(waitForFuture);
     }
 
     private void initInsurances() {
