@@ -180,8 +180,7 @@ public class PublishAndSetup {
                 ", address: " + "\"" + contractAddress.withLeading0x() + "\"" +
                 "}";
 
-        ArrayList<String> retVals = new ArrayList<String>();
-        return "let " + name + " = " + json + ";";
+        return "const " + name + " = " + json + ";";
 
     }
 

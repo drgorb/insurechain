@@ -6,7 +6,7 @@ function UserService ($q, EthereumRoleService) {
     return {
         checkUser: function () {
             const defer = $q.defer ();
-            const accs = web3.eth.accounts
+            const accs = web3.eth.accounts;
             if (!accs || accs.length == 0) {
                 defer.reject('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly')
             } else {

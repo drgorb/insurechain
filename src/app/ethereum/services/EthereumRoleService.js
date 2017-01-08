@@ -1,8 +1,8 @@
-import {insurechain} from './../../contractDefinitions';
+import {insureChain} from './../../contractDefinitions';
 
 function EthereumRoleService($q) {
-    let abi = insurechain.abi;
-    let contractAddress = insurechain.address;
+    let abi = insureChain.abi;
+    let contractAddress = insureChain.address;
     let contract = web3.eth.contract (abi).at (contractAddress);
 
     return {

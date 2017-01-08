@@ -1,8 +1,7 @@
-import {insuranceList, retailerList} from '../../shared/mock/mockData';
+import {retailerList} from '../../shared/mock/mockData';
 
-function EthereumRetailersService ($q, $timeout, EthereumInsuranceService, EthereumHelperService) {
-    const insurechainContract = EthereumHelperService.insurechain;
-    const toPromise = EthereumHelperService.toPromise;
+function EthereumRetailersService ($q, EthereumInsuranceService, EthereumHelperService) {
+    const contract = EthereumHelperService.retailerManager;
     /**
      * in fact this creates the partner relation between the retailer and the insurance with a status 'Requested'
      * @param companyName
@@ -11,21 +10,7 @@ function EthereumRetailersService ($q, $timeout, EthereumInsuranceService, Ether
      */
     this.requestRegistration = (companyName, insurance) => {
         console.log ('requesting registration for ', companyName);
-        return EthereumHelperService.toPromise(insurechainContract.requestRegistration, companyName, insurance);
-    };
-
-    this.getRegistrationStatus = (insurance) => {
-        const defer = $q.defer ();
-        $timeout(function(){
-            if(insurance === "0xc62e02ddc6c1a78ca63f144253e74c85ecb76b74"){
-                defer.resolve(1)
-            } else if(insurance === "0x607aae63a7d99e0207214248b9f663e55b465766"){
-                defer.resolve(0)
-            } else {
-                defer.resolve(2)
-            }
-        }, 500);
-        return defer.promise;
+        return EthereumHelperService.toPromise(contract.requestRegistration, companyName, insurance);
     };
 
     /**
@@ -34,7 +19,7 @@ function EthereumRetailersService ($q, $timeout, EthereumInsuranceService, Ether
      * @param status the status is a number with this meaning 0 = requested, 1 = Accepted, 2 = Rejected, 3 = Terminated
      * @returns {Function}
      */
-    this.setRequestStatus = (retailer, status) => EthereumHelperService.toPromise(insurechainContract.setRequestState, retailer, status);
+    this.setRequestStatus = (retailer, status) => EthereumHelperService.toPromise(contract.setRequestState, retailer, status);
 
     this.getInsuranceId = () => EthereumInsuranceService.getInsurancesList();
 
@@ -46,4 +31,4 @@ function EthereumRetailersService ($q, $timeout, EthereumInsuranceService, Ether
     return this;
 }
 
-export default ['$q', '$timeout','EthereumInsuranceService', 'EthereumHelperService', EthereumRetailersService]
+export default ['$q','EthereumInsuranceService', 'EthereumHelperService', EthereumRetailersService]
