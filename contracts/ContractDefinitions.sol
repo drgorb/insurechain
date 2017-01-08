@@ -307,7 +307,7 @@ contract Insurechain is mortal, stateful{
     }
 
     function isRegisteredRetailer(address insurance, address retailer) constant returns (bool) {
-        return isInsurance(insurance) && retailerManager.getRetailerStatus(msg.sender, insurance) == RetailerStatus.Accepted;
+        return isInsurance(insurance) && retailerManager.getRequestState(retailer, insurance) == RetailerStatus.Accepted;
     }
 
     function getRole(address user) constant returns (UserRole) {
