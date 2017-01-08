@@ -132,9 +132,9 @@ public class PublishAndSetup {
     }
 
     private void initContractInterfaces() throws InterruptedException, ExecutionException, IOException {
-        EthAddress icContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "Insurechain", owner).get();
         EthAddress imContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "InsuranceManager", owner).get();
-        EthAddress rmContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "RetailerManager", owner).get();
+        EthAddress rmContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "RetailerManager", owner, imContractAddress).get();
+        EthAddress icContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "Insurechain", owner, imContractAddress, rmContractAddress).get();
 
         String icJson = getJson(icContractAddress, "insureChain");
         String imJson = getJson(imContractAddress, "insuranceManager");
@@ -153,8 +153,10 @@ public class PublishAndSetup {
         contract.put(owner, new Contracts(icContractBuilder.forAccount(owner),
                 imContractBuilder.forAccount(owner),
                 rmContractBuilder.forAccount(owner)));
-        CompletableFuture<Void> setMainRel = contract.get(owner).ic.setSubContractAddresses(imContractAddress, rmContractAddress);
-        CompletableFuture<Void> setRetailerRel = contract.get(owner).rm.setSubContractAddresses(imContractAddress);
+        /*
+        contract.get(owner).ic.setSubContractAddresses(imContractAddress, rmContractAddress).get();
+        contract.get(owner).rm.setSubContractAddresses(imContractAddress).get();
+        */
 
         insurances.forEach(insurance -> contract.put(insurance, new Contracts(icContractBuilder.forAccount(insurance),
                 imContractBuilder.forAccount(insurance),
@@ -162,10 +164,6 @@ public class PublishAndSetup {
         retailers.forEach(retailer -> contract.put(retailer, new Contracts(icContractBuilder.forAccount(retailer),
                 imContractBuilder.forAccount(retailer),
                 rmContractBuilder.forAccount(retailer))));
-
-        /*do not continue before these two transactions have finished*/
-        setMainRel.get();
-        setRetailerRel.get();
     }
 
     private String getJson(EthAddress contractAddress, String name) throws IOException {
