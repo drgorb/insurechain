@@ -40,6 +40,8 @@ public class PublishAndSetup {
     private final EthAccount digitec = fromPrivateKey("7952218f38b62b43c59d2e3945bc8ef611d310f4a4c022f2448e8f64aa0daaad");
     private final EthAccount interdiscount = fromPrivateKey("21a0016ac3d43606dfb7b2b728ed21979bdf70896ddd719f66a0ba0227fa9473");
     private final EthAccount melectronics = fromPrivateKey("06ae93d8c283f7c00c6549fe708026db6a5aeeb6b5b87804dd0cc4b03010c43e");
+    private EthAddress priceCalculatorAddress;
+
 
     private final List<EthAccount> insurances = Lists.newArrayList(alianz, zurich, mobiliere);
     private final List<EthAccount> retailers = Lists.newArrayList(digitec, interdiscount, melectronics);
@@ -113,18 +115,19 @@ public class PublishAndSetup {
                 contract.get(melectronics).rm.requestRegistration("Melectronics", zurich));
 
         insurances.stream().map(insurance -> {
-                retailers.stream().map(retailer ->
-                        contract.get(insurance).rm.setRequestState(retailer, RegistrationState.Accepted))
-                        .collect(Collectors.toList())
-                        .forEach(waitForFuture);
-                return null;
+            retailers.stream().map(retailer ->
+                    contract.get(insurance).rm.setRequestState(retailer, RegistrationState.Accepted))
+                    .collect(Collectors.toList())
+                    .forEach(waitForFuture);
+            return null;
         });
     }
 
     private void initInsurances() {
-        Lists.newArrayList(contract.get(zurich).im.createInsurance("Zurich"),
-                contract.get(alianz).im.createInsurance("Alianz"),
-                contract.get(mobiliere).im.createInsurance("Mobiliere")).forEach(waitForFuture);
+        Lists.newArrayList(contract.get(zurich).im.createInsurance("Zurich", priceCalculatorAddress),
+                contract.get(alianz).im.createInsurance("Alianz", priceCalculatorAddress),
+                contract.get(mobiliere).im.createInsurance("Mobiliere", priceCalculatorAddress))
+                .forEach(waitForFuture);
 
         insurances.stream().map(insurance -> contract.get(owner).im
                 .setInsuranceState(insurance, InsuranceStatus.Active)).collect(Collectors.toList())
@@ -132,9 +135,15 @@ public class PublishAndSetup {
     }
 
     private void initContractInterfaces() throws InterruptedException, ExecutionException, IOException {
-        EthAddress imContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "InsuranceManager", owner).get();
-        EthAddress rmContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "RetailerManager", owner, imContractAddress).get();
-        EthAddress icContractAddress = ethereum.publishContract(SoliditySource.from(new File("contracts/ContractDefinitions.sol")), "Insurechain", owner, imContractAddress, rmContractAddress).get();
+        SoliditySource soliditySource = SoliditySource.from(new File("contracts/ContractDefinitions.sol"));
+        EthAddress imContractAddress = ethereum.publishContract(soliditySource, "InsuranceManager",
+                owner).get();
+        EthAddress rmContractAddress = ethereum.publishContract(soliditySource, "RetailerManager",
+                owner, imContractAddress).get();
+        EthAddress icContractAddress = ethereum.publishContract(soliditySource, "Insurechain",
+                owner, imContractAddress, rmContractAddress).get();
+        priceCalculatorAddress = ethereum.publishContract(soliditySource, "PriceCalculator",
+                owner).get();
 
         String icJson = getJson(icContractAddress, "insureChain");
         String imJson = getJson(imContractAddress, "insuranceManager");

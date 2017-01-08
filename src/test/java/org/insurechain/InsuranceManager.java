@@ -1,6 +1,7 @@
 package org.insurechain;
 
 import org.adridadou.ethereum.values.EthAccount;
+import org.adridadou.ethereum.values.EthAddress;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -9,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
  */
 public interface InsuranceManager {
 
-    CompletableFuture<Void> createInsurance(String name);
+    CompletableFuture<Void> createInsurance(String name, EthAddress priceCalculator);
 
     CompletableFuture<Void> setInsuranceState(EthAccount insurance, InsuranceStatus status);
 

@@ -100,11 +100,14 @@ public class InsurechainTest {
         assertFalse(mainAccount.equals(retailerAccount));
         assertFalse(insuranceAccount.equals(retailerAccount));
 
+        EthAddress priceCalculatorAddress = ethereum.publishContract(soliditySource, "PriceCalculator",
+                mainAccount).get();
+
         assertEquals(RegistrationState.Undefined, retailerManagerRetailer.getRequestState(retailerAccount, insuranceAccount));
         assertEquals(mainAccount.getAddress(), insureChainAdmin.getOwner());
 
         /*first register and approve an insurance*/
-        insuranceManagerInsurance.createInsurance("Zurich").get();
+        insuranceManagerInsurance.createInsurance("Zurich", priceCalculatorAddress).get();
         Assert.assertEquals(1L, insuranceManagerInsurance.insuranceCount().longValue());
 
         /*now check that the retailer can not request membership of an unapproved insurance*/

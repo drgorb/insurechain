@@ -23,6 +23,14 @@ contract mortal is owned {
     }
 }
 
+contract PriceCalculator {
+    function getWarrantyPrice(string productId, uint startDate, uint endDate, uint productPrice) constant returns (uint) {
+        uint yrs = (endDate - startDate) / 360 / 86400;
+        /*the price is allways 5% per year*/
+        return productPrice * 5 * yrs / 100;
+    }
+}
+
 contract stateful {
     enum RetailerStatus {Undefined, Requested, Accepted, Rejected, Terminated}
     enum InsuranceStatus {Undefined, Requested, Active, Terminated}
@@ -30,10 +38,21 @@ contract stateful {
     enum UserRole {Undefined, Retailer, Insurance, Owner}
 }
 
-contract InsuranceManager is owned, stateful {
+contract related is stateful{
+        struct PartnerRelations {
+        RetailerStatus status;
+        uint sales /*the total amount of policies sold by retailer*/;
+        uint payments /*the total amount paid by retailer*/;
+        uint claims /*the total amount the insurance has paid to the retailer in claims*/;
+    }
+}
+
+contract InsuranceManager is owned, related {
     struct Insurance {
         string name;
         InsuranceStatus status;
+        PriceCalculator priceCalculator;
+        mapping (address=>PartnerRelations) retailers;
     }
 
     mapping (address => Insurance) insurances;
@@ -49,13 +68,14 @@ contract InsuranceManager is owned, stateful {
         return insurances[insurance].status != InsuranceStatus.Undefined;
     }
 
-    function createInsurance(string name) {
+    function createInsurance(string name, address priceCalculator) {
         Insurance insurance = insurances[msg.sender];
         InsuranceStatus previousStatus = insurance.status;
         insurance.status = InsuranceStatus.Requested;
         if(previousStatus != InsuranceStatus.Undefined) throw;
 
         insurance.name = name;
+        insurance.priceCalculator = PriceCalculator(priceCalculator);
         insuranceList[insuranceCount++] = msg.sender;
 
         InsuranceStatusChanged(msg.sender, InsuranceStatus.Requested);
@@ -77,9 +97,15 @@ contract InsuranceManager is owned, stateful {
         return insurances[insuranceAddress].status;
     }
 
+    function getWarrantyPrice(address insuranceAddress, string productId, uint startDate, uint endDate, uint productPrice) constant returns (uint) {
+        Insurance insurance = insurances[insuranceAddress];
+        if(insurance.status != InsuranceStatus.Active) throw;
+        return insurance.priceCalculator.getWarrantyPrice(productId, startDate, endDate, productPrice);
+    }
+
 }
 
-contract RetailerManager is owned, stateful {
+contract RetailerManager is owned, related {
     InsuranceManager insuranceManager;
 
     function RetailerManager(address _insuranceManager){
@@ -88,13 +114,6 @@ contract RetailerManager is owned, stateful {
     
     function setSubContractAddresses (address _insuranceManager) ownerOnly {
         insuranceManager = InsuranceManager(_insuranceManager);
-    }
-
-    struct PartnerRelations {
-        RetailerStatus status;
-        uint sales /*the total amount of policies sold by retailer*/;
-        uint payments /*the total amount paid by retailer*/;
-        uint claims /*the total amount the insurance has paid to the retailer in claims*/;
     }
 
     modifier insuranceOnly {
@@ -222,7 +241,8 @@ contract Insurechain is mortal, stateful{
         uint endDate;
         string policyNumber;
         WarrantyStatus status;
-        uint price;
+        uint productPrice;
+        uint warrantyPrice;
         mapping (uint => Claim) claims;
         uint claimCount;
     }
@@ -262,15 +282,16 @@ contract Insurechain is mortal, stateful{
         endDate: start date of the extended warranty
         price: the price in cents
     */
-    function createWarranty(string productId, string serialNumber, address insurance, uint startDate, uint endDate, uint price) registeredRetailerOnly(insurance) {
+    function createWarranty(string productId, string serialNumber, address insurance, uint startDate, uint endDate, uint productPrice) registeredRetailerOnly(insurance) {
         Warranty warranty = warranties[insurance][productId][serialNumber];
         if(warranty.status != WarrantyStatus.Undefined) throw;
 
         warranty.status = WarrantyStatus.Created;
         warranty.startDate = startDate;
         warranty.endDate = endDate;
-        warranty.price = price;
+        warranty.productPrice = productPrice;
         warranty.retailer = msg.sender;
+        uint price = insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
         retailerManager.increaseSalesBalance(msg.sender, insurance, price);        
     }
 
