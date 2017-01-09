@@ -387,6 +387,11 @@ contract Insurechain is mortal, stateful{
         return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.warrantyPrice, warranty.claimCount);
     }
 
+    function isWarrantyValid(address insurance, string productId, string serialNumber) constant returns(bool) {
+        Warranty warranty = warranties[insurance][productId][serialNumber];
+        return warranty.status != WarrantyStatus.Confirmed || warranty.startDate > now || warranty.endDate < now;
+    }
+
     /**
         create a new claim for an insured product
         productId: The EAN13 that identifies the product
@@ -395,12 +400,13 @@ contract Insurechain is mortal, stateful{
     function createClaim(string productId, string serialNumber, address insurance, uint amount, string description) registeredRetailerOnly(insurance) {
         Warranty warranty = warranties[insurance][productId][serialNumber];
         /*create only works for existing and valid warranties*/
-        if(warranty.status != WarrantyStatus.Confirmed || warranty.startDate > now || warranty.endDate < now) throw;
+        if(!isWarrantyValid(insurance, productId, serialNumber)) throw;
 
         Claim claim = warranty.claims[warranty.claimCount++];
         claim.retailer = msg.sender;
         claim.amount = amount;
         claim.description = description;
+        warranty.claims[warranty.claimCount++] = claim;
 
         /*increase the retailer's account*/
         retailerManager.increaseClaimsBalance(msg.sender, insurance, amount);
