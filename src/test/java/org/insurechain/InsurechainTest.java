@@ -160,7 +160,7 @@ public class InsurechainTest {
         assertTrue(insureChainAdmin.isWarrantyValid(insuranceAccount, "ean13", "serialNumber"));
         insureChainRetailer.createClaim("ean13", "serialNumber", insuranceAccount, 200,
                 "replace device").get();
-        assertEquals(new Claim(retailerAccount, 200, "replace device"),
+        assertEquals(new Claim(retailerAccount.getAddress(), 200, "replace device"),
                 insureChainRetailer.getClaim("ean13", "serialNumber", insuranceAccount, 0));
         assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Canceled, "policyNumber", warrantyPrice, 1),
                 insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccount));

@@ -1,4 +1,3 @@
-import {products, retailers, manufacturers, productTypes} from '../mock/mockData';
 function WarrantyDetailsController($scope, $stateParams, EthereumWarrantyService) {
 
     $scope.product = null;
