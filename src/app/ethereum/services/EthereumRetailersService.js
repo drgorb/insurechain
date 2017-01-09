@@ -74,7 +74,7 @@ function EthereumRetailersService ($q, EthereumInsuranceService, EthereumHelperS
                     return {
                         name: insurancesArr[index].name,
                         balance,
-                        totoal: balance[0]-balance[1]-balance[2]
+                        total: balance[0]-balance[1]-balance[2]
                     }
                 })
             })
