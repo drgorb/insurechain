@@ -1,16 +1,17 @@
 package org.insurechain;
 
 import org.adridadou.ethereum.values.EthAccount;
+import org.adridadou.ethereum.values.EthAddress;
 
 /**
  * Created by davidroon on 02.01.17.
  */
 public class Claim {
-    private EthAccount retailer;
+    private EthAddress retailer;
     private Integer amount;
     private String description;
 
-    public Claim(EthAccount retailer, Integer amount, String description) {
+    public Claim(EthAddress retailer, Integer amount, String description) {
         this.retailer = retailer;
         this.amount = amount;
         this.description = description;
