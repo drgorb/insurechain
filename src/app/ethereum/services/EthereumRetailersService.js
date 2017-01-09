@@ -51,6 +51,35 @@ function EthereumRetailersService ($q, EthereumInsuranceService, EthereumHelperS
                 .filter(retailer => retailer.insuranceStatus != 0);
         });
     };
+
+    this.getRetailerBalances = (retailerAddress, insuranceAddress) => EthereumHelperService.toPromise(contract.getRetailerBalances, retailerAddress, insuranceAddress);
+
+    this.getFullRetailerBalances = retailerAddress => {
+        let promises = [];
+        let insurancesArr = [];
+        return EthereumInsuranceService
+            .getRegisteredInsurances()
+            .then(function (insurances) {
+                return insurances;
+            })
+            .then(function (insurances) {
+                insurancesArr = insurances;
+                insurances.forEach(elem => {
+                    promises.push(EthereumHelperService.toPromise(contract.getRetailerBalances, retailerAddress, elem.address));
+                });
+                return $q.all(promises);
+            })
+            .then(function (balances) {
+                return balances.map(function (balance, index) {
+                    return {
+                        name: insurancesArr[index].name,
+                        balance,
+                        totoal: balance[0]-balance[1]-balance[2]
+                    }
+                })
+            })
+    };
+
     return this;
 }
 

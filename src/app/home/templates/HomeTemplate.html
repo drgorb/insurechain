@@ -12,6 +12,30 @@
 
     <div layout-xs="column" layout="row">
         <div flex-xs flex-gt-xs="50" layout="column"  permission
+             permission-only="['RETAILER']">
+            <md-card>
+                <md-card-title layout="row">
+                    <h2>Available Insurance</h2>
+                </md-card-title>
+                <md-card-content>
+                    <insurance-registered></insurance-registered>
+                </md-card-content>
+            </md-card>
+        </div>
+
+        <div flex-xs flex-gt-xs="50" layout="column"  permission
+             permission-only="['RETAILER']">
+            <md-card>
+                <md-card-title layout="row">
+                    <h2>Balances</h2>
+                </md-card-title>
+                <md-card-content>
+                    <retailer-balances></retailer-balances>
+                </md-card-content>
+            </md-card>
+        </div>
+
+        <div flex-xs flex-gt-xs="50" layout="column"  permission
              permission-only="['UNDEFINED']">
             <md-card>
                 <md-card-title layout="row">

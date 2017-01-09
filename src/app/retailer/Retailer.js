@@ -9,6 +9,7 @@ import RetailerCreateController from "./controllers/RetailerCreateController";
 import RetailerConfirmationController from "./controllers/RetailerConfirmationController";
 
 import RetailerCreateComponent from './components/retailerCreate/RetailerCreateComponent';
+import RetailerBalancesComponent from './components/retailerBalances/RetailerBalancesComponent';
 
 import EthereumRetailersService from "../ethereum/services/EthereumRetailersService";
 
@@ -20,6 +21,7 @@ angular.module(retailer, [
     ngAria,
 ])
     .component(RetailerCreateComponent.name, RetailerCreateComponent.config)
+    .component(RetailerBalancesComponent.name, RetailerBalancesComponent.config)
 
     .factory('EthereumRetailersService', EthereumRetailersService)
 

@@ -27,7 +27,7 @@ function AppController(
 
     $rootScope.userRole = userRole;
     $rootScope.userRoleName = PermissionService.getUserRoleName(userRole);
-    $scope.user = userAddress;
+    $rootScope.user = userAddress;
 
     $q.when(getUserEntity(userRole, userAddress)).then((entity) => {
         $rootScope.entity = entity;

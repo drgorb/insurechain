@@ -1,4 +1,5 @@
 import {retailerList} from '../../shared/mock/mockData';
+import _ from 'underscore';
 
 function EthereumInsuranceService (EthereumHelperService, $q) {
     const contract = EthereumHelperService.insuranceManager;
@@ -24,6 +25,13 @@ function EthereumInsuranceService (EthereumHelperService, $q) {
 
     this.getInsurance = function(insuranceAddress) {
         return EthereumHelperService.toPromise(contract.getInsuranceByAddress, insuranceAddress).then(mapInsurance);
+    };
+
+    this.getRegisteredInsurances = () => {
+        return this.getInsurancesList()
+            .then(function (insurances) {
+                return _.where(insurances, {'status': 2});
+            })
     };
 
     this.getRetailerList = (insurance) => $q.when (retailerList);

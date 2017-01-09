@@ -8,6 +8,7 @@ import InsuranceCreateController from './controllers/InsuranceCreateController';
 import InsuranceConfirmationController from './controllers/InsuranceConfirmationController';
 
 import InsuranceCreateComponent from './components/insuranceCreate/InsuranceCreateComponent'
+import InsurancRegisteredComponent from './components/insuranceRegistered/InsurancRegisteredComponent'
 
 import EthereumInsuranceService from '../ethereum/services/EthereumInsuranceService';
 
@@ -17,6 +18,7 @@ angular.module(insurance, [
     uirouter
 ])
     .component(InsuranceCreateComponent.name, InsuranceCreateComponent.config)
+    .component(InsurancRegisteredComponent.name, InsurancRegisteredComponent.config)
 
     .factory('EthereumInsuranceService', EthereumInsuranceService)
 
