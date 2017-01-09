@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -70,7 +73,11 @@ public class PublishAndSetup {
         printBalances();
         initContractInterfaces();
         initInsurances();
-        initRetailers();
+        initRetailers(zurich);
+        initRetailers(mobiliere);
+        initRetailers(alianz);
+        createWarranties();
+        createClaims();
 
         assertEquals(RegistrationState.Accepted, contract.get(zurich).rm.getRequestState(digitec,zurich));
 
@@ -114,16 +121,49 @@ public class PublishAndSetup {
 */
     }
 
-    private void initRetailers() {
+    private void createWarranties() throws ExecutionException, InterruptedException {
+        Date startDate = Date.from(LocalDate.of(2016, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
+        Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
+
+        contract.get(digitec).ic.createWarranty("iPhone6", "iPhone6SerialNumber1", zurich, startDate,
+                endDate, 4000).get();
+        contract.get(digitec).ic.createWarranty("iPhone6", "iPhone6SerialNumber2", alianz, startDate,
+                endDate, 4000).get();
+        contract.get(interdiscount).ic.createWarranty("iPhone6", "iPhone6SerialNumber3", mobiliere, startDate,
+                endDate, 4000).get();
+        contract.get(interdiscount).ic.createWarranty("iPhone6", "iPhone6SerialNumber4", zurich, startDate,
+                endDate, 4000).get();
+        contract.get(melectronics).ic.createWarranty("iPhone6", "iPhone6SerialNumber5", alianz, startDate,
+                endDate, 4000).get();
+        contract.get(melectronics).ic.createWarranty("iPhone6", "iPhone6SerialNumber6", mobiliere, startDate,
+                endDate, 4000).get();
+
+        contract.get(zurich).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber1", "iPhone6SerialNumber1Zurich").get();
+        contract.get(alianz).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber2", "iPhone6SerialNumber2Alianz").get();
+        contract.get(mobiliere).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber3", "iPhone6SerialNumber3Mobiliere").get();
+        contract.get(zurich).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber4", "iPhone6SerialNumber4Zurich").get();
+        contract.get(alianz).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber5", "iPhone6SerialNumber5Alianz").get();
+        contract.get(mobiliere).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber6", "iPhone6SerialNumber6Mobiliere").get();
+    }
+
+    private void createClaims() throws ExecutionException, InterruptedException {
+        contract.get(digitec).ic.createClaim("iPhone6", "iPhone6SerialNumber1", zurich,
+                500, "replace screen").get();
+        contract.get(interdiscount).ic.createClaim("iPhone6", "iPhone6SerialNumber3", mobiliere,
+                2000, "replace phone").get();
+        contract.get(melectronics).ic.createClaim("iPhone6", "iPhone6SerialNumber5", alianz,
+                800, "replace battery").get();
+    }
+
+    private void initRetailers(EthAccount insurance) {
         Lists.newArrayList(
-                contract.get(digitec).rm.requestRegistration("Digitec", zurich),
-                contract.get(interdiscount).rm.requestRegistration("Interdiscount", zurich),
-                contract.get(melectronics).rm.requestRegistration("Melectronics", zurich))
+                contract.get(digitec).rm.requestRegistration("Digitec", insurance),
+                contract.get(interdiscount).rm.requestRegistration("Interdiscount", insurance),
+                contract.get(melectronics).rm.requestRegistration("Melectronics", insurance))
                 .forEach(waitForFuture);
 
-
         retailers.stream().map(retailer ->
-            contract.get(zurich).rm.setRequestState(retailer, RegistrationState.Accepted))
+            contract.get(insurance).rm.setRequestState(retailer, RegistrationState.Accepted))
             .forEach(waitForFuture);
     }
 
