@@ -389,7 +389,7 @@ contract Insurechain is mortal, stateful{
 
     function isWarrantyValid(address insurance, string productId, string serialNumber) constant returns(bool) {
         Warranty warranty = warranties[insurance][productId][serialNumber];
-        return warranty.status != WarrantyStatus.Confirmed || warranty.startDate > now || warranty.endDate < now;
+        return warranty.status == WarrantyStatus.Confirmed && warranty.startDate < now && warranty.endDate > now;
     }
 
     /**
@@ -406,7 +406,6 @@ contract Insurechain is mortal, stateful{
         claim.retailer = msg.sender;
         claim.amount = amount;
         claim.description = description;
-        warranty.claims[warranty.claimCount++] = claim;
 
         /*increase the retailer's account*/
         retailerManager.increaseClaimsBalance(msg.sender, insurance, amount);

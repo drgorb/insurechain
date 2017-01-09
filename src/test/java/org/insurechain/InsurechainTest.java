@@ -157,15 +157,20 @@ public class InsurechainTest {
                 insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccount));
 
         assertTrue(insureChainAdmin.isRegisteredRetailer(insuranceAccount, retailerAccount));
-        assertTrue(insureChainAdmin.isWarrantyValid(insuranceAccount, "ean13", "serialNumber"));
-        insureChainRetailer.createClaim("ean13", "serialNumber", insuranceAccount, 200,
+        assertTrue(insureChainAdmin.isWarrantyValid(insuranceAccount, "productId", "serialNumber"));
+        insureChainRetailer.createClaim("productId", "serialNumber", insuranceAccount, 200,
                 "replace device").get();
         assertEquals(new Claim(retailerAccount.getAddress(), 200, "replace device"),
-                insureChainRetailer.getClaim("ean13", "serialNumber", insuranceAccount, 0));
-        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Canceled, "policyNumber", warrantyPrice, 1),
+                insureChainRetailer.getClaim("productId", "serialNumber", insuranceAccount, 0));
+        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 1),
                 insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccount));
 
-        insureChainRetailer.cancelWarranty("productId", "serialNumber", insuranceAccount).get();
+        try{
+            insureChainRetailer.cancelWarranty("productId", "serialNumber", insuranceAccount).get();
+            fail("no exception for canceled warranty");
+        } catch (Exception e){
+            /*everything OK*/
+        }
 
     }
 }
