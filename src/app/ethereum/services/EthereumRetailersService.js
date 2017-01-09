@@ -1,22 +1,12 @@
 
 function EthereumRetailersService ($q, EthereumInsuranceService, EthereumHelperService) {
 
-    function getStatusName(status) {
-        switch(status) {
-            case 0 : return 'UNDEFINED';
-            case 1 : return 'Requested';
-            case 2 : return 'Accepted';
-            case 3 : return 'Rejected';
-            case 4 : return 'Terminated';
-        }
-    }
-
     function mapRetailer(retailer) {
         return {
             address: retailer[0],
             name: retailer[1],
             status: retailer[2].toNumber(),
-            statusName: getStatusName(retailer[3].toNumber()),
+            statusName: EthereumHelperService.getStatusName(retailer[3].toNumber()),
             insuranceStatus: retailer[3].toNumber()
         };
     }

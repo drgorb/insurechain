@@ -7,7 +7,8 @@ function EthereumInsuranceService (EthereumHelperService, $q) {
         return {
             name: insurance[0],
             address: insurance[1],
-            status: insurance[2].toNumber()
+            status: insurance[2].toNumber(),
+            statusName: EthereumHelperService.getStatusName(insurance[2].toNumber()),
         };
     }
 

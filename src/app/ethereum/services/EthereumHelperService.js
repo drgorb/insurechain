@@ -26,6 +26,16 @@ function EthereumHelperService ($q, UserService) {
         }
     };
 
+    this.getStatusName = status => {
+        switch(status) {
+            case 0 : return 'UNDEFINED';
+            case 1 : return 'Requested';
+            case 2 : return 'Accepted';
+            case 3 : return 'Rejected';
+            case 4 : return 'Terminated';
+        }
+    };
+
     return this;
 }
 

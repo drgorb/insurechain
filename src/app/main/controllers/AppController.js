@@ -6,6 +6,7 @@ function AppController(
     $mdSidenav,
     UserService,
     $state,
+    $location,
     $interval,
     userAddress,
     userRole,
@@ -29,7 +30,7 @@ function AppController(
     $scope.user = userAddress;
 
     $q.when(getUserEntity(userRole, userAddress)).then((entity) => {
-        $scope.entity = entity;
+        $rootScope.entity = entity;
     });
 
     $scope.menu = [
@@ -71,6 +72,7 @@ function AppController(
                 if($scope.user !== user) {
                     $scope.user = user;
                     $state.reload();
+                    $state.go('app.home');
                 }
             })
     }
@@ -84,6 +86,7 @@ export default [
     '$mdSidenav',
     'UserService',
     '$state',
+    '$location',
     '$interval',
     'userAddress',
     'userRole',
