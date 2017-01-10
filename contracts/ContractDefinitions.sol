@@ -110,7 +110,7 @@ contract InsuranceManager is owned, related {
         return insurance.priceCalculator.getWarrantyPrice(productId, startDate, endDate, productPrice);
     }
 
-    function getInusranceBalance(address insuranceAddress) constant returns (uint, uint, uint ) {
+    function getInsuranceBalance(address insuranceAddress) constant returns (uint, uint, uint ) {
         Insurance insurance = insurances[insuranceAddress];
         return (insurance.sales, insurance.payments, insurance.claims);
     }
