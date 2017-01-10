@@ -33,6 +33,7 @@
                             ng-repeat="item in menu"
                             ui-sref-active="md-active"
                             ui-sref="{{item.link}}"
+                            ui-sref-opts="{reload: true}"
                             permission
                             permission-only="item.permissionRoles">
                         {{item.title}}
