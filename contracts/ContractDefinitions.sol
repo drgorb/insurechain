@@ -52,7 +52,9 @@ contract InsuranceManager is owned, related {
         string name;
         InsuranceStatus status;
         PriceCalculator priceCalculator;
-        mapping (address=>PartnerRelations) retailers;
+        uint sales;
+        uint payments;
+        uint claims;
     }
 
     mapping (address => Insurance) insurances;
@@ -108,28 +110,33 @@ contract InsuranceManager is owned, related {
         return insurance.priceCalculator.getWarrantyPrice(productId, startDate, endDate, productPrice);
     }
 
-    function increaseSalesBalance(address insurance, address retailer, uint amount) {
-        insurances[insurance].retailers[retailer].sales += amount;
+    function getInusranceBalance(address insuranceAddress) constant returns (uint, uint, uint ) {
+        Insurance insurance = insurances[insuranceAddress];
+        return (insurance.sales, insurance.payments, insurance.claims);
     }
 
-    function decreaseSalesBalance(address insurance, address retailer, uint amount) {
-        insurances[insurance].retailers[retailer].sales -= amount;
+    function increaseSalesBalance(address insurance, uint amount) {
+        insurances[insurance].sales += amount;
     }
 
-    function increasePaymentsBalance(address insurance, address retailer, uint amount) {
-        insurances[insurance].retailers[retailer].payments += amount;
+    function decreaseSalesBalance(address insurance, uint amount) {
+        insurances[insurance].sales -= amount;
     }
 
-    function decreasePaymentsBalance(address insurance, address retailer, uint amount) {
-        insurances[insurance].retailers[retailer].payments -= amount;
+    function increasePaymentsBalance(address insurance, uint amount) {
+        insurances[insurance].payments += amount;
     }
 
-    function increaseClaimsBalance(address insurance, address retailer, uint amount) {
-        insurances[insurance].retailers[retailer].claims += amount;
+    function decreasePaymentsBalance(address insurance, uint amount) {
+        insurances[insurance].payments -= amount;
     }
 
-    function decreaseClaimsBalance(address insurance, address retailer, uint amount) {
-        insurances[insurance].retailers[retailer].claims -= amount;
+    function increaseClaimsBalance(address insurance, uint amount) {
+        insurances[insurance].claims += amount;
+    }
+
+    function decreaseClaimsBalance(address insurance, uint amount) {
+        insurances[insurance].claims -= amount;
     }
 }
 
@@ -156,7 +163,12 @@ contract RetailerManager is owned, related {
     struct Retailer {
         string companyName;
         mapping (address=>PartnerRelations) partnerRelations /*the mapping holds the relation of the partner with each insurance company*/;
+        uint insuranceCount;
+        mapping (uint=>address) insurances;
         RetailerStatus status/*in order to easily check for the existence of a retailer the first status is also set on the retailer itself*/;
+        uint sales;
+        uint payments;
+        uint claims;
     }
 
     mapping (address=>Retailer) retailers;
@@ -192,9 +204,14 @@ contract RetailerManager is owned, related {
 
         retailerList[retailerCount++] = msg.sender;
         retailer.partnerRelations[insurance].status = RetailerStatus.Requested;
+        retailer.insurances[retailer.insuranceCount++] = insurance;
         retailer.status = RetailerStatus.Accepted;
         retailers[msg.sender] = retailer;
         RetailerRequest(companyName, msg.sender, insurance);
+    }
+
+    function getInsurance(address retailer, uint idx) constant returns (address) {
+        return retailers[retailer].insurances[idx];
     }
 
     function getRequestState(address retailer, address insurance) constant returns (RetailerStatus) {
@@ -237,28 +254,39 @@ contract RetailerManager is owned, related {
         return (partnerRelation.sales, partnerRelation.payments, partnerRelation.claims);
     }
 
+    function getRetailerTotalBalances(address retailerAddress) constant returns (uint, uint, uint) {
+        Retailer retailer = retailers[retailerAddress];
+        return (retailer.sales, retailer.payments, retailer.claims);
+    }
+
     function increaseSalesBalance(address retailer, address insurance, uint price) {
         retailers[retailer].partnerRelations[insurance].sales += price;
+        retailers[retailer].sales += price;
     }
 
     function decreaseSalesBalance(address retailer, address insurance, uint price) {
         retailers[retailer].partnerRelations[insurance].sales -= price;
+        retailers[retailer].sales -= price;
     }
 
     function increasePaymentsBalance(address retailer, address insurance, uint amount) {
         retailers[retailer].partnerRelations[insurance].payments += amount;
+        retailers[retailer].payments += amount;
     }
 
     function decreasePaymentsBalance(address retailer, address insurance, uint amount) {
         retailers[retailer].partnerRelations[insurance].payments -= amount;
+        retailers[retailer].payments -= amount;
     }
 
     function increaseClaimsBalance(address retailer, address insurance, uint amount) {
         retailers[retailer].partnerRelations[insurance].claims += amount;
+        retailers[retailer].claims += amount;
     }
 
     function decreaseClaimsBalance(address retailer, address insurance, uint amount) {
         retailers[retailer].partnerRelations[insurance].claims -= amount;
+        retailers[retailer].claims -= amount;
     }
 }
 
@@ -348,7 +376,7 @@ contract Insurechain is mortal, stateful{
         warranty.retailer = msg.sender;
         warranty.warrantyPrice = insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
         retailerManager.increaseSalesBalance(msg.sender, insurance, warranty.warrantyPrice);
-        insuranceManager.increaseSalesBalance(insurance, msg.sender, warranty.warrantyPrice);
+        insuranceManager.increaseSalesBalance(insurance, warranty.warrantyPrice);
     }
 
     /**
@@ -378,7 +406,7 @@ contract Insurechain is mortal, stateful{
 
         warranty.status = WarrantyStatus.Canceled;
         retailerManager.decreaseSalesBalance(msg.sender, insuranceAddress, warranty.warrantyPrice);
-        insuranceManager.decreaseSalesBalance(insuranceAddress, msg.sender, warranty.warrantyPrice);
+        insuranceManager.decreaseSalesBalance(insuranceAddress, warranty.warrantyPrice);
     }
 
     function getWarranty(string productId, string serialNumber, address insurance) constant returns (uint startDate, uint endDate, WarrantyStatus status, 
@@ -409,7 +437,7 @@ contract Insurechain is mortal, stateful{
 
         /*increase the retailer's account*/
         retailerManager.increaseClaimsBalance(msg.sender, insurance, amount);
-        insuranceManager.increaseClaimsBalance(insurance, msg.sender, amount);
+        insuranceManager.increaseClaimsBalance(insurance, amount);
     }
 
     function getClaim(string productId, string serialNumber, address insurance, uint idx) constant returns (address retailer, uint amount, string description) {

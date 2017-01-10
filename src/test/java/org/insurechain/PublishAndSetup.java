@@ -105,7 +105,7 @@ public class PublishAndSetup {
 
     @Before
     public void before() {
-        provider.extendConfig().fastSync(true);
+        provider.extendConfig().fastSync(false);
         ethereum = provider.create();
 /*
         ethereum = new PrivateEthereumFacadeProvider().create(PrivateNetworkConfig.config()
