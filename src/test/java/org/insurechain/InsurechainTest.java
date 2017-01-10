@@ -28,19 +28,23 @@ import static org.junit.Assert.*;
 public class InsurechainTest {
 
     private final EthAccount mainAccount = from("mainAccount");
-    private final EthAccount insuranceAccount = from("insuranceAccount");
+    private final EthAccount insuranceAccountA = from("insuranceAccountA");
+    private final EthAccount insuranceAccountB = from("insuranceAccountB");
     private final EthAccount retailerAccount = from("retailerAccount");
     private EthereumFacade ethereum;
     private SoliditySource soliditySource = SoliditySource.from(new File("contracts/ContractDefinitions.sol"));
 
     private Insurechain insureChainAdmin;
-    private Insurechain insureChainInsurance;
+    private Insurechain insureChainInsuranceA;
+    private Insurechain insureChainInsuranceB;
     private Insurechain insureChainRetailer;
 
     private InsuranceManager insuranceManagerAdmin;
-    private InsuranceManager insuranceManagerInsurance;
+    private InsuranceManager insuranceManagerInsuranceA;
+    private InsuranceManager insuranceManagerInsuranceB;
 
-    private RetailerManager retailerManagerInsurance;
+    private RetailerManager retailerManagerInsuranceA;
+    private RetailerManager retailerManagerInsuranceB;
     private RetailerManager retailerManagerRetailer;
 
 
@@ -60,7 +64,8 @@ public class InsurechainTest {
         ethereum = new PrivateEthereumFacadeProvider().create(PrivateNetworkConfig.config()
                 .reset(true)
                 .initialBalance(mainAccount, ether(1000000000))
-                .initialBalance(insuranceAccount, ether(1000000000))
+                .initialBalance(insuranceAccountA, ether(1000000000))
+                .initialBalance(insuranceAccountB, ether(1000000000))
                 .initialBalance(retailerAccount, ether(1000000000))
         );
         // add contracts to publish
@@ -81,92 +86,107 @@ public class InsurechainTest {
         insureChainAdmin = insurechainContractBuilder.forAccount(mainAccount);
         insureChainAdmin.setSubContractAddresses(insuranceManagerAddress, retailermanagerAddress);
 
-        insureChainInsurance = insurechainContractBuilder.forAccount(insuranceAccount);
+        insureChainInsuranceA = insurechainContractBuilder.forAccount(insuranceAccountA);
+        insureChainInsuranceB = insurechainContractBuilder.forAccount(insuranceAccountB);
         insureChainRetailer = insurechainContractBuilder.forAccount(retailerAccount);
 
         insuranceManagerAdmin = insuranceManagerContractBuilder.forAccount(mainAccount);
-        insuranceManagerInsurance = insuranceManagerContractBuilder.forAccount(insuranceAccount);
+        insuranceManagerInsuranceA = insuranceManagerContractBuilder.forAccount(insuranceAccountA);
+        insuranceManagerInsuranceB = insuranceManagerContractBuilder.forAccount(insuranceAccountB);
 
         RetailerManager retailerManagerAdmin = retailerManagerContractBuilder.forAccount(mainAccount);
         retailerManagerAdmin.setSubContractAddresses(insuranceManagerAddress);
 
-        retailerManagerInsurance = retailerManagerContractBuilder.forAccount(insuranceAccount);
+        retailerManagerInsuranceA = retailerManagerContractBuilder.forAccount(insuranceAccountA);
+        retailerManagerInsuranceB = retailerManagerContractBuilder.forAccount(insuranceAccountB);
         retailerManagerRetailer = retailerManagerContractBuilder.forAccount(retailerAccount);
     }
 
     @Test
     public void contractTest() throws ExecutionException, InterruptedException, IOException {
-        assertFalse(mainAccount.equals(insuranceAccount));
+        assertFalse(mainAccount.equals(insuranceAccountA));
         assertFalse(mainAccount.equals(retailerAccount));
-        assertFalse(insuranceAccount.equals(retailerAccount));
+        assertFalse(insuranceAccountA.equals(retailerAccount));
 
         EthAddress priceCalculatorAddress = ethereum.publishContract(soliditySource, "PriceCalculator",
                 mainAccount).get();
 
-        assertEquals(RegistrationState.Undefined, retailerManagerRetailer.getRequestState(retailerAccount, insuranceAccount));
+        assertEquals(RegistrationState.Undefined, retailerManagerRetailer.getRequestState(retailerAccount, insuranceAccountA));
         assertEquals(mainAccount.getAddress(), insureChainAdmin.getOwner());
 
         /*first register and approve an insurance*/
-        insuranceManagerInsurance.createInsurance("Zurich", priceCalculatorAddress).get();
-        Assert.assertEquals(1L, insuranceManagerInsurance.insuranceCount().longValue());
+        insuranceManagerInsuranceA.createInsurance("Zurich", priceCalculatorAddress).get();
+        Assert.assertEquals(1L, insuranceManagerInsuranceA.insuranceCount().longValue());
+
+        insuranceManagerInsuranceB.createInsurance("Alianz", priceCalculatorAddress).get();
+        Assert.assertEquals(2L, insuranceManagerInsuranceB.insuranceCount().longValue());
 
         /*now check that the retailer can not request membership of an unapproved insurance*/
         try {
-            retailerManagerRetailer.requestRegistration("a company name", insuranceAccount).get();
+            retailerManagerRetailer.requestRegistration("a company name", insuranceAccountA).get();
             fail("the call should throw an exception");
         } catch (ExecutionException e) {
             Assert.assertEquals(EthereumApiException.class, e.getCause().getClass());
         }
 
-        /*the owner approves the insurance creation*/
-        insuranceManagerAdmin.setInsuranceState(insuranceAccount, InsuranceStatus.Active).get();
-        InsuranceStruct returnValues = new InsuranceStruct("Zurich", insuranceAccount.getAddress(), InsuranceStatus.Active.ordinal());
-        Assert.assertEquals(true, returnValues.equals(insuranceManagerInsurance.getInsurance(0)));
+        /*the owner approves both insurances creation*/
+        insuranceManagerAdmin.setInsuranceState(insuranceAccountA, InsuranceStatus.Active).get();
+        insuranceManagerAdmin.setInsuranceState(insuranceAccountB, InsuranceStatus.Active).get();
+
+        InsuranceStruct returnValues = new InsuranceStruct("Zurich", insuranceAccountA.getAddress(), InsuranceStatus.Active.ordinal());
+        Assert.assertEquals(true, returnValues.equals(insuranceManagerInsuranceA.getInsurance(0)));
 
         /*the registration request should pass now*/
-        Assert.assertEquals(InsuranceStatus.Active, insuranceManagerInsurance.getInsuranceStatus(insuranceAccount));
-        Assert.assertTrue(retailerManagerRetailer.isInsurance(insuranceAccount));
-        retailerManagerRetailer.requestRegistration("a company name", insuranceAccount).get();
+        Assert.assertEquals(InsuranceStatus.Active, insuranceManagerInsuranceA.getInsuranceStatus(insuranceAccountA));
+        Assert.assertTrue(retailerManagerRetailer.isInsurance(insuranceAccountA));
+        retailerManagerRetailer.requestRegistration("a company name", insuranceAccountA).get();
         /*there is one retailer in the list now*/
         Assert.assertEquals(1L, retailerManagerRetailer.retailerCount().longValue());
         /*and the state of the request is pending approval*/
-        assertEquals(RegistrationState.Requested, retailerManagerRetailer.getRequestState(retailerAccount, insuranceAccount));
+        assertEquals(RegistrationState.Requested, retailerManagerRetailer.getRequestState(retailerAccount, insuranceAccountA));
+
+        /*now do the same for InsuranceB*/
+        retailerManagerRetailer.requestRegistration("a company name", insuranceAccountB).get();
+        /*there is still only one retailer in the list*/
+        Assert.assertEquals(1L, retailerManagerRetailer.retailerCount().longValue());
+        /*and the state of the request is pending approval*/
+        assertEquals(RegistrationState.Requested, retailerManagerRetailer.getRequestState(retailerAccount, insuranceAccountB));
 
         /*the insurer approves the registration request*/
-        retailerManagerInsurance.setRequestState(retailerAccount, RegistrationState.Accepted).get();
-        assertEquals(RegistrationState.Accepted, retailerManagerInsurance.getRequestState(retailerAccount, insuranceAccount));
+        retailerManagerInsuranceA.setRequestState(retailerAccount, RegistrationState.Accepted).get();
+        assertEquals(RegistrationState.Accepted, retailerManagerInsuranceA.getRequestState(retailerAccount, insuranceAccountA));
 
         assertTrue((new RetailerStruct(retailerAccount.getAddress(), "a company name", RetailerStatus.Accepted, RetailerStatus.Accepted))
-                .equals(retailerManagerInsurance.getRetailer(0, insuranceAccount )));
+                .equals(retailerManagerInsuranceA.getRetailer(0, insuranceAccountA)));
         assertTrue((new RetailerStruct(retailerAccount.getAddress(), "a company name", RetailerStatus.Accepted, RetailerStatus.Accepted))
-                .equals(retailerManagerInsurance.getRetailerByAddress(retailerAccount, insuranceAccount)));
+                .equals(retailerManagerInsuranceA.getRetailerByAddress(retailerAccount, insuranceAccountA)));
 
         assertEquals(UserRole.Owner, insureChainAdmin.getRole(mainAccount));
-        assertEquals(UserRole.Insurance, insureChainAdmin.getRole(insuranceAccount));
+        assertEquals(UserRole.Insurance, insureChainAdmin.getRole(insuranceAccountA));
         assertEquals(UserRole.Retailer, insureChainAdmin.getRole(retailerAccount));
 
         Date startDate = Date.from(LocalDate.of(2016, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
-        Integer warrantyPrice = insureChainRetailer.getWarrantyQuote("productId", insuranceAccount, startDate,
+        Integer warrantyPrice = insureChainRetailer.getWarrantyQuote("productId", insuranceAccountA, startDate,
                 endDate, 4000);
-        insureChainRetailer.createWarranty("productId", "serialNumber", insuranceAccount, startDate,
+        insureChainRetailer.createWarranty("productId", "serialNumber", insuranceAccountA, startDate,
                 endDate, 4000).get();
-        insureChainInsurance.confirmWarranty("productId", "serialNumber",
+        insureChainInsuranceA.confirmWarranty("productId", "serialNumber",
                 "policyNumber").get();
         assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 0),
-                insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccount));
+                insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccountA));
 
-        assertTrue(insureChainAdmin.isRegisteredRetailer(insuranceAccount, retailerAccount));
-        assertTrue(insureChainAdmin.isWarrantyValid(insuranceAccount, "productId", "serialNumber"));
-        insureChainRetailer.createClaim("productId", "serialNumber", insuranceAccount, 200,
+        assertTrue(insureChainAdmin.isRegisteredRetailer(insuranceAccountA, retailerAccount));
+        assertTrue(insureChainAdmin.isWarrantyValid(insuranceAccountA, "productId", "serialNumber"));
+        insureChainRetailer.createClaim("productId", "serialNumber", insuranceAccountA, 200,
                 "replace device").get();
         assertEquals(new Claim(retailerAccount.getAddress(), 200, "replace device"),
-                insureChainRetailer.getClaim("productId", "serialNumber", insuranceAccount, 0));
+                insureChainRetailer.getClaim("productId", "serialNumber", insuranceAccountA, 0));
         assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 1),
-                insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccount));
+                insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccountA));
 
         try{
-            insureChainRetailer.cancelWarranty("productId", "serialNumber", insuranceAccount).get();
+            insureChainRetailer.cancelWarranty("productId", "serialNumber", insuranceAccountA).get();
             fail("no exception for canceled warranty");
         } catch (Exception e){
             /*everything OK*/

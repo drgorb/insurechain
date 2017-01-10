@@ -202,11 +202,13 @@ contract RetailerManager is owned, related {
             throw;
         }
 
-        retailerList[retailerCount++] = msg.sender;
+        if(retailer.status == RetailerStatus.Undefined){
+            retailerList[retailerCount++] = msg.sender;
+        }
+
         retailer.partnerRelations[insurance].status = RetailerStatus.Requested;
         retailer.insurances[retailer.insuranceCount++] = insurance;
         retailer.status = RetailerStatus.Accepted;
-        retailers[msg.sender] = retailer;
         RetailerRequest(companyName, msg.sender, insurance);
     }
 
