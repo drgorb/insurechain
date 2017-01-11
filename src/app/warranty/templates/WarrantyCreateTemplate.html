@@ -17,6 +17,16 @@
 
             <div layout="row">
                 <md-input-container>
+                    <label>EAN 13</label>
+                    <input name="productId" ng-model="warrantyCreate.productId" required>
+                    <div ng-messages="warrantyCreateForm.productId.$error">
+                        <div ng-message="required">This is required!</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row">
+                <md-input-container>
                     <label>Product Manufacturer</label>
                     <input name="productManufacturer" ng-model="warrantyCreate.productManufacturer" required>
                     <div ng-messages="warrantyCreateForm.productManufacturer.$error">
@@ -40,16 +50,6 @@
                     <label>Product Serial Number</label>
                     <input name="productSerialNumber" ng-model="warrantyCreate.productSerialNumber" required>
                     <div ng-messages="warrantyCreateForm.productSerialNumber.$error">
-                        <div ng-message="required">This is required!</div>
-                    </div>
-                </md-input-container>
-            </div>
-
-            <div layout="row">
-                <md-input-container>
-                    <label>Product Id</label>
-                    <input name="productId" ng-model="warrantyCreate.productId" required>
-                    <div ng-messages="warrantyCreateForm.productId.$error">
                         <div ng-message="required">This is required!</div>
                     </div>
                 </md-input-container>
