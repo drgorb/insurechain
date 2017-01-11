@@ -169,9 +169,15 @@ public class InsurechainTest {
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Integer warrantyPrice = insureChainRetailer.getWarrantyQuote("productId", insuranceAccountA, startDate,
                 endDate, 4000);
+        assertEquals(Integer.valueOf(4000 * 5 / 100 * 4), warrantyPrice);
         insureChainRetailer.createWarranty("productId", "serialNumber", insuranceAccountA, startDate,
                 endDate, 4000).get();
         assertEquals(1, insureChainRetailer.warrantyCount().intValue());
+
+        insureChainRetailer.createWarranty("productId", "serialNumber2", insuranceAccountA, startDate,
+                endDate, 4000).get();
+        assertEquals(2, insureChainRetailer.warrantyCount().intValue());
+
         insureChainInsuranceA.confirmWarranty("productId", "serialNumber",
                 "policyNumber").get();
         assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 0),

@@ -371,7 +371,7 @@ contract Insurechain is mortal, stateful{
     */
     function createWarranty(string productId, string serialNumber, address insurance, uint startDate, uint endDate, uint productPrice) registeredRetailerOnly(insurance) {
         uint idx = warranties[insurance][productId][serialNumber];
-        Warranty warranty = warrantyList[idx + 1];
+        Warranty warranty = warrantyList[idx];
         if(warranty.status != WarrantyStatus.Undefined) throw;
 
         warranty.status = WarrantyStatus.Created;
@@ -380,7 +380,8 @@ contract Insurechain is mortal, stateful{
         warranty.productPrice = productPrice;
         warranty.retailer = msg.sender;
         warranty.warrantyPrice = insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
-        warrantyList[1 + warrantyCount++] = warranty;
+        warrantyList[++warrantyCount] = warranty;        
+        warranties[insurance][productId][serialNumber] = warrantyCount;
         retailerManager.increaseSalesBalance(msg.sender, insurance, warranty.warrantyPrice);
         insuranceManager.increaseSalesBalance(insurance, warranty.warrantyPrice);
     }
@@ -393,7 +394,7 @@ contract Insurechain is mortal, stateful{
     */
     function confirmWarranty(string productId, string serialNumber, string policyNumber) insuranceOnly {
         uint idx = warranties[msg.sender][productId][serialNumber];
-        Warranty warranty = warrantyList[idx + 1];
+        Warranty warranty = warrantyList[idx];
         if(warranty.status != WarrantyStatus.Created) throw;
 
         warranty.status = WarrantyStatus.Confirmed;
@@ -408,7 +409,7 @@ contract Insurechain is mortal, stateful{
     */
     function cancelWarranty(string productId, string serialNumber, address insuranceAddress) registeredRetailerOnly(insuranceAddress) {
         uint idx = warranties[insuranceAddress][productId][serialNumber];
-        Warranty warranty = warrantyList[idx + 1];
+        Warranty warranty = warrantyList[idx];
         /*a warranty can only be canceled if it exists and no claims have been made*/
         if(warranty.status == WarrantyStatus.Undefined || warranty.claimCount > 0) throw;
 
@@ -424,14 +425,14 @@ contract Insurechain is mortal, stateful{
 
     function getWarrantyByIndex(uint idx)  constant returns (uint startDate, uint endDate, WarrantyStatus status, 
                          string policyNumber, uint warrantyPrice, uint claimCount) {
-        Warranty warranty = warrantyList[idx + 1];
+        Warranty warranty = warrantyList[idx];
         return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.warrantyPrice, warranty.claimCount);        
     }
 
     function isWarrantyValid(address insurance, string productId, string serialNumber) constant returns(bool) {
         uint idx = warranties[insurance][productId][serialNumber];
         /*the index can not be zero based because else the first warranty would be the default but I don't want to make it 1 based for the user*/
-        Warranty warranty = warrantyList[idx + 1];
+        Warranty warranty = warrantyList[idx];
         return warranty.status == WarrantyStatus.Confirmed && warranty.startDate < now && warranty.endDate > now;
     }
 
@@ -445,7 +446,7 @@ contract Insurechain is mortal, stateful{
         if(!isWarrantyValid(insurance, productId, serialNumber)) throw;
 
         uint idx = warranties[insurance][productId][serialNumber];
-        Warranty warranty = warrantyList[idx + 1];
+        Warranty warranty = warrantyList[idx];
 
         Claim claim = warranty.claims[warranty.claimCount++];
         claim.retailer = msg.sender;
@@ -459,7 +460,7 @@ contract Insurechain is mortal, stateful{
 
     function getClaim(string productId, string serialNumber, address insurance, uint idx) constant returns (address retailer, uint amount, string description) {
         uint wIdx = warranties[insurance][productId][serialNumber];
-        Claim claim = warrantyList[idx + 1].claims[wIdx];
+        Claim claim = warrantyList[idx].claims[wIdx];
         return (claim.retailer, claim.amount, claim.description);
     }
 }
