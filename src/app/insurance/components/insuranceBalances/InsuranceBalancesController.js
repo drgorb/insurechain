@@ -12,12 +12,19 @@ function RetailerBalanceController(
         .then(function (balances) {
             $scope.balances = balances;
         })
-        .catch(function (err) {
-            console.log(err);
-        })
+        .catch(err);
 
-    $scope.sendRequest = function(payment, balance) {
-        console.log(payment, balance.address);
+    $scope.sendRequest = function(amount, balance) {
+        EthereumBalancesService
+            .increasePaymentsBalance(balance.address, $rootScope.user, amount)
+            .then(function (info) {
+                console.log(info)
+            })
+            .catch(err);
+    };
+
+    function err(err) {
+        console.log(err);
     }
 }
 export default ['$scope', '$rootScope', 'EthereumBalancesService', RetailerBalanceController]

@@ -55,7 +55,9 @@ function EthereumBalancesService ($q, EthereumHelperService, EthereumInsuranceSe
 
     this.getRetailerTotalBalances = (retailerAddress) => EthereumHelperService.toPromise(retailerManager.getRetailerTotalBalances, retailerAddress);
 
-    this.getInsuranceTotalBalance = (address) =>  EthereumHelperService.toPromise(insuranceManager.getInsuranceBalance, address);
+    this.getInsuranceTotalBalance = (insuranceAddress) =>  EthereumHelperService.toPromise(insuranceManager.getInsuranceBalance, insuranceAddress);
+
+    this.increasePaymentsBalance = (retailerAddress, insuranceAddress, amount) =>  EthereumHelperService.toPromise(retailerManager.increasePaymentsBalance, retailerAddress, insuranceAddress, amount);
 
     return this;
 }
