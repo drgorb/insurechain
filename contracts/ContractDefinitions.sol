@@ -371,8 +371,10 @@ contract Insurechain is mortal, stateful{
     */
     function createWarranty(string productId, string serialNumber, address insurance, uint startDate, uint endDate, uint productPrice) registeredRetailerOnly(insurance) {
         uint idx = warranties[insurance][productId][serialNumber];
-        Warranty warranty = warrantyList[idx];
-        if(warranty.status != WarrantyStatus.Undefined) throw;
+        if(warrantyList[idx].status != WarrantyStatus.Undefined) throw;
+
+        warranties[insurance][productId][serialNumber] = ++warrantyCount;
+        Warranty warranty = warrantyList[warrantyCount];
 
         warranty.status = WarrantyStatus.Created;
         warranty.startDate = startDate;
@@ -380,8 +382,6 @@ contract Insurechain is mortal, stateful{
         warranty.productPrice = productPrice;
         warranty.retailer = msg.sender;
         warranty.warrantyPrice = insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
-        warrantyList[++warrantyCount] = warranty;        
-        warranties[insurance][productId][serialNumber] = warrantyCount;
         retailerManager.increaseSalesBalance(msg.sender, insurance, warranty.warrantyPrice);
         insuranceManager.increaseSalesBalance(insurance, warranty.warrantyPrice);
     }
@@ -425,7 +425,7 @@ contract Insurechain is mortal, stateful{
 
     function getWarrantyByIndex(uint idx)  constant returns (uint startDate, uint endDate, WarrantyStatus status, 
                          string policyNumber, uint warrantyPrice, uint claimCount) {
-        Warranty warranty = warrantyList[idx];
+        Warranty warranty = warrantyList[idx+1];
         return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.warrantyPrice, warranty.claimCount);        
     }
 
