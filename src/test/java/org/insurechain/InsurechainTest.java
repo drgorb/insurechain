@@ -111,6 +111,13 @@ public class InsurechainTest {
         EthAddress priceCalculatorAddress = ethereum.publishContract(soliditySource, "PriceCalculator",
                 mainAccount).get();
 
+        PriceCalculator priceCalculator = ethereum.createContractProxy(soliditySource, "PriceCalculator", priceCalculatorAddress,mainAccount, PriceCalculator.class);
+
+        Date startDate = Date.from(LocalDate.of(2016, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
+        Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
+
+        priceCalculator.getWarrantyPrice("",startDate, endDate, 4000);
+
         assertEquals(RegistrationState.Undefined, retailerManagerRetailer.getRequestState(retailerAccount, insuranceAccountA));
         assertEquals(mainAccount.getAddress(), insureChainAdmin.getOwner());
 
@@ -165,8 +172,6 @@ public class InsurechainTest {
         assertEquals(UserRole.Insurance, insureChainAdmin.getRole(insuranceAccountA));
         assertEquals(UserRole.Retailer, insureChainAdmin.getRole(retailerAccount));
 
-        Date startDate = Date.from(LocalDate.of(2016, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
-        Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Integer warrantyPrice = insureChainRetailer.getWarrantyQuote("productId", insuranceAccountA, startDate,
                 endDate, 4000);
         assertEquals(Integer.valueOf(4000 * 5 / 100 * 4), warrantyPrice);
@@ -180,17 +185,24 @@ public class InsurechainTest {
 
         insureChainInsuranceA.confirmWarranty("productId", "serialNumber",
                 "policyNumber").get();
+        insureChainInsuranceA.confirmWarranty("productId", "serialNumber2",
+                "policyNumber2").get();
+
         assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 0),
                 insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccountA));
-        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 0),
-                insureChainAdmin.getWarrantyByIndex(0));
+
+        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber2", warrantyPrice, 0),
+                insureChainAdmin.getWarranty("productId", "serialNumber2", insuranceAccountA));
 
         assertTrue(insureChainAdmin.isRegisteredRetailer(insuranceAccountA, retailerAccount));
         assertTrue(insureChainAdmin.isWarrantyValid(insuranceAccountA, "productId", "serialNumber"));
+
         insureChainRetailer.createClaim("productId", "serialNumber", insuranceAccountA, 200,
                 "replace device").get();
+
         assertEquals(new Claim(retailerAccount.getAddress(), 200, "replace device"),
                 insureChainRetailer.getClaim("productId", "serialNumber", insuranceAccountA, 0));
+
         assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 1),
                 insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccountA));
 
