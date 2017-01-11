@@ -80,6 +80,8 @@ function EthereumRetailersService ($q, EthereumInsuranceService, EthereumHelperS
             })
     };
 
+    this.getRetailerTotalBalances = (retailerAddress) => EthereumHelperService.toPromise(contract.getRetailerTotalBalances, retailerAddress);
+
     return this;
 }
 

@@ -9,6 +9,7 @@ import RetailerCreateController from "./controllers/RetailerCreateController";
 import RetailerConfirmationController from "./controllers/RetailerConfirmationController";
 
 import RetailerCreateComponent from './components/retailerCreate/RetailerCreateComponent';
+import RetailerTotalBalancesComponent from './components/retailerTotalBalances/RetailerTotalBalancesComponent';
 import RetailerBalancesComponent from './components/retailerBalances/RetailerBalancesComponent';
 import RetailerAcceptedComponent from './components/retailerAccepted/RetailerAcceptedComponent';
 
@@ -23,6 +24,7 @@ angular.module(retailer, [
 ])
     .component(RetailerCreateComponent.name, RetailerCreateComponent.config)
     .component(RetailerBalancesComponent.name, RetailerBalancesComponent.config)
+    .component(RetailerTotalBalancesComponent.name, RetailerTotalBalancesComponent.config)
     .component(RetailerAcceptedComponent.name, RetailerAcceptedComponent.config)
 
     .factory('EthereumRetailersService', EthereumRetailersService)
