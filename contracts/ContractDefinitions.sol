@@ -461,7 +461,7 @@ contract Insurechain is mortal, stateful{
 
     function getClaim(string productId, string serialNumber, address insurance, uint idx) constant returns (address retailer, uint amount, string description) {
         uint wIdx = warranties[insurance][productId][serialNumber];
-        Claim claim = warrantyList[idx].claims[wIdx];
+        Claim claim = warrantyList[wIdx].claims[idx];
         return (claim.retailer, claim.amount, claim.description);
     }
 }
