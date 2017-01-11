@@ -30,6 +30,10 @@ public interface Insurechain {
 
     Warranty getWarranty(String productId, String serialNumber, EthAccount insurance);
 
+    Integer warrantyCount();
+
+    Warranty getWarrantyByIndex(Integer index);
+
     Boolean isWarrantyValid(EthAccount insurance, String productId, String serialNumber);
 
     CompletableFuture<Void> createClaim(String productId, String serialNumber, EthAccount insurance, Integer amount,

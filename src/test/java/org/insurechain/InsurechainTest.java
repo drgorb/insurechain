@@ -171,10 +171,13 @@ public class InsurechainTest {
                 endDate, 4000);
         insureChainRetailer.createWarranty("productId", "serialNumber", insuranceAccountA, startDate,
                 endDate, 4000).get();
+        assertEquals(1, insureChainRetailer.warrantyCount().intValue());
         insureChainInsuranceA.confirmWarranty("productId", "serialNumber",
                 "policyNumber").get();
         assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 0),
                 insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccountA));
+        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 0),
+                insureChainAdmin.getWarrantyByIndex(0));
 
         assertTrue(insureChainAdmin.isRegisteredRetailer(insuranceAccountA, retailerAccount));
         assertTrue(insureChainAdmin.isWarrantyValid(insuranceAccountA, "productId", "serialNumber"));

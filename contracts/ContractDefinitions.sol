@@ -325,7 +325,9 @@ contract Insurechain is mortal, stateful{
     }
 
     // mapping of insurance -> productId -> serialNumber -> Warranty
-    mapping (address=>mapping( string=>mapping( string=>Warranty ))) warranties;
+    mapping (address=>mapping( string=>mapping( string=>uint ))) warranties;
+    uint public warrantyCount;
+    mapping (uint=>Warranty) warrantyList;
 
     modifier insuranceOnly {
         if(!isInsurance(msg.sender)) throw;
@@ -368,7 +370,8 @@ contract Insurechain is mortal, stateful{
         price: the price in cents
     */
     function createWarranty(string productId, string serialNumber, address insurance, uint startDate, uint endDate, uint productPrice) registeredRetailerOnly(insurance) {
-        Warranty warranty = warranties[insurance][productId][serialNumber];
+        uint idx = warranties[insurance][productId][serialNumber];
+        Warranty warranty = warrantyList[idx];
         if(warranty.status != WarrantyStatus.Undefined) throw;
 
         warranty.status = WarrantyStatus.Created;
@@ -377,6 +380,7 @@ contract Insurechain is mortal, stateful{
         warranty.productPrice = productPrice;
         warranty.retailer = msg.sender;
         warranty.warrantyPrice = insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
+        warrantyList[warrantyCount++] = warranty;
         retailerManager.increaseSalesBalance(msg.sender, insurance, warranty.warrantyPrice);
         insuranceManager.increaseSalesBalance(insurance, warranty.warrantyPrice);
     }
@@ -388,7 +392,8 @@ contract Insurechain is mortal, stateful{
         policyNumber: the policy number of the warranty
     */
     function confirmWarranty(string productId, string serialNumber, string policyNumber) insuranceOnly {
-        Warranty warranty = warranties[msg.sender][productId][serialNumber];
+        uint idx = warranties[msg.sender][productId][serialNumber];
+        Warranty warranty = warrantyList[idx];
         if(warranty.status != WarrantyStatus.Created) throw;
 
         warranty.status = WarrantyStatus.Confirmed;
@@ -402,7 +407,8 @@ contract Insurechain is mortal, stateful{
         policyNumber: the policy number of the warranty
     */
     function cancelWarranty(string productId, string serialNumber, address insuranceAddress) registeredRetailerOnly(insuranceAddress) {
-        Warranty warranty = warranties[insuranceAddress][productId][serialNumber];
+        uint idx = warranties[insuranceAddress][productId][serialNumber];
+        Warranty warranty = warrantyList[idx];
         /*a warranty can only be canceled if it exists and no claims have been made*/
         if(warranty.status == WarrantyStatus.Undefined || warranty.claimCount > 0) throw;
 
@@ -413,12 +419,18 @@ contract Insurechain is mortal, stateful{
 
     function getWarranty(string productId, string serialNumber, address insurance) constant returns (uint startDate, uint endDate, WarrantyStatus status, 
                          string policyNumber, uint warrantyPrice, uint claimCount) {
-        Warranty warranty = warranties[insurance][productId][serialNumber];
-        return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.warrantyPrice, warranty.claimCount);
+        return getWarrantyByIndex(warranties[insurance][productId][serialNumber]);
+    }
+
+    function getWarrantyByIndex(uint idx)  constant returns (uint startDate, uint endDate, WarrantyStatus status, 
+                         string policyNumber, uint warrantyPrice, uint claimCount) {
+        Warranty warranty = warrantyList[idx];
+        return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.warrantyPrice, warranty.claimCount);        
     }
 
     function isWarrantyValid(address insurance, string productId, string serialNumber) constant returns(bool) {
-        Warranty warranty = warranties[insurance][productId][serialNumber];
+        uint idx = warranties[insurance][productId][serialNumber];
+        Warranty warranty = warrantyList[idx];
         return warranty.status == WarrantyStatus.Confirmed && warranty.startDate < now && warranty.endDate > now;
     }
 
@@ -428,9 +440,11 @@ contract Insurechain is mortal, stateful{
         serialNumber: the particular product serial number
     */
     function createClaim(string productId, string serialNumber, address insurance, uint amount, string description) registeredRetailerOnly(insurance) {
-        Warranty warranty = warranties[insurance][productId][serialNumber];
         /*create only works for existing and valid warranties*/
         if(!isWarrantyValid(insurance, productId, serialNumber)) throw;
+
+        uint idx = warranties[insurance][productId][serialNumber];
+        Warranty warranty = warrantyList[idx];
 
         Claim claim = warranty.claims[warranty.claimCount++];
         claim.retailer = msg.sender;
@@ -443,7 +457,8 @@ contract Insurechain is mortal, stateful{
     }
 
     function getClaim(string productId, string serialNumber, address insurance, uint idx) constant returns (address retailer, uint amount, string description) {
-        Claim claim = warranties[insurance][productId][serialNumber].claims[idx];
+        uint wIdx = warranties[insurance][productId][serialNumber];
+        Claim claim = warrantyList[idx].claims[wIdx];
         return (claim.retailer, claim.amount, claim.description);
     }
 }
