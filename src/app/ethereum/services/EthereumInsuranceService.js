@@ -37,6 +37,8 @@ function EthereumInsuranceService (EthereumHelperService, $q) {
     this.getRetailerList = (insurance) => $q.when (retailerList);
     this.regsiterInsurance = (name) => EthereumHelperService.toPromise(contract.createInsurance, name);
     this.setRequestStatus = (address, state) => EthereumHelperService.toPromise(contract.setInsuranceState, address, state);
+    this.getInsuranceBalance = (address) =>  EthereumHelperService.toPromise(contract.getInsuranceBalance, address);
+
     return this;
 }
 

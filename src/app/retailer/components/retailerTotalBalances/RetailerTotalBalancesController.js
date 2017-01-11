@@ -7,7 +7,6 @@ function RetailerTotalBalanceController(
     EthereumRetailersService
         .getRetailerTotalBalances($rootScope.user)
         .then(function (balances) {
-            console.log(balances);
             $scope.balances = balances;
             $scope.total = balances[0]-balances[1]-balances[2];
         })

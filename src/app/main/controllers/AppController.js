@@ -71,8 +71,7 @@ function AppController(
             .then(function (user) {
                 if($scope.user !== user) {
                     $scope.user = user;
-                    $state.reload();
-                    $state.go('app.home');
+                    $state.go('app.home', {}, {reload: true});
                 }
             })
     }

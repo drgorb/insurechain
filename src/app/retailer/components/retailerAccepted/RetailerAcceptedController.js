@@ -6,7 +6,6 @@ function RetailerAcceptedController(
     EthereumRetailersService
         .getRetailerList($rootScope.user)
         .then(function (retailers) {
-            console.log(retailers);
             $scope.retailers = retailers;
         })
 }
