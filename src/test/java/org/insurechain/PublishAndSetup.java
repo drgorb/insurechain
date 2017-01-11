@@ -216,9 +216,8 @@ public class PublishAndSetup {
     }
 
     private String getJson(EthAddress contractAddress, String name, String contractName) throws IOException {
-        final String json = "{" + "abi:" + ethereum.getAbi(soliditySource, contractName).getAbi() +
-                ", address: " + "\"" + contractAddress.withLeading0x() + "\"" +
-                "}";
+        final String json = "{address: " + "\"" + contractAddress.withLeading0x() + "\"" +
+                ",abi:" + ethereum.getAbi(soliditySource, contractName).getAbi() + "}";
 
         return "const " + name + " = " + json + ";";
 
