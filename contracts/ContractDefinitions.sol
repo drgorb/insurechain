@@ -421,7 +421,8 @@ contract Insurechain is mortal, stateful{
 
     function getWarranty(string productId, string serialNumber, address insurance) constant returns (uint startDate, uint endDate, WarrantyStatus status,
                          string policyNumber, uint warrantyPrice, uint claimCount) {
-        return getWarrantyByIndex(warranties[insurance][productId][serialNumber]);
+        uint idx = warranties[insurance][productId][serialNumber];
+        if(idx > 0) return getWarrantyByIndex(idx - 1);
     }
 
     function getWarrantyByIndex(uint idx)  constant returns (uint startDate, uint endDate, WarrantyStatus status,
@@ -433,7 +434,7 @@ contract Insurechain is mortal, stateful{
     function isWarrantyValid(address insurance, string productId, string serialNumber) constant returns(bool) {
         uint idx = warranties[insurance][productId][serialNumber];
         /*the index can not be zero based because else the first warranty would be the default but I don't want to make it 1 based for the user*/
-        Warranty warranty = warrantyList[idx];
+        Warranty warranty = warrantyList[idx+1];
         return warranty.status == WarrantyStatus.Confirmed && warranty.startDate < now && warranty.endDate > now;
     }
 
