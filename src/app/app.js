@@ -22,6 +22,7 @@ import EthereumHelperService from './ethereum/services/EthereumHelperService';
 import EthereumRoleService from './ethereum/services/EthereumRoleService';
 import EthereumWarrantyService from './ethereum/services/EthereumWarrantyService';
 import EthereumBalancesService from './ethereum/services/EthereumBalancesService';
+import EthereumEventService from './ethereum/services/EthereumEventService'
 
 import homeModule from './home/Home';
 import warrantyModule from './warranty/Warranty';
@@ -55,6 +56,7 @@ export default angular.module(appModule, [
     .factory('EthereumRoleService', EthereumRoleService)
     .factory('EthereumWarrantyService', EthereumWarrantyService)
     .factory('EthereumBalancesService', EthereumBalancesService)
+    .factory('EthereumEventService', EthereumEventService)
 
     .config(['$locationProvider', '$urlRouterProvider' , '$stateProvider', function($locationProvider, $urlRouterProvider, $stateProvider) {
         $locationProvider.html5Mode(true);

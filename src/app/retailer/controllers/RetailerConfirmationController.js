@@ -4,7 +4,6 @@ function RetailerConfirmationController(EthereumRetailersService, $scope) {
         .getRetailerList(web3.eth.accounts[0])
         .then(function(retailers) {
             $scope.retailers = retailers;
-            console.log(retailers);
         });
 
     $scope.filterStatus = '';

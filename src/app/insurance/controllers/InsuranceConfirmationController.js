@@ -5,7 +5,6 @@ function InsuranceConfirmationController(EthereumInsuranceService, $scope) {
     EthereumInsuranceService
         .getInsurancesList()
         .then(function(insurances) {
-            console.log(insurances);
             $scope.insurances = insurances;
         });
 
