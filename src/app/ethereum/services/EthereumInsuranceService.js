@@ -1,4 +1,3 @@
-import {retailerList} from '../../shared/mock/mockData';
 import _ from 'underscore';
 
 function EthereumInsuranceService (EthereumHelperService, $q) {
@@ -34,13 +33,11 @@ function EthereumInsuranceService (EthereumHelperService, $q) {
             })
     };
 
-    this.getRetailerList = (insurance) => $q.when (retailerList);
     this.regsiterInsurance = (name) => EthereumHelperService.toPromise(contract.createInsurance, name);
+
     this.setRequestStatus = (address, state) => EthereumHelperService.toPromise(contract.setInsuranceState, address, state);
-    this.getInsuranceBalance = (address) =>  EthereumHelperService.toPromise(contract.getInsuranceBalance, address);
 
     return this;
 }
 
 export default ['EthereumHelperService', '$q', EthereumInsuranceService]
-

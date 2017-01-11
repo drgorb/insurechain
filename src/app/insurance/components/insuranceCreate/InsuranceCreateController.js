@@ -3,7 +3,7 @@ function InsuranceCreateController(EthereumInsuranceService, $scope) {
         insuranceId: '',
         insuranceAddress: '',
         insuranceName: ''
-    }
+    };
 
     $scope.sendRequest = function(insurance) {
         EthereumInsuranceService

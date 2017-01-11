@@ -10,6 +10,7 @@ import InsuranceConfirmationController from './controllers/InsuranceConfirmation
 import InsuranceCreateComponent from './components/insuranceCreate/InsuranceCreateComponent';
 import InsurancRegisteredComponent from './components/insuranceRegistered/InsurancRegisteredComponent';
 import insuranceBalancesComponent from './components/insuranceBalances/insuranceBalancesComponent'
+import insuranceTotalBalancesComponent from './components/insuranceTotalBalances/insuranceTotalBalancesComponent'
 
 import EthereumInsuranceService from '../ethereum/services/EthereumInsuranceService';
 
@@ -20,6 +21,7 @@ angular.module(insurance, [
 ])
     .component(InsuranceCreateComponent.name, InsuranceCreateComponent.config)
     .component(insuranceBalancesComponent.name, insuranceBalancesComponent.config)
+    .component(insuranceTotalBalancesComponent.name, insuranceTotalBalancesComponent.config)
     .component(InsurancRegisteredComponent.name, InsurancRegisteredComponent.config)
 
     .factory('EthereumInsuranceService', EthereumInsuranceService)

@@ -1,10 +1,10 @@
 function RetailerTotalBalanceController(
     $scope,
     $rootScope,
-    EthereumRetailersService
+    EthereumBalancesService
 ) {
 
-    EthereumRetailersService
+    EthereumBalancesService
         .getRetailerTotalBalances($rootScope.user)
         .then(function (balances) {
             $scope.balances = balances;
@@ -14,4 +14,4 @@ function RetailerTotalBalanceController(
             console.log(err);
         })
 }
-export default ['$scope', '$rootScope', 'EthereumRetailersService', RetailerTotalBalanceController]
+export default ['$scope', '$rootScope', 'EthereumBalancesService', RetailerTotalBalanceController]

@@ -1,11 +1,11 @@
 function RetailerBalanceController(
     $scope,
     $rootScope,
-    EthereumBalancesService
+    EthereumBalancesService,
 ) {
 
     EthereumBalancesService
-        .getFullRetailerBalances($rootScope.user)
+        .getFullInsuranceBalances($rootScope.user)
         .then(function (balances) {
             $scope.balances = balances;
         })
