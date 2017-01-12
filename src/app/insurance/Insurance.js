@@ -1,18 +1,15 @@
 'use strict';
 
-import angular from 'angular';
-import uirouter from 'angular-ui-router';
-
-import InsuranceController from './controllers/InsuranceController';
-import InsuranceCreateController from './controllers/InsuranceCreateController';
-import InsuranceConfirmationController from './controllers/InsuranceConfirmationController';
-
-import InsuranceCreateComponent from './components/insuranceCreate/InsuranceCreateComponent';
-import InsurancRegisteredComponent from './components/insuranceRegistered/InsurancRegisteredComponent';
-import insuranceBalancesComponent from './components/insuranceBalances/insuranceBalancesComponent'
-import insuranceTotalBalancesComponent from './components/insuranceTotalBalances/insuranceTotalBalancesComponent'
-
-import EthereumInsuranceService from '../ethereum/services/EthereumInsuranceService';
+import angular from "angular";
+import uirouter from "angular-ui-router";
+import InsuranceController from "./controllers/InsuranceController";
+import InsuranceCreateController from "./controllers/InsuranceCreateController";
+import InsuranceConfirmationController from "./controllers/InsuranceConfirmationController";
+import InsuranceCreateComponent from "./components/insuranceCreate/InsuranceCreateComponent";
+import InsurancRegisteredComponent from "./components/insuranceRegistered/InsurancRegisteredComponent";
+import insuranceBalancesComponent from "./components/insuranceBalances/InsuranceBalancesComponent";
+import insuranceTotalBalancesComponent from "./components/insuranceTotalBalances/insuranceTotalBalancesComponent";
+import EthereumInsuranceService from "../ethereum/services/EthereumInsuranceService";
 
 const insurance = 'app.insurance';
 
