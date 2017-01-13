@@ -1,4 +1,4 @@
-function InsuranceCreateController(EthereumInsuranceService, $scope) {
+function InsuranceCreateController($scope, EthereumInsuranceService, TransactionService) {
     $scope.insurance = {
         insuranceId: '',
         insuranceAddress: '',
@@ -6,14 +6,11 @@ function InsuranceCreateController(EthereumInsuranceService, $scope) {
     };
 
     $scope.sendRequest = function(insurance) {
+        TransactionService.startTransaction();
         EthereumInsuranceService
             .regsiterInsurance(insurance.insuranceName)
-            .then(function (result) {
-                $scope.showToast(result)
-            })
-            .catch(function (err) {
-                $scope.showToast(err)
-            })
+            .then(info => TransactionService.finishTransaction(info))
+            .catch(err => TransactionService.finishTransaction(err))
     }
 }
-export default ['EthereumInsuranceService', '$scope', InsuranceCreateController]
+export default ['$scope', 'EthereumInsuranceService', 'TransactionService', InsuranceCreateController]

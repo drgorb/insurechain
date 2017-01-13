@@ -1,11 +1,4 @@
-function RetailerController($mdToast, $scope) {
-     $scope.showToast = function(info) {
-        $mdToast.show(
-            $mdToast.simple()
-                .textContent(info)
-                .position('bottom right')
-                .hideDelay(3000)
-        );
-    }
+function RetailerController($scope) {
+
 }
-export default ['$mdToast', '$scope', RetailerController]
+export default ['$scope', RetailerController]
