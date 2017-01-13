@@ -1,7 +1,6 @@
 package org.insurechain;
 
 
-import com.google.common.collect.Lists;
 import org.adridadou.ethereum.EthereumFacade;
 import org.adridadou.ethereum.provider.EthereumFacadeProvider;
 import org.adridadou.ethereum.provider.EthereumJConfigs;
@@ -18,15 +17,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.adridadou.ethereum.keystore.AccountProvider.fromPrivateKey;
 import static org.junit.Assert.assertEquals;
 
@@ -50,8 +47,8 @@ public class PublishAndSetup {
     private EthAddress priceCalculatorAddress;
 
 
-    private final List<EthAccount> insurances = Lists.newArrayList(alianz, zurich, mobiliere);
-    private final List<EthAccount> retailers = Lists.newArrayList(digitec, interdiscount, melectronics);
+    private final List<EthAccount> insurances = newArrayList(alianz, zurich, mobiliere);
+    private final List<EthAccount> retailers = newArrayList(digitec, interdiscount, melectronics);
 
     private class Contracts {
         public Insurechain ic;
@@ -125,38 +122,38 @@ public class PublishAndSetup {
         Date startDate = Date.from(LocalDate.of(2016, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
 
-        contract.get(digitec).ic.createWarranty("iPhone6", "iPhone6SerialNumber1", zurich, startDate,
-                endDate, 4000).get();
+        newArrayList(contract.get(digitec).ic.createWarranty("iPhone6", "iPhone6SerialNumber1", zurich, startDate,
+                endDate, 4000),
         contract.get(digitec).ic.createWarranty("iPhone6", "iPhone6SerialNumber2", alianz, startDate,
-                endDate, 4000).get();
+                endDate, 4000),
         contract.get(interdiscount).ic.createWarranty("iPhone6", "iPhone6SerialNumber3", mobiliere, startDate,
-                endDate, 4000).get();
+                endDate, 4000),
         contract.get(interdiscount).ic.createWarranty("iPhone6", "iPhone6SerialNumber4", zurich, startDate,
-                endDate, 4000).get();
+                endDate, 4000),
         contract.get(melectronics).ic.createWarranty("iPhone6", "iPhone6SerialNumber5", alianz, startDate,
-                endDate, 4000).get();
+                endDate, 4000),
         contract.get(melectronics).ic.createWarranty("iPhone6", "iPhone6SerialNumber6", mobiliere, startDate,
-                endDate, 4000).get();
+                endDate, 4000)).forEach(waitForFuture);
 
-        contract.get(zurich).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber1", "iPhone6SerialNumber1Zurich").get();
-        contract.get(alianz).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber2", "iPhone6SerialNumber2Alianz").get();
-        contract.get(mobiliere).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber3", "iPhone6SerialNumber3Mobiliere").get();
-        contract.get(zurich).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber4", "iPhone6SerialNumber4Zurich").get();
-        contract.get(alianz).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber5", "iPhone6SerialNumber5Alianz").get();
-        contract.get(mobiliere).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber6", "iPhone6SerialNumber6Mobiliere").get();
+        newArrayList(contract.get(zurich).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber1", "iPhone6SerialNumber1Zurich"),
+        contract.get(alianz).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber2", "iPhone6SerialNumber2Alianz"),
+        contract.get(mobiliere).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber3", "iPhone6SerialNumber3Mobiliere"),
+        contract.get(zurich).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber4", "iPhone6SerialNumber4Zurich"),
+        contract.get(alianz).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber5", "iPhone6SerialNumber5Alianz"),
+        contract.get(mobiliere).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber6", "iPhone6SerialNumber6Mobiliere")).forEach(waitForFuture);
     }
 
     private void createClaims() throws ExecutionException, InterruptedException {
-        contract.get(digitec).ic.createClaim("iPhone6", "iPhone6SerialNumber1", zurich,
-                500, "replace screen").get();
+        newArrayList(contract.get(digitec).ic.createClaim("iPhone6", "iPhone6SerialNumber1", zurich,
+                500, "replace screen"),
         contract.get(interdiscount).ic.createClaim("iPhone6", "iPhone6SerialNumber3", mobiliere,
-                2000, "replace phone").get();
+                2000, "replace phone"),
         contract.get(melectronics).ic.createClaim("iPhone6", "iPhone6SerialNumber5", alianz,
-                800, "replace battery").get();
+                800, "replace battery")).forEach(waitForFuture);
     }
 
     private void initRetailers(EthAccount insurance) {
-        Lists.newArrayList(
+        newArrayList(
                 contract.get(digitec).rm.requestRegistration("Digitec", insurance),
                 contract.get(interdiscount).rm.requestRegistration("Interdiscount", insurance),
                 contract.get(melectronics).rm.requestRegistration("Melectronics", insurance))
@@ -168,7 +165,7 @@ public class PublishAndSetup {
     }
 
     private void initInsurances() {
-        Lists.newArrayList(contract.get(zurich).im.createInsurance("Zurich", priceCalculatorAddress),
+        newArrayList(contract.get(zurich).im.createInsurance("Zurich", priceCalculatorAddress),
                 contract.get(alianz).im.createInsurance("Alianz", priceCalculatorAddress),
                 contract.get(mobiliere).im.createInsurance("Mobiliere", priceCalculatorAddress))
                 .forEach(waitForFuture);
@@ -219,9 +216,8 @@ public class PublishAndSetup {
     }
 
     private String getJson(EthAddress contractAddress, String name, String contractName) throws IOException {
-        final String json = "{" + "abi:" + ethereum.getAbi(soliditySource, contractName).getAbi() +
-                ", address: " + "\"" + contractAddress.withLeading0x() + "\"" +
-                "}";
+        final String json = "{address: " + "\"" + contractAddress.withLeading0x() + "\"" +
+                ",abi:" + ethereum.getAbi(soliditySource, contractName).getAbi() + "}";
 
         return "const " + name + " = " + json + ";";
 

@@ -1,11 +1,9 @@
-import {retailerList} from '../../shared/mock/mockData';
 import {products} from '../../warranty/mock/mockData'
 import _ from 'underscore';
 
-function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceService, $q) {
+function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceService, EthereumRetailersService, $q, $http) {
     const insurechainContract = EthereumHelperService.insurechain;
-
-    this.getRetailerList = (insurance) => $q.when(retailerList);
+    this.getRetailerList = (insurance) => EthereumRetailersService.getRetailerList(insurance);
     this.getAllProducts = () => $q.when(products);
     this.getProduct = (serial) => {
         let elem = _.findWhere(products, {'serial': serial});
@@ -39,5 +37,5 @@ function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceServic
     return this;
 }
 
-export default ['EthereumHelperService', 'EthereumInsuranceService', '$q', EthereumWarrantyService]
+export default ['EthereumHelperService', 'EthereumInsuranceService', 'EthereumRetailersService', '$q', '$http', EthereumWarrantyService]
 

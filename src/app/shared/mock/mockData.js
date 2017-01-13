@@ -1,37 +1,45 @@
-var insuranceList = [
+const productList = [
     {
-        name: 'Zurich insurance',
-        address: '0x95262f78c646178416c123dbeef2a286d41a27e8',
-        status: 1
+        "name": "Apple iPhone 6, Silver, 16GB (T-Mobile)",
+        "ean": "0711730346183",
+        "images": [
+            "http://sem3-idn.s3-website-us-east-1.amazonaws.com/7421e2e638bf717a9e8324302fc500dd,0.jpg"
+        ],
+        "cat_id": "9359",
+        "manufacturer": "Apple",
+        "sem3_id": "7dpP7zGI1gEIgciKGGQWuM"
     },
     {
-        name: 'Allianz',
-        address: '0xc62e02ddc6c1a78ca63f144253e74c85ecb76b74',
-        status: 1
+        "name": "Apple iPhone 6 Plus, Silver, 128 GB (AT&T)",
+        "model": "iPhone 6 Plus",
+        "sem3_id": "4AhyWrP65Qc6yQoCoCO44M",
+        "manufacturer": "Apple",
+        "ean": "0885909971299",
+        "images": [
+            "http://sem3-idn.s3-website-us-east-1.amazonaws.com/286f51f6be0ddab6862339a6941fe9b6,0.jpg"
+        ]
     },
     {
-        name: 'Mobiliar',
-        address: '0x607aae63a7d99e0207214248b9f663e55b465766',
-        status: 1
+        "sem3_id": "0R5etbrpihEWq8Ew6OQc6s",
+        "manufacturer": "Sony",
+        "brand": "Sony",
+        "images": [
+            "http://sem3-idn.s3-website-us-east-1.amazonaws.com/a5e2a1665a73ba6a323d5e4c4aeef8d0,0.jpg"
+        ],
+        "ean": "7311271539353",
+        "model": "Xperia_Z5_Compact_wei",
+        "name": "Sony Xperia Z5 Compact white"
+    },
+    {
+        "brand": "Apple",
+        "ean": "0885909436705",
+        "name": "Apple MacBook Pro MC700LL/A 13.3-Inch Laptop",
+        "model": "MC700LL/A",
+        "images": [
+            "http://sem3-idn.s3-website-us-east-1.amazonaws.com/675eaf2c4eb87fce56aa83980e5b1262,0.jpg"
+        ],
+        "manufacturer": "Apple Computer"
     }
-]
+];
 
-var retailerList = [
-    {
-        name: 'Digitec',
-        address: '0x3b06274c18e8a188c24f64dd4793f1027c1f3123',
-        status: 1
-    },
-    {
-        name: 'Interdiscount',
-        address: '0xce2db460f2c86b5b66bfb2815d5ee476e61584ac',
-        status: 2
-    },
-    {
-        name: 'M-Electronics',
-        address: '0xb3b499b3a1f35d1b413e8fb17d0134ed11c650cc',
-        status: 1
-    }
-]
-
-export {insuranceList, retailerList}
+export {productList}

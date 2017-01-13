@@ -1,28 +1,25 @@
-function RetailerCreateController(EthereumRetailersService, $scope) {
+function RetailerCreateController($scope, EthereumRetailersService, TransactionService) {
     $scope.company = {
         companyName: '',
         selectedInsurance: '',
         insurances: []
-    }
+    };
 
     EthereumRetailersService
         .getInsuranceId()
-        .then(function(insurances) {
+        .then(insurances => {
             $scope.company.insurances = insurances
         })
-        .catch(function (err) {
-            $scope.showToast(err)
+        .catch(err => {
+            console.log(err)
         });
 
     $scope.sendRequest = function(company) {
+        TransactionService.startTransaction();
         EthereumRetailersService
             .requestRegistration(company.companyName, company.selectedInsurance)
-            .then(function (result) {
-                $scope.showToast(result)
-            })
-            .catch(function (err) {
-                $scope.showToast(err)
-            })
+            .then(info => TransactionService.finishTransaction(info))
+            .catch(err => TransactionService.finishTransaction(err))
     }
 }
-export default ['EthereumRetailersService', '$scope', RetailerCreateController]
+export default ['$scope', 'EthereumRetailersService', 'TransactionService', RetailerCreateController]

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.7;
 
 contract owned {
     address owner;
@@ -355,7 +355,7 @@ contract Insurechain is mortal, stateful{
         return UserRole.Undefined;
     }
 
-    function getWarrantyQuote(string productId, address insurance, uint startDate, uint endDate, uint productPrice) 
+    function getWarrantyQuote(string productId, address insurance, uint startDate, uint endDate, uint productPrice)
                               constant returns(uint warrantyPrice) {
         return insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
     }
@@ -371,8 +371,10 @@ contract Insurechain is mortal, stateful{
     */
     function createWarranty(string productId, string serialNumber, address insurance, uint startDate, uint endDate, uint productPrice) registeredRetailerOnly(insurance) {
         uint idx = warranties[insurance][productId][serialNumber];
+        if(warrantyList[idx].status != WarrantyStatus.Undefined) throw;
+        idx = ++warrantyCount;
+        warranties[insurance][productId][serialNumber] = idx;
         Warranty warranty = warrantyList[idx];
-        if(warranty.status != WarrantyStatus.Undefined) throw;
 
         warranty.status = WarrantyStatus.Created;
         warranty.startDate = startDate;
@@ -380,7 +382,6 @@ contract Insurechain is mortal, stateful{
         warranty.productPrice = productPrice;
         warranty.retailer = msg.sender;
         warranty.warrantyPrice = insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
-        warrantyList[++warrantyCount] = warranty;        
         warranties[insurance][productId][serialNumber] = warrantyCount;
         retailerManager.increaseSalesBalance(msg.sender, insurance, warranty.warrantyPrice);
         insuranceManager.increaseSalesBalance(insurance, warranty.warrantyPrice);
@@ -402,7 +403,7 @@ contract Insurechain is mortal, stateful{
     }
 
     /**
-        Cacnels a warranty
+        Cancels a warranty
         productId: The EAN13 that identifies the product
         serialNumber: the particular product serial number
         policyNumber: the policy number of the warranty
@@ -418,15 +419,20 @@ contract Insurechain is mortal, stateful{
         insuranceManager.decreaseSalesBalance(insuranceAddress, warranty.warrantyPrice);
     }
 
-    function getWarranty(string productId, string serialNumber, address insurance) constant returns (uint startDate, uint endDate, WarrantyStatus status, 
+    function getWarranty(string productId, string serialNumber, address insurance) constant returns (uint startDate, uint endDate, WarrantyStatus status,
                          string policyNumber, uint warrantyPrice, uint claimCount) {
-        return getWarrantyByIndex(warranties[insurance][productId][serialNumber]);
+        uint idx = warranties[insurance][productId][serialNumber];
+        if(idx == 0) {
+            Warranty warranty = warrantyList[0];
+            return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.warrantyPrice, warranty.claimCount);
+        }
+        return getWarrantyByIndex(idx - 1);
     }
 
-    function getWarrantyByIndex(uint idx)  constant returns (uint startDate, uint endDate, WarrantyStatus status, 
+    function getWarrantyByIndex(uint idx)  constant returns (uint startDate, uint endDate, WarrantyStatus status,
                          string policyNumber, uint warrantyPrice, uint claimCount) {
-        Warranty warranty = warrantyList[idx];
-        return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.warrantyPrice, warranty.claimCount);        
+        Warranty warranty = warrantyList[idx+1];
+        return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.warrantyPrice, warranty.claimCount);
     }
 
     function isWarrantyValid(address insurance, string productId, string serialNumber) constant returns(bool) {
@@ -460,7 +466,7 @@ contract Insurechain is mortal, stateful{
 
     function getClaim(string productId, string serialNumber, address insurance, uint idx) constant returns (address retailer, uint amount, string description) {
         uint wIdx = warranties[insurance][productId][serialNumber];
-        Claim claim = warrantyList[idx].claims[wIdx];
+        Claim claim = warrantyList[wIdx].claims[idx];
         return (claim.retailer, claim.amount, claim.description);
     }
 }
