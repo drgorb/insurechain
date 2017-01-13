@@ -3,8 +3,10 @@ function WarrantyDetailsController($scope, $stateParams, EthereumWarrantyService
     $scope.product = null;
 
     EthereumWarrantyService
-        .getProduct($stateParams.id)
+        .getWarranty($stateParams.id)
         .then(function (product) {
+            console.dir(product);
+            console.log(product.toString());
             $scope.product = product;
         })
         .catch(logError);

@@ -2,14 +2,20 @@
     <md-card-content>
         <div layout="column" layout-padding>
             <h2>Details</h2>
-            <div>{{product.avatar}}</div>
-            <div><strong>Manufacturer</strong>: {{product.manufacturer}}</div>
-            <div><strong>Product Type:</strong> {{product.productType}}</div>
+
             <div><strong>Name</strong>: {{product.name}}</div>
-            <div><strong>Serial</strong>: {{product.serial}}</div>
-            <div><strong>Description</strong>: {{product.description}}</div>
+            <div><strong>Manufacturer</strong>: {{product.manufacturer}}</div>
+            <div><strong>Ean</strong>: {{product.ean}}</div>
+            <div><strong>Cat ID:</strong> {{product.cat_id}}</div>
+            <div><strong>Sem3 Id</strong>: {{product.sem3_id}}</div>
+
+            <h2>Images</h2>
+            <div ng-repeat="image in product.images">
+                <img ng-src="{{image}}" alt="{{product.name}}" style="width: 50px" >
+            </div>
 
             <h2>Warranty</h2>
+            (Mock info)
             <div><strong>Extended Warranty: </strong>{{warranty.status}}</div>
             <div><strong>Extended Warranty Start Date: </strong>{{warranty.startDate | date}}</div>
             <div><strong>Extended Warranty End Date: </strong>{{warranty.endDate | date}}</div>
