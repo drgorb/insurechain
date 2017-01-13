@@ -1,4 +1,4 @@
-function WarrantyController($scope, $state, EthereumRetailersService) {
+function WarrantyController($scope) {
 
 }
-export default ['$scope','$state' , 'EthereumRetailersService', WarrantyController]
+export default ['$scope', WarrantyController]

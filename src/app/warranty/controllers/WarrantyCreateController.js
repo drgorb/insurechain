@@ -1,4 +1,4 @@
-function WarrantyCreateController($scope, EthereumWarrantyService) {
+function WarrantyCreateController($scope, TransactionService, EthereumWarrantyService) {
     $scope.warrantyCreate = {
         insurance: null,
         productManufacturer: null,
@@ -13,18 +13,19 @@ function WarrantyCreateController($scope, EthereumWarrantyService) {
 
     EthereumWarrantyService
         .getRegisteredInsurances()
-        .then(function (insurances) {
-            $scope.warrantyCreate.insurances = insurances;
+        .then(insurances => {
+            $scope.warrantyCreate.insurances = insurances
         })
-        .catch(logError);
+        .catch(err => {
+            console.log(err)
+        });
 
     $scope.createWarranty = function (warranty) {
+        TransactionService.startTransaction();
         EthereumWarrantyService
             .createWarranty(warranty)
+            .then(info => TransactionService.finishTransaction(info))
+            .catch(err => TransactionService.finishTransaction(err))
     };
-
-    function logError(err) {
-        console.log(err);
-    }
 }
-export default ['$scope', 'EthereumWarrantyService', WarrantyCreateController]
+export default ['$scope', 'TransactionService', 'EthereumWarrantyService', WarrantyCreateController]
