@@ -29,8 +29,7 @@ angular.module(retailer, [
 
     .factory('EthereumRetailersService', EthereumRetailersService)
 
-    .config(['$stateProvider', '$urlRouterProvider', '$mdToastProvider', function($stateProvider, $urlRouterProvider) {
-        $urlRouterProvider.when('retailer', 'retailer.create');
+    .config(['$stateProvider', function($stateProvider) {
         $stateProvider
             .state({
                 name: retailer,

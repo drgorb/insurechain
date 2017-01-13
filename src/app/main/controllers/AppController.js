@@ -12,8 +12,7 @@ function AppController(
     userRole,
     PermissionService,
     EthereumInsuranceService,
-    EthereumRetailersService,
-    EthereumEventService)
+    EthereumRetailersService)
 {
     function getUserEntity(userRole, address) {
         switch(userRole) {
@@ -77,12 +76,6 @@ function AppController(
             })
     }
     $interval(updateUser, 3000);
-
-    EthereumEventService
-        .insuranceStatusChanged();
-
-    EthereumEventService
-        .getAllEvents();
 }
 
 export default [
@@ -99,6 +92,5 @@ export default [
     'PermissionService',
     'EthereumInsuranceService',
     'EthereumRetailersService',
-    'EthereumEventService',
     AppController
 ]
