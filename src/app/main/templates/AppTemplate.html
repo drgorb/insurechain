@@ -1,0 +1,53 @@
+<div layout="column" class="relative" layout-fill role="main">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <md-button ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu" class="md-icon-button md-primary">
+                <ng-md-icon icon="menu"></ng-md-icon>
+            </md-button>
+            <h3>
+                Warranty
+            </h3>
+            <span flex></span>
+            <md-button class="md-icon-button" aria-label="Favorite">
+                <ng-md-icon icon="notifications"></ng-md-icon>
+            </md-button>
+            <md-button class="md-icon-button" aria-label="Favorite">
+                <ng-md-icon icon="more_vert"></ng-md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <div flex layout="row">
+        <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+            <md-toolbar class="md-hue-2" md-colors="{background: 'primary-400'}">
+                <span flex></span>
+                <div layout="column" class="md-toolbar-tools-bottom inset">
+                    <span></span>
+                    <div>Role: {{userRoleName}}</div>
+                    <span>{{entity.name}}</span>
+                </div>
+            </md-toolbar>
+            <md-sidemenu locked="true">
+                <md-sidemenu-group>
+                    <md-subheader class="md-no-sticky">Menu</md-subheader>
+                    <md-sidemenu-button
+                            ng-repeat="item in menu"
+                            ui-sref-active="md-active"
+                            ui-sref="{{item.link}}"
+                            ui-sref-opts="{reload: true}"
+                            permission
+                            permission-only="item.permissionRoles">
+                        {{item.title}}
+                    </md-sidemenu-button>
+                </md-sidemenu-group>
+                <md-sidemenu-group>
+                    <md-divider></md-divider>
+                    <md-subheader class="md-no-sticky">Settings</md-subheader>
+                </md-sidemenu-group>
+            </md-sidemenu>
+        </md-sidenav>
+        <md-content flex md-scroll-y>
+            <ui-view></ui-view>
+        </md-content>
+    </div>
+</div>
+<main-loader ng-show="showMainLoader" layout-fill layout="column" layout-align="center center"></main-loader>

@@ -1,0 +1,43 @@
+<md-button class="md-fab md-fab-bottom-right md-primary md-icon-button" aria-label="Search Product" ng-click="showSearch()">
+    <ng-md-icon icon="search"></ng-md-icon>
+</md-button>
+
+
+<div style="visibility: hidden">
+    <div class="md-dialog-container" id="searchDialog">
+        <md-dialog style="width: 100%; max-width: 700px;">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>Go to Product</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <form name="searchForm" ng-cloak>
+                <md-dialog-content>
+                    <div class="md-dialog-content">
+                        <md-input-container class="md-block">
+                            <label>EAN 13</label>
+                            <input name="ean13" ng-model="search.ean13" required>
+                            <div ng-messages="searchForm.ean13.$error">
+                                <div ng-message="required">This is required!</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container class="md-block">
+                            <label>Serial Number</label>
+                            <input name="serialNumber" ng-model="search.serialNumber" required>
+                            <div ng-messages="searchForm.serialNumber.$error">
+                                <div ng-message="required">This is required!</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                </md-dialog-content>
+                <md-dialog-actions layout="row">
+                    <span flex></span>
+                    <md-button type="submit">
+                        Go To Product
+                    </md-button>
+                </md-dialog-actions>
+            </form>
+        </md-dialog>
+    </div>
+</div>

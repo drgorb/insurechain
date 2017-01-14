@@ -1,0 +1,10 @@
+<div layout="column">
+    <md-content class="md-padding" permission
+                permission-only="['RETAILER']">
+        <md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+            <md-nav-item md-nav-sref="app.warranty.create" name="warranty.create">Create Warranty</md-nav-item>
+        </md-nav-bar>
+    </md-content>
+    <ui-view layout="column" layout-padding></ui-view>
+</div>
+<warranty-search></warranty-search>

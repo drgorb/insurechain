@@ -1,0 +1,6 @@
+<md-list>
+    <md-list-item ng-repeat="retailer in retailers">
+        <md-divider ng-hide="$last"></md-divider>
+        <p><b>{{ retailer.name }}</b> ({{retailer.statusName}})</p>
+    </md-list-item>
+</md-list>

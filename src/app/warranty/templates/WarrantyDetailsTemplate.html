@@ -1,0 +1,18 @@
+<md-card flex-gt-sm="90" flex-gt-md="80">
+    <md-card-content>
+        <div layout="column" layout-padding>
+            <h2>Details</h2>
+            <div>{{product.avatar}}</div>
+            <div><strong>Manufacturer</strong>: {{product.manufacturer}}</div>
+            <div><strong>Product Type:</strong> {{product.productType}}</div>
+            <div><strong>Name</strong>: {{product.name}}</div>
+            <div><strong>Serial</strong>: {{product.serial}}</div>
+            <div><strong>Description</strong>: {{product.description}}</div>
+
+            <h2>Warranty</h2>
+            <div><strong>Extended Warranty: </strong>{{warranty.status}}</div>
+            <div><strong>Extended Warranty Start Date: </strong>{{warranty.startDate | date}}</div>
+            <div><strong>Extended Warranty End Date: </strong>{{warranty.endDate | date}}</div>
+        </div>
+    </md-card-content>
+</md-card>

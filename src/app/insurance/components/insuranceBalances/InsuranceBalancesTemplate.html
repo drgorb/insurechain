@@ -1,0 +1,25 @@
+<md-card ng-repeat="balance in balances" flex-xs flex-gt-xs="50">
+    <md-card-title row="column">
+        <h2>{{balance.name}}</h2>
+    </md-card-title>
+    <md-card-content>
+        <div style="padding-bottom: 20px">
+            <p><b>Total Warranties Sold:</b> {{balance.balance[0]}}</p>
+            <p><b>Total Payments Made:</b> {{balance.balance[1]}}</p>
+            <p><b>Total Amount in Claim:</b> {{balance.balance[2]}}</p>
+            <p><b style="color: red"><i>Total to pay:</i></b> {{balance.total}}</p>
+        </div>
+        <form name="paymentCreate" ng-submit="sendRequest(payment, balance)">
+            <md-input-container class="md-block">
+                <label>Payment  Amount</label>
+                <input ng-model="payment" name="payment" type="number" step="0.01" required>
+                <div ng-messages="paymentCreate.payment.$error">
+                    <div ng-message="required">This is required!</div>
+                </div>
+            </md-input-container>
+            <md-card-actions layout="row" layout-align="end center">
+                <md-button class="md-raised md-primary" type="submit">Submit</md-button>
+            </md-card-actions>
+        </form>
+    </md-card-content>
+</md-card>

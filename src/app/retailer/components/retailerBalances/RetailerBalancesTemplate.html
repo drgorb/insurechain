@@ -1,0 +1,11 @@
+<md-card ng-repeat="balance in balances" flex-xs flex-gt-xs="50">
+    <md-card-title row="column">
+        <h2>{{balance.name}}</h2>
+    </md-card-title>
+    <md-card-content>
+        <p><b>Total Warranties Sold:</b> {{balance.balance[0]}}</p>
+        <p><b>Total Payments Made:</b> {{balance.balance[1]}}</p>
+        <p><b>Total Amount in Claim:</b> {{balance.balance[2]}}</p>
+        <p><b style="color: red"><i>Total to pay:</i></b> {{balance.total}}</p>
+    </md-card-content>
+</md-card>
