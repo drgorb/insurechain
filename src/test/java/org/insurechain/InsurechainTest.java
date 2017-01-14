@@ -188,10 +188,12 @@ public class InsurechainTest {
         insureChainInsuranceA.confirmWarranty("productId", "serialNumber2",
                 "policyNumber2").get();
 
-        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 0),
+        assertEquals(new Warranty(retailerAccount.getAddress(), insuranceAccountA.getAddress(), startDate, endDate, WarrantyStatus.Confirmed,
+                        "policyNumber", "productId", "serialNumber", warrantyPrice, 0),
                 insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccountA));
 
-        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber2", warrantyPrice, 0),
+        assertEquals(new Warranty(retailerAccount.getAddress(), insuranceAccountA.getAddress(), startDate, endDate, WarrantyStatus.Confirmed,
+                        "policyNumber2", "productId", "serialNumber2", warrantyPrice, 0),
                 insureChainAdmin.getWarranty("productId", "serialNumber2", insuranceAccountA));
 
         assertTrue(insureChainAdmin.isRegisteredRetailer(insuranceAccountA, retailerAccount));
@@ -203,7 +205,8 @@ public class InsurechainTest {
         assertEquals(new Claim(retailerAccount.getAddress(), 200, "replace device"),
                 insureChainRetailer.getClaim("productId", "serialNumber", insuranceAccountA, 0));
 
-        assertEquals(new Warranty(startDate, endDate, WarrantyStatus.Confirmed, "policyNumber", warrantyPrice, 1),
+        assertEquals(new Warranty(retailerAccount.getAddress(), insuranceAccountA.getAddress(), startDate, endDate, WarrantyStatus.Confirmed, "policyNumber",
+                        "productId", "serialNumber", warrantyPrice, 1),
                 insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccountA));
 
         try{
