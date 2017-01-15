@@ -3,6 +3,7 @@ package org.insurechain;
 import org.adridadou.ethereum.EthereumFacade;
 import org.adridadou.ethereum.provider.PrivateEthereumFacadeProvider;
 import org.adridadou.ethereum.provider.PrivateNetworkConfig;
+import org.adridadou.ethereum.values.CompiledContract;
 import org.adridadou.ethereum.values.EthAccount;
 import org.adridadou.ethereum.values.EthAddress;
 import org.adridadou.ethereum.values.SoliditySource;
@@ -68,20 +69,23 @@ public class InsurechainTest {
                 .initialBalance(insuranceAccountB, ether(1000000000))
                 .initialBalance(retailerAccount, ether(1000000000))
         );
+        CompiledContract insuranceManager = ethereum.compile(soliditySource,"InsuranceManager");
+        CompiledContract retailerManager = ethereum.compile(soliditySource, "RetailerManager");
+        CompiledContract insurechain = ethereum.compile(soliditySource,"Insurechain");
         // add contracts to publish
-        EthAddress insuranceManagerAddress = ethereum.publishContract(soliditySource, "InsuranceManager",
+        EthAddress insuranceManagerAddress = ethereum.publishContract(insuranceManager,
                 mainAccount).get();
-        EthAddress retailermanagerAddress = ethereum.publishContract(soliditySource, "RetailerManager",
+        EthAddress retailermanagerAddress = ethereum.publishContract(retailerManager,
                 mainAccount).get();
-        EthAddress insureChainAddress = ethereum.publishContract(soliditySource, "Insurechain",
+        EthAddress insureChainAddress = ethereum.publishContract(insurechain,
                 mainAccount).get();
 
         EthereumFacade.Builder<Insurechain> insurechainContractBuilder =
-                ethereum.createContractProxy(soliditySource, "Insurechain", insureChainAddress, Insurechain.class);
+                ethereum.createContractProxy(insurechain, insureChainAddress, Insurechain.class);
         EthereumFacade.Builder<InsuranceManager> insuranceManagerContractBuilder =
-                ethereum.createContractProxy(soliditySource, "InsuranceManager", insuranceManagerAddress, InsuranceManager.class);
+                ethereum.createContractProxy(insuranceManager, insuranceManagerAddress, InsuranceManager.class);
         EthereumFacade.Builder<RetailerManager> retailerManagerContractBuilder =
-                ethereum.createContractProxy(soliditySource, "RetailerManager", retailermanagerAddress, RetailerManager.class);
+                ethereum.createContractProxy(retailerManager, retailermanagerAddress, RetailerManager.class);
 
         insureChainAdmin = insurechainContractBuilder.forAccount(mainAccount);
         insureChainAdmin.setSubContractAddresses(insuranceManagerAddress, retailermanagerAddress);
@@ -108,10 +112,12 @@ public class InsurechainTest {
         assertFalse(mainAccount.equals(retailerAccount));
         assertFalse(insuranceAccountA.equals(retailerAccount));
 
-        EthAddress priceCalculatorAddress = ethereum.publishContract(soliditySource, "PriceCalculator",
+        CompiledContract priceCalculatorContract = ethereum.compile(soliditySource,"PriceCalculator");
+
+        EthAddress priceCalculatorAddress = ethereum.publishContract(priceCalculatorContract,
                 mainAccount).get();
 
-        PriceCalculator priceCalculator = ethereum.createContractProxy(soliditySource, "PriceCalculator", priceCalculatorAddress,mainAccount, PriceCalculator.class);
+        PriceCalculator priceCalculator = ethereum.createContractProxy(priceCalculatorContract, priceCalculatorAddress,mainAccount, PriceCalculator.class);
 
         Date startDate = Date.from(LocalDate.of(2016, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
