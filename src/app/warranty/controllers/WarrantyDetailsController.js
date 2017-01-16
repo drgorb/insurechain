@@ -4,18 +4,11 @@ function WarrantyDetailsController($scope, $stateParams, EthereumWarrantyService
 
     EthereumWarrantyService
         .getWarranty($stateParams.id)
-        .then(function (product) {
-            console.dir(product);
-            console.log(product.toString());
-            $scope.product = product;
+        .then(function (warranty) {
+            $scope.warranty = warranty;
         })
         .catch(logError);
 
-    $scope.warranty = {
-        status: true,
-        startDate: new Date(),
-        endDate: new Date()
-    };
 
     function logError(err) {
         console.log(err);

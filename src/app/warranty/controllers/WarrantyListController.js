@@ -10,7 +10,7 @@ function WarrantyListController($scope, $state, $stateParams, EthereumWarrantySe
         .catch(logError);
 
     $scope.goToProduct = function (product) {
-        $state.go('app.warranty.details', {id: 1});
+        $state.go('app.warranty.details', {id: product.index});
     };
 
     function logError(err) {

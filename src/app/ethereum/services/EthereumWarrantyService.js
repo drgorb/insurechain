@@ -1,11 +1,32 @@
-import {productList} from '../../warranty/mock/mockData'
+import {productList} from '../../warranty/mock/mockData';
 import _ from 'underscore';
 
 function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceService, EthereumRetailersService, $q, $http) {
     const insureChain = EthereumHelperService.insurechain;
+    let self = this;
 
-    function getDetailedInfo(ean) {
-        
+    function getDetailedInfo(warranty, index) {
+        const productInfo = getProductInfo(warranty[6]);
+        return Object.assign({}, {
+            retailer: warranty[0],
+            insurance: warranty[1],
+            startDate: warranty[2].toNumber(),
+            endDate: warranty[3].toNumber(),
+            status: warranty[4].toNumber(),
+            policyNumber: warranty[5],
+            productId: warranty[6],
+            serial: warranty[7],
+            warrantyPrice: warranty[8].toNumber(),
+            claimCount: warranty[9].toNumber(),
+            index
+        }, {productInfo});
+    }
+
+    function getProductInfo(ean) {
+        let productInfo = productList.find(value => {
+            return value.ean === ean;
+        });
+        return productInfo;
     }
 
     this.getRetailerList = (insurance) => EthereumRetailersService.getRetailerList(insurance);
@@ -14,16 +35,19 @@ function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceServic
         return EthereumHelperService.toPromise(insureChain.warrantyCount).then((count) => {
             const promises = [];
             for(let i = 0; i < count.toNumber(); i++) {
-                promises.push(EthereumHelperService.toPromise(insureChain.getWarrantyByIndex, i));
+                promises.push(self.getWarranty(i));
             }
             return $q.all(promises);
-        }).then(warranties => {
-            return warranties
-        });
+        }).then(warranties => warranties);
     };
 
-    this.getWarranty = (index) => EthereumHelperService.toPromise(insureChain.getWarrantyByIndex, index);
-    
+    this.getWarranty = (index) => {
+        return EthereumHelperService.toPromise(insureChain.getWarrantyByIndex, index)
+            .then(warranty => {
+                return getDetailedInfo(warranty, index)
+            });
+    };
+
     this.getRegisteredInsurances = () => {
         return EthereumInsuranceService
             .getInsurancesList()
@@ -48,4 +72,3 @@ function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceServic
 }
 
 export default ['EthereumHelperService', 'EthereumInsuranceService', 'EthereumRetailersService', '$q', '$http', EthereumWarrantyService]
-
