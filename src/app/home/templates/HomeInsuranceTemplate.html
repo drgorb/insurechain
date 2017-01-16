@@ -1,22 +1,26 @@
 <div layout-xs="column" layout="row">
-    <md-card flex-xs flex-gt-xs="50">
-        <md-card-title>
-            <h2>Retailers List</h2>
-        </md-card-title>
-        <md-card-content>
-            <retailer-accepted></retailer-accepted>
-            <md-card-actions layout="row" layout-align="end center">
-                <md-button class="md-raised md-primary" ui-sref="app.retailer.confirmation">Manage Retailers</md-button>
-            </md-card-actions>
-        </md-card-content>
-    </md-card>
-    <md-card flex-xs flex-gt-xs="50">
-        <md-card-title>
-            <h2>Total Balances</h2>
-        </md-card-title>
-        <md-card-content>
-            <insurance-total-balances></insurance-total-balances>
-        </md-card-content>
-    </md-card>
+    <div flex-xs flex-gt-xs="50">
+        <md-card>
+            <md-card-title>
+                <h2>Retailers List</h2>
+            </md-card-title>
+            <md-card-content>
+                <retailer-accepted></retailer-accepted>
+                <md-card-actions layout="row" layout-align="end center">
+                    <md-button class="md-raised md-primary" ui-sref="app.retailer.confirmation">Manage Retailers</md-button>
+                </md-card-actions>
+            </md-card-content>
+        </md-card>
+    </div>
+    <div flex-xs flex-gt-xs="50">
+        <md-card>
+            <md-card-title>
+                <h2>Total Balances</h2>
+            </md-card-title>
+            <md-card-content>
+                <insurance-total-balances></insurance-total-balances>
+            </md-card-content>
+        </md-card>
+    </div>
 </div>
-<insurance-balances layout-xs="column" layout="row"></insurance-balances>
+<insurance-balances layout-xs="column" layout="row" layout-align="center center"></insurance-balances>

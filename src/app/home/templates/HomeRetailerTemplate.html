@@ -1,20 +1,25 @@
 
 <div layout-xs="column" layout="row">
-    <md-card flex-xs flex-gt-xs="50">
-        <md-card-title layout="row">
-            <h2>Available Insurance</h2>
-        </md-card-title>
-        <md-card-content>
-            <insurance-registered></insurance-registered>
-        </md-card-content>
-    </md-card>
-    <md-card flex-xs flex-gt-xs="50">
-        <md-card-title layout="row">
-            <h2>Total Balances</h2>
-        </md-card-title>
-        <md-card-content>
-            <retailer-total-balances></retailer-total-balances>
-        </md-card-content>
-    </md-card>
+    <div flex-xs flex-gt-xs="50">
+        <md-card>
+            <md-card-title layout="row">
+                <h2>Available Insurance</h2>
+            </md-card-title>
+            <md-card-content>
+                <insurance-registered></insurance-registered>
+            </md-card-content>
+        </md-card>
+    </div>
+
+    <div flex-xs flex-gt-xs="50">
+        <md-card>
+            <md-card-title>
+                <h2>Total Balances</h2>
+            </md-card-title>
+            <md-card-content>
+                <retailer-total-balances></retailer-total-balances>
+            </md-card-content>
+        </md-card>
+    </div>
 </div>
-<retailer-balances layout-xs="column" layout="row"></retailer-balances>
+<retailer-balances layout-xs="column" layout="row" layout-align="center center"></retailer-balances>
