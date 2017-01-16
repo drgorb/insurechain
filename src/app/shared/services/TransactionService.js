@@ -1,4 +1,4 @@
-function TransactionService ($rootScope, $mdDialog, $compile) {
+function TransactionService ($rootScope, $mdDialog, $compile, $state) {
 
     this.showWidgetLoader = (elem, scope) => {
         let loaderElement = angular.element(`<div class="widget-loader" layout="row" layout-sm="column" layout-align="space-around">
@@ -23,7 +23,13 @@ function TransactionService ($rootScope, $mdDialog, $compile) {
 
         if(info) {
             $mdDialog.show(
-                $mdDialog.alert()
+                $mdDialog.alert({
+                    onRemoving: () => {
+                        if(reload) {
+                            $state.reload();
+                        }
+                    }
+                })
                     .clickOutsideToClose(true)
                     .title('Transaction Result')
                     .textContent(info)
@@ -40,4 +46,4 @@ function TransactionService ($rootScope, $mdDialog, $compile) {
     return this;
 }
 
-export default ['$rootScope', '$mdDialog', '$compile', TransactionService];
+export default ['$rootScope', '$mdDialog', '$compile', '$state', TransactionService];

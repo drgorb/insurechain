@@ -39,7 +39,7 @@ function InsuranceConfirmationController($scope, TransactionService, EthereumIns
         EthereumInsuranceService
             .setRequestStatus(insurance, status)
             .then(function (info) {
-                TransactionService.finishTransaction(info);
+                TransactionService.finishTransaction(info, true);
             })
             .catch(function (err) {
                 TransactionService.finishTransaction(err);

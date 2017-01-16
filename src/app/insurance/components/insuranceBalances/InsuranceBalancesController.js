@@ -24,7 +24,7 @@ function RetailerBalanceController(
 
         EthereumBalancesService
             .increasePaymentsBalance(balance.address, $rootScope.user, amount)
-            .then((info) => TransactionService.finishTransaction(info))
+            .then((info) => TransactionService.finishTransaction(info, true))
             .catch((err) => TransactionService.finishTransaction(err))
     };
 

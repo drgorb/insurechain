@@ -36,7 +36,7 @@ function RetailerConfirmationController($scope, TransactionService, EthereumReta
         EthereumRetailersService
             .setRequestStatus(retailer, status)
             .then(function (info) {
-                TransactionService.finishTransaction(info);
+                TransactionService.finishTransaction(info, true);
             })
             .catch(function (err) {
                 TransactionService.finishTransaction(err);
