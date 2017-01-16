@@ -1,9 +1,11 @@
 function RetailerBalanceController(
     $scope,
     $rootScope,
+    $element,
     EthereumBalancesService,
     TransactionService
 ) {
+    TransactionService.showWidgetLoader($element, $scope);
 
     $scope.balances = null;
     $scope.payment = null;
@@ -11,6 +13,7 @@ function RetailerBalanceController(
     EthereumBalancesService
         .getFullInsuranceBalances($rootScope.user)
         .then(function (balances) {
+            TransactionService.hideWidgetLoader($element);
             $scope.balances = balances;
         })
         .catch(err);
@@ -29,4 +32,4 @@ function RetailerBalanceController(
         console.log(err);
     }
 }
-export default ['$scope', '$rootScope', 'EthereumBalancesService', 'TransactionService', RetailerBalanceController]
+export default ['$scope', '$rootScope', '$element', 'EthereumBalancesService', 'TransactionService', RetailerBalanceController]

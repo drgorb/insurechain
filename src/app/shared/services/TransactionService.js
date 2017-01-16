@@ -1,4 +1,19 @@
-function TransactionService ($rootScope, $mdDialog) {
+function TransactionService ($rootScope, $mdDialog, $compile) {
+
+    this.showWidgetLoader = (elem, scope) => {
+        let loaderElement = angular.element(`<div class="widget-loader" layout="row" layout-sm="column" layout-align="space-around">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>`);
+        let loader = $compile(loaderElement)(scope);
+        elem.append(loader);
+    };
+
+    this.hideWidgetLoader = (elem) => {
+        let loader = elem[0].querySelector('.widget-loader');
+        loader.remove();
+    };
+
+
     this.startTransaction = () => {
         $rootScope.showMainLoader = true;
     };
@@ -25,4 +40,4 @@ function TransactionService ($rootScope, $mdDialog) {
     return this;
 }
 
-export default ['$rootScope', '$mdDialog', TransactionService];
+export default ['$rootScope', '$mdDialog', '$compile', TransactionService];
