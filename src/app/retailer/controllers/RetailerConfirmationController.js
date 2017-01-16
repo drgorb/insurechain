@@ -4,7 +4,10 @@ function RetailerConfirmationController($scope, TransactionService, EthereumReta
         .getRetailerList(web3.eth.accounts[0])
         .then(function(retailers) {
             $scope.retailers = retailers;
-            TransactionService.finishTransaction(retailers);
+            TransactionService.finishTransaction();
+        })
+        .catch(function(err) {
+            TransactionService.finishTransaction(null, null, err);
         });
 
     $scope.filterStatus = '';

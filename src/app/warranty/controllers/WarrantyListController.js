@@ -1,20 +1,17 @@
-function WarrantyListController($scope, $state, $stateParams, EthereumWarrantyService) {
-    $scope.products = null;
-
+function WarrantyListController($scope, $state, TransactionService, EthereumWarrantyService) {
+    TransactionService.startTransaction();
     EthereumWarrantyService
         .getAllWarranty()
         .then(function (products) {
-            console.log(products);
             $scope.products = products;
+            TransactionService.finishTransaction();
         })
-        .catch(logError);
+        .catch(function(err) {
+            TransactionService.finishTransaction(null, null, err);
+        });
 
     $scope.goToProduct = function (product) {
         $state.go('app.warranty.details', {id: product.index});
     };
-
-    function logError(err) {
-        console.log(err);
-    }
 }
-export default ['$scope','$state', '$stateParams', 'EthereumWarrantyService', WarrantyListController]
+export default ['$scope','$state', 'TransactionService', 'EthereumWarrantyService', WarrantyListController]

@@ -1,16 +1,13 @@
 function RetailerAcceptedController(
     $scope,
     $rootScope,
-    EthereumRetailersService,
-    TransactionService
+    EthereumRetailersService
 ) {
-    TransactionService.startTransaction();
     EthereumRetailersService
         .getRetailerList($rootScope.user)
         .then(function (retailers) {
-            TransactionService.finishTransaction(retailers);
             $scope.retailers = retailers;
         })
 }
-export default ['$scope', '$rootScope', 'EthereumRetailersService','TransactionService', RetailerAcceptedController]
+export default ['$scope', '$rootScope', 'EthereumRetailersService', RetailerAcceptedController]
 
