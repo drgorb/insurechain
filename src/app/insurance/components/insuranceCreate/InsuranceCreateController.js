@@ -8,7 +8,7 @@ function InsuranceCreateController($scope, EthereumInsuranceService, Transaction
     $scope.sendRequest = function(insurance) {
         TransactionService.startTransaction();
         EthereumInsuranceService
-            .regsiterInsurance(insurance.insuranceName)
+            .registerInsurance(insurance.insuranceName)
             .then(info => TransactionService.finishTransaction(info))
             .catch(err => TransactionService.finishTransaction(err))
     }

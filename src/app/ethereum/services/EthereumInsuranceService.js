@@ -33,7 +33,7 @@ function EthereumInsuranceService (EthereumHelperService, $q) {
             })
     };
 
-    this.regsiterInsurance = (name) => EthereumHelperService.toPromise(contract.createInsurance, name);
+    this.registerInsurance = (name) => EthereumHelperService.toPromise(contract.createInsurance, name);
 
     this.setRequestStatus = (address, state) => EthereumHelperService.toPromise(contract.setInsuranceState, address, state);
 

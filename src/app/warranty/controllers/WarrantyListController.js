@@ -2,14 +2,15 @@ function WarrantyListController($scope, $state, $stateParams, EthereumWarrantySe
     $scope.products = null;
 
     EthereumWarrantyService
-        .getAllProducts()
+        .getAllWarranty()
         .then(function (products) {
+            console.log(products);
             $scope.products = products;
         })
         .catch(logError);
 
     $scope.goToProduct = function (product) {
-        $state.go('app.warranty.details', {id: product.serial});
+        $state.go('app.warranty.details', {id: product.index});
     };
 
     function logError(err) {

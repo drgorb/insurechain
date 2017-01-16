@@ -4,9 +4,7 @@ package org.insurechain;
 import org.adridadou.ethereum.EthereumFacade;
 import org.adridadou.ethereum.provider.EthereumFacadeProvider;
 import org.adridadou.ethereum.provider.EthereumJConfigs;
-import org.adridadou.ethereum.values.EthAccount;
-import org.adridadou.ethereum.values.EthAddress;
-import org.adridadou.ethereum.values.SoliditySource;
+import org.adridadou.ethereum.values.*;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -176,18 +174,23 @@ public class PublishAndSetup {
     }
 
     private void initContractInterfaces() throws InterruptedException, ExecutionException, IOException {
-        EthAddress imContractAddress = ethereum.publishContract(soliditySource, "InsuranceManager",
+        CompiledContract insuranceManager = ethereum.compile(soliditySource,"InsuranceManager");
+        CompiledContract retailerManager = ethereum.compile(soliditySource, "RetailerManager");
+        CompiledContract insurechain = ethereum.compile(soliditySource,"Insurechain");
+        CompiledContract priceCalculator = ethereum.compile(soliditySource,"PriceCalculator");
+
+        EthAddress imContractAddress = ethereum.publishContract(insuranceManager,
                 owner).get();
-        EthAddress rmContractAddress = ethereum.publishContract(soliditySource, "RetailerManager",
+        EthAddress rmContractAddress = ethereum.publishContract(retailerManager,
                 owner, imContractAddress).get();
-        EthAddress icContractAddress = ethereum.publishContract(soliditySource, "Insurechain",
+        EthAddress icContractAddress = ethereum.publishContract(insurechain,
                 owner, imContractAddress, rmContractAddress).get();
-        priceCalculatorAddress = ethereum.publishContract(soliditySource, "PriceCalculator",
+        priceCalculatorAddress = ethereum.publishContract(priceCalculator,
                 owner).get();
 
-        String icJson = getJson(icContractAddress, "insureChain", "Insurechain");
-        String imJson = getJson(imContractAddress, "insuranceManager", "InsuranceManager");
-        String rmJson = getJson(rmContractAddress, "retailerManager", "RetailerManager");
+        String icJson = getJson(icContractAddress, "insureChain", insurechain.getAbi());
+        String imJson = getJson(imContractAddress, "insuranceManager", insuranceManager.getAbi());
+        String rmJson = getJson(rmContractAddress, "retailerManager", retailerManager.getAbi());
 
         String definitions = icJson + "\n" + imJson + "\n" + rmJson + "\n";
 
@@ -195,9 +198,9 @@ public class PublishAndSetup {
         IOUtils.write(definitions + "export {insureChain, insuranceManager, retailerManager};"
                 , contractDefinitions, StandardCharsets.UTF_8);
 
-        EthereumFacade.Builder<Insurechain> icContractBuilder = ethereum.createContractProxy(soliditySource, "Insurechain", icContractAddress, Insurechain.class);
-        EthereumFacade.Builder<InsuranceManager> imContractBuilder = ethereum.createContractProxy(soliditySource, "InsuranceManager",imContractAddress, InsuranceManager.class);
-        EthereumFacade.Builder<RetailerManager> rmContractBuilder = ethereum.createContractProxy(soliditySource, "RetailerManager",rmContractAddress, RetailerManager.class);
+        EthereumFacade.Builder<Insurechain> icContractBuilder = ethereum.createContractProxy(insurechain, icContractAddress, Insurechain.class);
+        EthereumFacade.Builder<InsuranceManager> imContractBuilder = ethereum.createContractProxy(insuranceManager,imContractAddress, InsuranceManager.class);
+        EthereumFacade.Builder<RetailerManager> rmContractBuilder = ethereum.createContractProxy(retailerManager,rmContractAddress, RetailerManager.class);
 
         contract.put(owner, new Contracts(icContractBuilder.forAccount(owner),
                 imContractBuilder.forAccount(owner),
@@ -215,9 +218,9 @@ public class PublishAndSetup {
                 rmContractBuilder.forAccount(retailer))));
     }
 
-    private String getJson(EthAddress contractAddress, String name, String contractName) throws IOException {
+    private String getJson(EthAddress contractAddress, String name, ContractAbi abi) throws IOException {
         final String json = "{address: " + "\"" + contractAddress.withLeading0x() + "\"" +
-                ",abi:" + ethereum.getAbi(soliditySource, contractName).getAbi() + "}";
+                ",abi:" + abi.getAbi() + "}";
 
         return "const " + name + " = " + json + ";";
 

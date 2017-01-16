@@ -6,13 +6,11 @@ function TransactionService ($rootScope, $mdDialog) {
     this.finishTransaction = function (info) {
         $rootScope.showMainLoader = false;
 
-        let textContent =  info;
-
         $mdDialog.show(
             $mdDialog.alert()
                 .clickOutsideToClose(true)
                 .title('Transaction Result')
-                .textContent(textContent)
+                .textContent(info)
                 .ariaLabel('Transaction Result')
                 .ok('Ok')
         );

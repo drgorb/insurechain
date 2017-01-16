@@ -1,18 +1,31 @@
 <md-card flex-gt-sm="90" flex-gt-md="80">
     <md-card-content>
-        <div layout="column" layout-padding>
-            <h2>Details</h2>
-            <div>{{product.avatar}}</div>
-            <div><strong>Manufacturer</strong>: {{product.manufacturer}}</div>
-            <div><strong>Product Type:</strong> {{product.productType}}</div>
-            <div><strong>Name</strong>: {{product.name}}</div>
-            <div><strong>Serial</strong>: {{product.serial}}</div>
-            <div><strong>Description</strong>: {{product.description}}</div>
+        <div layout="row" layout-sm="column">
+            <div layout="column" flex-gt-sm="70"  layout-padding>
+                <h2>Details</h2>
 
-            <h2>Warranty</h2>
-            <div><strong>Extended Warranty: </strong>{{warranty.status}}</div>
-            <div><strong>Extended Warranty Start Date: </strong>{{warranty.startDate | date}}</div>
-            <div><strong>Extended Warranty End Date: </strong>{{warranty.endDate | date}}</div>
+                <div><strong>Name</strong>: {{warranty.productInfo.name}}</div>
+                <div><strong>Manufacturer</strong>: {{warranty.productInfo.manufacturer}}</div>
+                <div><strong>Ean</strong>: {{warranty.productInfo.ean}}</div>
+                <div><strong>Cat ID:</strong> {{warranty.productInfo.cat_id}}</div>
+                <div><strong>Sem3 Id</strong>: {{warranty.productInfo.sem3_id}}</div>
+
+                <h2>Warranty</h2>
+                <div><strong>Warranty: </strong>{{warranty.status}}</div>
+                <div><strong>Warranty Retailer: </strong>{{warranty.retailer}}</div>
+                <div><strong>Warranty Insurer: </strong>{{warranty.insurance}}</div>
+                <div><strong>Warranty Policy Number: </strong>{{warranty.policyNumber}}</div>
+                <div><strong>Warranty Price: </strong>{{warranty.warrantyPrice}}</div>
+                <div><strong>Warranty Claim Count: </strong>{{warranty.claimCount}}</div>
+                <div><strong>Warranty Start Date: </strong>{{warranty.startDate | date}}</div>
+                <div><strong>Warranty End Date: </strong>{{warranty.endDate | date}}</div>
+            </div>
+            <div layout="column" flex-gt-sm="30" layout-padding>
+                <h2>Images</h2>
+                <div ng-repeat="image in warranty.productInfo.images">
+                    <img ng-src="{{image}}" alt="{{warranty.name}}" style="width: 100%">
+                </div>
+            </div>
         </div>
     </md-card-content>
 </md-card>
