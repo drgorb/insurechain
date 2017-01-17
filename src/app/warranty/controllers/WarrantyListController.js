@@ -1,5 +1,6 @@
 function WarrantyListController($scope, $state, TransactionService, EthereumWarrantyService) {
     TransactionService.startTransaction();
+    $scope.productSearch = '';
     EthereumWarrantyService
         .getAllWarranty()
         .then(function (products) {

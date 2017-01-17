@@ -52,13 +52,14 @@ export default angular.module(appModule, [
     productModule,
     warrantyModule
 ])
-    .factory('UserService', UserService)
-    .factory('TransactionService', TransactionService)
-    .factory('PermissionService', PermissionService)
     .factory('EthereumHelperService', EthereumHelperService)
     .factory('EthereumRoleService', EthereumRoleService)
     .factory('EthereumWarrantyService', EthereumWarrantyService)
     .factory('EthereumBalancesService', EthereumBalancesService)
+
+    .factory('TransactionService', TransactionService)
+    .factory('PermissionService', PermissionService)
+    .factory('UserService', UserService)
 
     .component(LoaderComponent.name, LoaderComponent.config)
 

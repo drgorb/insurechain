@@ -1,7 +1,15 @@
 <md-card flex-gt-sm="90" flex-gt-md="80">
     <md-card-content>
+        <div layout="row" layout-padding>
+            <div>
+                <md-input-container>
+                    <label>Search</label>
+                    <input name="productSearch" ng-model="productSearch">
+                </md-input-container>
+            </div>
+        </div>
         <md-list>
-            <md-list-item class="md-2-line" ng-repeat="product in products" ng-click="goToProduct(product)">
+            <md-list-item class="md-2-line" ng-repeat="product in products | filter:productSearch" ng-click="goToProduct(product)">
                 <div class="md-list-item-text">
                     <h3>{{product.productInfo.name}}</h3>
                     <p>Serial: {{product.serial}}</p>
