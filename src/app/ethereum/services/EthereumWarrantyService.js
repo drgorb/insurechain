@@ -10,8 +10,8 @@ function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceServic
         return Object.assign({}, {
             retailer: warranty[0],
             insurance: warranty[1],
-            startDate: warranty[2].toNumber(),
-            endDate: warranty[3].toNumber(),
+            startDate: warranty[2].toNumber() * 1000,
+            endDate: warranty[3].toNumber() * 1000,
             status: warranty[4].toNumber(),
             policyNumber: warranty[5],
             productId: warranty[6],
