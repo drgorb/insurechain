@@ -3,6 +3,7 @@ import _ from 'underscore';
 
 function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceService, EthereumRetailersService, $q, $http) {
     const insureChain = EthereumHelperService.insurechain;
+
     let self = this;
 
     function getDetailedInfo(warranty, index) {
@@ -67,6 +68,10 @@ function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceServic
                 warranty.price
             );
     };
+
+    this.cancelWarranty = (productId, serialNumber, insuranceAddress) => EthereumHelperService.toPromise(insureChain.cancelWarranty, productId, serialNumber, insuranceAddress);
+
+    this.createClaim = (productId, serialNumber, insurance, amount, description) => EthereumHelperService.toPromise(insureChain.createClaim, productId, serialNumber, insurance, amount, description);
 
     return this;
 }
