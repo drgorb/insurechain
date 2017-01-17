@@ -17,17 +17,36 @@ function TransactionService ($rootScope, $mdDialog, $compile, $state, $interval)
     this.startTransaction = () => {
         $rootScope.showMainLoader = true;
     };
+    function showInfo(info) {
+        $mdDialog.show(
+            $mdDialog.alert({})
+                .clickOutsideToClose(true)
+                .title('Transaction Result')
+                .textContent(info)
+                .ariaLabel('Transaction Result')
+                .ok('Ok')
+        );
+    }
 
     this.finishTransaction = (info = false, reload = false, log = false) => {
 
         if(reload) {
+            let attempts = 0;
             let stopVerify = null;
             const verifyTx = () => {
+                attempts++;
                 web3.eth.getTransactionReceipt(info, function(err,res) {
                     if(err){
-                        console.error(err);
+                        $interval.cancel(stopVerify);
+                        showInfo('error while executing the transaction ' + info + ':' + err);
                     }else {
                         if(res) {
+                            showInfo('transaction ' + info + " successful");
+                            $interval.cancel(stopVerify);
+                            $rootScope.showMainLoader = false;
+                            $state.reload();
+                        } else if(attempts > 600) {
+                            showInfo('transaction ' + info + " was needed included after 5 minutes");
                             $interval.cancel(stopVerify);
                             $rootScope.showMainLoader = false;
                             $state.reload();
@@ -40,14 +59,7 @@ function TransactionService ($rootScope, $mdDialog, $compile, $state, $interval)
             $rootScope.showMainLoader = false;
 
             if(info) {
-                $mdDialog.show(
-                    $mdDialog.alert({})
-                        .clickOutsideToClose(true)
-                        .title('Transaction Result')
-                        .textContent(info)
-                        .ariaLabel('Transaction Result')
-                        .ok('Ok')
-                );
+                showInfo(info);
             }
 
             if(log) {
