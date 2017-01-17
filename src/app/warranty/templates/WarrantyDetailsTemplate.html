@@ -24,7 +24,7 @@
                     <div><strong>Warranty Start Date: </strong>{{warranty.startDate | date}}</div>
                     <div><strong>Warranty End Date: </strong>{{warranty.endDate | date}}</div>
                 </div>
-                <div if="showRetailerPart" layout-padding>
+                <div ng-if="showRetailerPart" layout-padding>
                     <br><br>
                     <md-divider></md-divider>
                     <h2>Claim</h2>
