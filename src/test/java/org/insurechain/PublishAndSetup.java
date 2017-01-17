@@ -15,7 +15,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -120,33 +123,33 @@ public class PublishAndSetup {
         Date startDate = Date.from(LocalDate.of(2016, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
 
-        newArrayList(contract.get(digitec).ic.createWarranty("iPhone6", "iPhone6SerialNumber1", zurich, startDate,
+        newArrayList(contract.get(digitec).ic.createWarranty("0711730346183", "iPhone6SerialNumber1", zurich, startDate,
                 endDate, 4000),
-        contract.get(digitec).ic.createWarranty("iPhone6", "iPhone6SerialNumber2", alianz, startDate,
+        contract.get(digitec).ic.createWarranty("0711730346183", "iPhone6SerialNumber2", alianz, startDate,
                 endDate, 4000),
-        contract.get(interdiscount).ic.createWarranty("iPhone6", "iPhone6SerialNumber3", mobiliere, startDate,
+        contract.get(interdiscount).ic.createWarranty("0711730346183", "iPhone6SerialNumber3", mobiliere, startDate,
                 endDate, 4000),
-        contract.get(interdiscount).ic.createWarranty("iPhone6", "iPhone6SerialNumber4", zurich, startDate,
+        contract.get(interdiscount).ic.createWarranty("0711730346183", "iPhone6SerialNumber4", zurich, startDate,
                 endDate, 4000),
-        contract.get(melectronics).ic.createWarranty("iPhone6", "iPhone6SerialNumber5", alianz, startDate,
+        contract.get(melectronics).ic.createWarranty("0711730346183", "iPhone6SerialNumber5", alianz, startDate,
                 endDate, 4000),
-        contract.get(melectronics).ic.createWarranty("iPhone6", "iPhone6SerialNumber6", mobiliere, startDate,
+        contract.get(melectronics).ic.createWarranty("0711730346183", "iPhone6SerialNumber6", mobiliere, startDate,
                 endDate, 4000)).forEach(waitForFuture);
 
-        newArrayList(contract.get(zurich).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber1", "iPhone6SerialNumber1Zurich"),
-        contract.get(alianz).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber2", "iPhone6SerialNumber2Alianz"),
-        contract.get(mobiliere).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber3", "iPhone6SerialNumber3Mobiliere"),
-        contract.get(zurich).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber4", "iPhone6SerialNumber4Zurich"),
-        contract.get(alianz).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber5", "iPhone6SerialNumber5Alianz"),
-        contract.get(mobiliere).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber6", "iPhone6SerialNumber6Mobiliere")).forEach(waitForFuture);
+        newArrayList(contract.get(zurich).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber1", "iPhone6SerialNumber1Zurich"),
+        contract.get(alianz).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber2", "iPhone6SerialNumber2Alianz"),
+        contract.get(mobiliere).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber3", "iPhone6SerialNumber3Mobiliere"),
+        contract.get(zurich).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber4", "iPhone6SerialNumber4Zurich"),
+        contract.get(alianz).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber5", "iPhone6SerialNumber5Alianz"),
+        contract.get(mobiliere).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber6", "iPhone6SerialNumber6Mobiliere")).forEach(waitForFuture);
     }
 
     private void createClaims() throws ExecutionException, InterruptedException {
-        newArrayList(contract.get(digitec).ic.createClaim("iPhone6", "iPhone6SerialNumber1", zurich,
+        newArrayList(contract.get(digitec).ic.createClaim("0711730346183", "iPhone6SerialNumber1", zurich,
                 500, "replace screen"),
-        contract.get(interdiscount).ic.createClaim("iPhone6", "iPhone6SerialNumber3", mobiliere,
+        contract.get(interdiscount).ic.createClaim("0711730346183", "iPhone6SerialNumber3", mobiliere,
                 2000, "replace phone"),
-        contract.get(melectronics).ic.createClaim("iPhone6", "iPhone6SerialNumber5", alianz,
+        contract.get(melectronics).ic.createClaim("0711730346183", "iPhone6SerialNumber5", alianz,
                 800, "replace battery")).forEach(waitForFuture);
     }
 
