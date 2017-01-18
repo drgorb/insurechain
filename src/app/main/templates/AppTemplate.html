@@ -8,12 +8,34 @@
                 Warranty
             </h3>
             <span flex></span>
-            <md-button class="md-icon-button" aria-label="Favorite">
-                <ng-md-icon icon="notifications"></ng-md-icon>
-            </md-button>
-            <md-button class="md-icon-button" aria-label="Favorite">
-                <ng-md-icon icon="more_vert"></ng-md-icon>
-            </md-button>
+            <md-menu md-position-mode="target-right target" >
+                <md-button class="md-icon-button" aria-label="Notifications" ng-click="$mdOpenMenu($event)">
+                    <ng-md-icon icon="notifications"></ng-md-icon>
+                </md-button>
+                <md-menu-content width="4" >
+                    <md-menu-item>
+                        <md-button>
+                            <div layout="row" flex>
+                                <p flex>Option 1</p>
+                            </div>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+            <md-menu md-position-mode="target-right target" >
+                <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
+                    <ng-md-icon icon="more_vert"></ng-md-icon>
+                </md-button>
+                <md-menu-content width="4" >
+                    <md-menu-item>
+                        <md-button>
+                            <div layout="row" flex>
+                                <p flex>Option 2</p>
+                            </div>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
         </div>
     </md-toolbar>
     <div flex layout="row">
