@@ -16,6 +16,7 @@ import resolvers from './resolvers';
 import AppController from './main/controllers/AppController';
 
 import UserService from './shared/services/UserService';
+import NameService from './shared/services/NameService';
 import TransactionService from './shared/services/TransactionService';
 import PermissionService from './main/services/PermissionService';
 
@@ -60,6 +61,7 @@ export default angular.module(appModule, [
     .factory('TransactionService', TransactionService)
     .factory('PermissionService', PermissionService)
     .factory('UserService', UserService)
+    .factory('NameService', NameService)
 
     .component(LoaderComponent.name, LoaderComponent.config)
 

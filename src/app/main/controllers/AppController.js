@@ -6,30 +6,17 @@ function AppController(
     $mdSidenav,
     UserService,
     $state,
-    $location,
     $interval,
     userAddress,
     userRole,
     PermissionService,
-    EthereumInsuranceService,
-    EthereumRetailersService)
+    NameService)
 {
-    function getUserEntity(userRole, address) {
-        switch(userRole) {
-            case 1: return EthereumRetailersService.getRetailer(address);
-            case 2: return EthereumInsuranceService.getInsurance(address);
-            case 3 : return {
-                name: 'owner'
-            };
-            default : return {};
-        }
-    }
-
     $rootScope.userRole = userRole;
     $rootScope.userRoleName = PermissionService.getUserRoleName(userRole);
     $rootScope.user = userAddress;
 
-    $q.when(getUserEntity(userRole, userAddress)).then((entity) => {
+    NameService.getUserEntity(userRole, userAddress).then((entity) => {
         $rootScope.entity = entity;
     });
 
@@ -85,12 +72,10 @@ export default [
     '$mdSidenav',
     'UserService',
     '$state',
-    '$location',
     '$interval',
     'userAddress',
     'userRole',
     'PermissionService',
-    'EthereumInsuranceService',
-    'EthereumRetailersService',
+    'NameService',
     AppController
 ]

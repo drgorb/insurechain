@@ -16,8 +16,8 @@
                 <div layout-padding>
                     <h2>Warranty</h2>
                     <div><strong>Warranty: </strong>{{warranty.status}}</div>
-                    <div><strong>Warranty Retailer: </strong>{{warranty.retailer}}</div>
-                    <div><strong>Warranty Insurer: </strong>{{warranty.insurance}}</div>
+                    <div ng-show="warranty.retailerEntity.name"><strong>Warranty Retailer: </strong>{{warranty.retailerEntity.name}} <small ng-show="showAddresses">({{warranty.retailer}})</small></div>
+                    <div ng-show="warranty.retailerEntity.name"><strong>Warranty Insurer: </strong>{{warranty.insuranceEntity.name}} <small ng-show="showAddresses">({{warranty.insurance}})</small></div>
                     <div><strong>Warranty Policy Number: </strong>{{warranty.policyNumber}}</div>
                     <div><strong>Warranty Price: </strong>{{warranty.warrantyPrice}}</div>
                     <div><strong>Warranty Claim Count: </strong>{{warranty.claimCount}}</div>

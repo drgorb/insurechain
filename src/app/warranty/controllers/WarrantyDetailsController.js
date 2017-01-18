@@ -3,7 +3,8 @@ function WarrantyDetailsController(
     $rootScope,
     $stateParams,
     TransactionService,
-    EthereumWarrantyService
+    EthereumWarrantyService,
+    NameService
 ) {
     TransactionService.startTransaction();
     $scope.showRetailerPart = ($rootScope.userRole === 1);
@@ -11,11 +12,21 @@ function WarrantyDetailsController(
         amount: null,
         description: ''
     };
+    $scope.showAddresses = false;
+
     EthereumWarrantyService
         .getWarranty($stateParams.id)
         .then(function (warranty) {
             $scope.warranty = warranty;
             $scope.allowCancelWarranty = ($rootScope.user === warranty.retailer);
+            return NameService.getUserEntity(1, warranty.retailer);
+        })
+        .then(entity => {
+            $scope.warranty.retailerEntity = entity;
+            return NameService.getUserEntity(2,  $scope.warranty.insurance);
+        })
+        .then(entity => {
+            $scope.warranty.insuranceEntity = entity;
             TransactionService.finishTransaction();
         })
         .catch(function(err) {
@@ -44,5 +55,6 @@ export default [
     '$stateParams',
     'TransactionService',
     'EthereumWarrantyService',
+    'NameService',
     WarrantyDetailsController
 ]
