@@ -1,18 +1,15 @@
 'use strict';
 
-import angular from 'angular';
-import uirouter from 'angular-ui-router';
-
-import InsuranceController from './controllers/InsuranceController';
-import InsuranceCreateController from './controllers/InsuranceCreateController';
-import InsuranceConfirmationController from './controllers/InsuranceConfirmationController';
-
-import InsuranceCreateComponent from './components/insuranceCreate/InsuranceCreateComponent';
-import InsurancRegisteredComponent from './components/insuranceRegistered/InsurancRegisteredComponent';
-import insuranceBalancesComponent from './components/insuranceBalances/insuranceBalancesComponent'
-import insuranceTotalBalancesComponent from './components/insuranceTotalBalances/insuranceTotalBalancesComponent'
-
-import EthereumInsuranceService from '../ethereum/services/EthereumInsuranceService';
+import angular from "angular";
+import uirouter from "angular-ui-router";
+import InsuranceController from "./controllers/InsuranceController";
+import InsuranceCreateController from "./controllers/InsuranceCreateController";
+import InsuranceConfirmationController from "./controllers/InsuranceConfirmationController";
+import InsuranceCreateComponent from "./components/insuranceCreate/InsuranceCreateComponent";
+import InsurancRegisteredComponent from "./components/insuranceRegistered/InsurancRegisteredComponent";
+import InsuranceBalancesComponent from "./components/insuranceBalances/InsuranceBalancesComponent";
+import InsuranceTotalBalancesComponent from "./components/insuranceTotalBalances/insuranceTotalBalancesComponent";
+import EthereumInsuranceService from "../ethereum/services/EthereumInsuranceService";
 
 const insurance = 'app.insurance';
 
@@ -20,8 +17,8 @@ angular.module(insurance, [
     uirouter
 ])
     .component(InsuranceCreateComponent.name, InsuranceCreateComponent.config)
-    .component(insuranceBalancesComponent.name, insuranceBalancesComponent.config)
-    .component(insuranceTotalBalancesComponent.name, insuranceTotalBalancesComponent.config)
+    .component(InsuranceBalancesComponent.name, InsuranceBalancesComponent.config)
+    .component(InsuranceTotalBalancesComponent.name, InsuranceTotalBalancesComponent.config)
     .component(InsurancRegisteredComponent.name, InsurancRegisteredComponent.config)
 
     .factory('EthereumInsuranceService', EthereumInsuranceService)

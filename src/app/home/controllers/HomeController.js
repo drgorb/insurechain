@@ -1,4 +1,4 @@
-function HomeController($scope, $rootScope, $state, UserService) {
+function HomeController($rootScope, $state) {
     switch($rootScope.userRole) {
         case 0 : {
             $state.go('app.home.undefined');
@@ -18,4 +18,4 @@ function HomeController($scope, $rootScope, $state, UserService) {
         }
     }
 }
-export default ['$scope', '$rootScope', '$state', 'UserService', HomeController]
+export default ['$rootScope', '$state', HomeController]

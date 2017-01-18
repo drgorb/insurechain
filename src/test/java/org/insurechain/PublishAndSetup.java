@@ -4,9 +4,7 @@ package org.insurechain;
 import org.adridadou.ethereum.EthereumFacade;
 import org.adridadou.ethereum.provider.EthereumFacadeProvider;
 import org.adridadou.ethereum.provider.EthereumJConfigs;
-import org.adridadou.ethereum.values.EthAccount;
-import org.adridadou.ethereum.values.EthAddress;
-import org.adridadou.ethereum.values.SoliditySource;
+import org.adridadou.ethereum.values.*;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +15,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -122,33 +123,33 @@ public class PublishAndSetup {
         Date startDate = Date.from(LocalDate.of(2016, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
         Date endDate = Date.from(LocalDate.of(2020, 4, 24).atStartOfDay().toInstant(ZoneOffset.UTC));
 
-        newArrayList(contract.get(digitec).ic.createWarranty("iPhone6", "iPhone6SerialNumber1", zurich, startDate,
+        newArrayList(contract.get(digitec).ic.createWarranty("0711730346183", "iPhone6SerialNumber1", zurich, startDate,
                 endDate, 4000),
-        contract.get(digitec).ic.createWarranty("iPhone6", "iPhone6SerialNumber2", alianz, startDate,
+        contract.get(digitec).ic.createWarranty("0711730346183", "iPhone6SerialNumber2", alianz, startDate,
                 endDate, 4000),
-        contract.get(interdiscount).ic.createWarranty("iPhone6", "iPhone6SerialNumber3", mobiliere, startDate,
+        contract.get(interdiscount).ic.createWarranty("0711730346183", "iPhone6SerialNumber3", mobiliere, startDate,
                 endDate, 4000),
-        contract.get(interdiscount).ic.createWarranty("iPhone6", "iPhone6SerialNumber4", zurich, startDate,
+        contract.get(interdiscount).ic.createWarranty("0711730346183", "iPhone6SerialNumber4", zurich, startDate,
                 endDate, 4000),
-        contract.get(melectronics).ic.createWarranty("iPhone6", "iPhone6SerialNumber5", alianz, startDate,
+        contract.get(melectronics).ic.createWarranty("0711730346183", "iPhone6SerialNumber5", alianz, startDate,
                 endDate, 4000),
-        contract.get(melectronics).ic.createWarranty("iPhone6", "iPhone6SerialNumber6", mobiliere, startDate,
+        contract.get(melectronics).ic.createWarranty("0711730346183", "iPhone6SerialNumber6", mobiliere, startDate,
                 endDate, 4000)).forEach(waitForFuture);
 
-        newArrayList(contract.get(zurich).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber1", "iPhone6SerialNumber1Zurich"),
-        contract.get(alianz).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber2", "iPhone6SerialNumber2Alianz"),
-        contract.get(mobiliere).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber3", "iPhone6SerialNumber3Mobiliere"),
-        contract.get(zurich).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber4", "iPhone6SerialNumber4Zurich"),
-        contract.get(alianz).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber5", "iPhone6SerialNumber5Alianz"),
-        contract.get(mobiliere).ic.confirmWarranty("iPhone6", "iPhone6SerialNumber6", "iPhone6SerialNumber6Mobiliere")).forEach(waitForFuture);
+        newArrayList(contract.get(zurich).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber1", "iPhone6SerialNumber1Zurich"),
+        contract.get(alianz).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber2", "iPhone6SerialNumber2Alianz"),
+        contract.get(mobiliere).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber3", "iPhone6SerialNumber3Mobiliere"),
+        contract.get(zurich).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber4", "iPhone6SerialNumber4Zurich"),
+        contract.get(alianz).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber5", "iPhone6SerialNumber5Alianz"),
+        contract.get(mobiliere).ic.confirmWarranty("0711730346183", "iPhone6SerialNumber6", "iPhone6SerialNumber6Mobiliere")).forEach(waitForFuture);
     }
 
     private void createClaims() throws ExecutionException, InterruptedException {
-        newArrayList(contract.get(digitec).ic.createClaim("iPhone6", "iPhone6SerialNumber1", zurich,
+        newArrayList(contract.get(digitec).ic.createClaim("0711730346183", "iPhone6SerialNumber1", zurich,
                 500, "replace screen"),
-        contract.get(interdiscount).ic.createClaim("iPhone6", "iPhone6SerialNumber3", mobiliere,
+        contract.get(interdiscount).ic.createClaim("0711730346183", "iPhone6SerialNumber3", mobiliere,
                 2000, "replace phone"),
-        contract.get(melectronics).ic.createClaim("iPhone6", "iPhone6SerialNumber5", alianz,
+        contract.get(melectronics).ic.createClaim("0711730346183", "iPhone6SerialNumber5", alianz,
                 800, "replace battery")).forEach(waitForFuture);
     }
 
@@ -176,18 +177,23 @@ public class PublishAndSetup {
     }
 
     private void initContractInterfaces() throws InterruptedException, ExecutionException, IOException {
-        EthAddress imContractAddress = ethereum.publishContract(soliditySource, "InsuranceManager",
+        CompiledContract insuranceManager = ethereum.compile(soliditySource,"InsuranceManager");
+        CompiledContract retailerManager = ethereum.compile(soliditySource, "RetailerManager");
+        CompiledContract insurechain = ethereum.compile(soliditySource,"Insurechain");
+        CompiledContract priceCalculator = ethereum.compile(soliditySource,"PriceCalculator");
+
+        EthAddress imContractAddress = ethereum.publishContract(insuranceManager,
                 owner).get();
-        EthAddress rmContractAddress = ethereum.publishContract(soliditySource, "RetailerManager",
+        EthAddress rmContractAddress = ethereum.publishContract(retailerManager,
                 owner, imContractAddress).get();
-        EthAddress icContractAddress = ethereum.publishContract(soliditySource, "Insurechain",
+        EthAddress icContractAddress = ethereum.publishContract(insurechain,
                 owner, imContractAddress, rmContractAddress).get();
-        priceCalculatorAddress = ethereum.publishContract(soliditySource, "PriceCalculator",
+        priceCalculatorAddress = ethereum.publishContract(priceCalculator,
                 owner).get();
 
-        String icJson = getJson(icContractAddress, "insureChain", "Insurechain");
-        String imJson = getJson(imContractAddress, "insuranceManager", "InsuranceManager");
-        String rmJson = getJson(rmContractAddress, "retailerManager", "RetailerManager");
+        String icJson = getJson(icContractAddress, "insureChain", insurechain.getAbi());
+        String imJson = getJson(imContractAddress, "insuranceManager", insuranceManager.getAbi());
+        String rmJson = getJson(rmContractAddress, "retailerManager", retailerManager.getAbi());
 
         String definitions = icJson + "\n" + imJson + "\n" + rmJson + "\n";
 
@@ -195,9 +201,9 @@ public class PublishAndSetup {
         IOUtils.write(definitions + "export {insureChain, insuranceManager, retailerManager};"
                 , contractDefinitions, StandardCharsets.UTF_8);
 
-        EthereumFacade.Builder<Insurechain> icContractBuilder = ethereum.createContractProxy(soliditySource, "Insurechain", icContractAddress, Insurechain.class);
-        EthereumFacade.Builder<InsuranceManager> imContractBuilder = ethereum.createContractProxy(soliditySource, "InsuranceManager",imContractAddress, InsuranceManager.class);
-        EthereumFacade.Builder<RetailerManager> rmContractBuilder = ethereum.createContractProxy(soliditySource, "RetailerManager",rmContractAddress, RetailerManager.class);
+        EthereumFacade.Builder<Insurechain> icContractBuilder = ethereum.createContractProxy(insurechain, icContractAddress, Insurechain.class);
+        EthereumFacade.Builder<InsuranceManager> imContractBuilder = ethereum.createContractProxy(insuranceManager,imContractAddress, InsuranceManager.class);
+        EthereumFacade.Builder<RetailerManager> rmContractBuilder = ethereum.createContractProxy(retailerManager,rmContractAddress, RetailerManager.class);
 
         contract.put(owner, new Contracts(icContractBuilder.forAccount(owner),
                 imContractBuilder.forAccount(owner),
@@ -215,9 +221,9 @@ public class PublishAndSetup {
                 rmContractBuilder.forAccount(retailer))));
     }
 
-    private String getJson(EthAddress contractAddress, String name, String contractName) throws IOException {
+    private String getJson(EthAddress contractAddress, String name, ContractAbi abi) throws IOException {
         final String json = "{address: " + "\"" + contractAddress.withLeading0x() + "\"" +
-                ",abi:" + ethereum.getAbi(soliditySource, contractName).getAbi() + "}";
+                ",abi:" + abi.getAbi() + "}";
 
         return "const " + name + " = " + json + ";";
 

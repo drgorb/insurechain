@@ -1,22 +1,60 @@
-function WarrantyDetailsController($scope, $stateParams, EthereumWarrantyService) {
-
-    $scope.product = null;
+function WarrantyDetailsController(
+    $scope,
+    $rootScope,
+    $stateParams,
+    TransactionService,
+    EthereumWarrantyService,
+    NameService
+) {
+    TransactionService.startTransaction();
+    $scope.showRetailerPart = ($rootScope.userRole === 1);
+    $scope.claim = {
+        amount: null,
+        description: ''
+    };
+    $scope.showAddresses = false;
 
     EthereumWarrantyService
-        .getProduct($stateParams.id)
-        .then(function (product) {
-            $scope.product = product;
+        .getWarranty($stateParams.id)
+        .then(function (warranty) {
+            $scope.warranty = warranty;
+            $scope.allowCancelWarranty = ($rootScope.user === warranty.retailer);
+            return NameService.getUserEntity(1, warranty.retailer);
         })
-        .catch(logError);
+        .then(entity => {
+            $scope.warranty.retailerEntity = entity;
+            return NameService.getUserEntity(2,  $scope.warranty.insurance);
+        })
+        .then(entity => {
+            $scope.warranty.insuranceEntity = entity;
+            TransactionService.finishTransaction();
+        })
+        .catch(function(err) {
+            TransactionService.finishTransaction(null, null, err);
+        });
 
-    $scope.warranty = {
-        status: true,
-        startDate: new Date(),
-        endDate: new Date()
+    $scope.createClaim = (warranty, claim) => {
+        TransactionService.startTransaction();
+        EthereumWarrantyService
+            .cancelWarranty(warranty.productInfo.ean, warranty.serial, warranty.insurance, claim.amount, claim.description)
+            .then((info) => TransactionService.finishTransaction(info, true))
+            .catch((err) => TransactionService.finishTransaction(err))
     };
 
-    function logError(err) {
-        console.log(err);
-    }
+    $scope.cancelWarranty = (warranty) => {
+        TransactionService.startTransaction();
+        EthereumWarrantyService
+            .cancelWarranty(warranty.productInfo.ean, warranty.serial, warranty.insurance)
+            .then((info) => TransactionService.finishTransaction(info, true))
+            .catch((err) => TransactionService.finishTransaction(err))
+    };
 }
-export default ['$scope', '$stateParams', 'EthereumWarrantyService', WarrantyDetailsController]
+export default [
+    '$scope',
+    '$rootScope',
+    '$stateParams',
+    'TransactionService',
+    'EthereumWarrantyService',
+    'NameService',
+    WarrantyDetailsController
+]

@@ -1,4 +1,5 @@
 function InsuranceConfirmationController($scope, TransactionService, EthereumInsuranceService) {
+    TransactionService.startTransaction();
 
     $scope.insurances = [];
 
@@ -6,6 +7,10 @@ function InsuranceConfirmationController($scope, TransactionService, EthereumIns
         .getInsurancesList()
         .then(function(insurances) {
             $scope.insurances = insurances;
+            TransactionService.finishTransaction();
+        })
+        .catch(function(err) {
+            TransactionService.finishTransaction(null, null, err);
         });
 
     $scope.filterStatus = '';
@@ -34,7 +39,7 @@ function InsuranceConfirmationController($scope, TransactionService, EthereumIns
         EthereumInsuranceService
             .setRequestStatus(insurance, status)
             .then(function (info) {
-                TransactionService.finishTransaction(info);
+                TransactionService.finishTransaction(info, true);
             })
             .catch(function (err) {
                 TransactionService.finishTransaction(err);

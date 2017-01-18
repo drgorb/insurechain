@@ -314,12 +314,15 @@ contract Insurechain is mortal, stateful{
 
     struct Warranty {
         address retailer;
+        address insurance;
         uint startDate;
         uint endDate;
         string policyNumber;
         WarrantyStatus status;
         uint productPrice;
         uint warrantyPrice;
+        string productId;
+        string serial;
         mapping (uint => Claim) claims;
         uint claimCount;
     }
@@ -381,6 +384,9 @@ contract Insurechain is mortal, stateful{
         warranty.endDate = endDate;
         warranty.productPrice = productPrice;
         warranty.retailer = msg.sender;
+        warranty.insurance = insurance;
+        warranty.productId = productId;
+        warranty.serial = serialNumber;
         warranty.warrantyPrice = insuranceManager.getWarrantyPrice(insurance, productId, startDate, endDate, productPrice);
         warranties[insurance][productId][serialNumber] = warrantyCount;
         retailerManager.increaseSalesBalance(msg.sender, insurance, warranty.warrantyPrice);
@@ -419,20 +425,18 @@ contract Insurechain is mortal, stateful{
         insuranceManager.decreaseSalesBalance(insuranceAddress, warranty.warrantyPrice);
     }
 
-    function getWarranty(string productId, string serialNumber, address insurance) constant returns (uint startDate, uint endDate, WarrantyStatus status,
-                         string policyNumber, uint warrantyPrice, uint claimCount) {
+    function getWarranty(string productId, string serialNumber, address insurance) constant returns (
+                         address _retailer, address _insurance, uint _startDate, uint _endDate, WarrantyStatus _status,
+                         string _policyNumber, string _productId, string _serial, uint _warrantyPrice, uint _claimCount) {
         uint idx = warranties[insurance][productId][serialNumber];
-        if(idx == 0) {
-            Warranty warranty = warrantyList[0];
-            return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.warrantyPrice, warranty.claimCount);
-        }
         return getWarrantyByIndex(idx - 1);
     }
 
-    function getWarrantyByIndex(uint idx)  constant returns (uint startDate, uint endDate, WarrantyStatus status,
-                         string policyNumber, uint warrantyPrice, uint claimCount) {
+    function getWarrantyByIndex(uint idx)  constant returns (
+                                 address _retailer, address _insurance, uint _startDate, uint _endDate, WarrantyStatus _status,
+                         string _policyNumber, string _productId, string _serial, uint _warrantyPrice, uint _claimCount) {
         Warranty warranty = warrantyList[idx+1];
-        return (warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.warrantyPrice, warranty.claimCount);
+        return (warranty.retailer, warranty.insurance, warranty.startDate, warranty.endDate, warranty.status, warranty.policyNumber, warranty.productId, warranty.serial, warranty.warrantyPrice, warranty.claimCount);
     }
 
     function isWarrantyValid(address insurance, string productId, string serialNumber) constant returns(bool) {

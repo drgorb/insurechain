@@ -16,6 +16,7 @@ import resolvers from './resolvers';
 import AppController from './main/controllers/AppController';
 
 import UserService from './shared/services/UserService';
+import NameService from './shared/services/NameService';
 import TransactionService from './shared/services/TransactionService';
 import PermissionService from './main/services/PermissionService';
 
@@ -57,14 +58,16 @@ export default angular.module(appModule, [
     warrantyModule,
     eventModule
 ])
-    .factory('UserService', UserService)
-    .factory('TransactionService', TransactionService)
-    .factory('PermissionService', PermissionService)
     .factory('EthereumHelperService', EthereumHelperService)
     .factory('EthereumRoleService', EthereumRoleService)
     .factory('EthereumWarrantyService', EthereumWarrantyService)
     .factory('EthereumBalancesService', EthereumBalancesService)
     .factory('EthereumEventService', EthereumEventService)
+
+    .factory('TransactionService', TransactionService)
+    .factory('PermissionService', PermissionService)
+    .factory('UserService', UserService)
+    .factory('NameService', NameService)
 
     .component(LoaderComponent.name, LoaderComponent.config)
 
