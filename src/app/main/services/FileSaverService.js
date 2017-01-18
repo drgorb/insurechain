@@ -6,7 +6,7 @@
  * @returns {{loadAll: Function}}
  * @constructor
  */
-import FileSaver from 'file-saver';
+import FileSaver from "file-saver";
 
 function FileSaverService($q) {
 

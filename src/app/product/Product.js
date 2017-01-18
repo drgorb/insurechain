@@ -4,14 +4,12 @@ import angular from "angular";
 import uirouter from "angular-ui-router";
 import moment from "moment";
 import ProductDataService from "./services/ProductDataService";
-import FileSaverService from "./services/FileSaverService";
+import FileSaverService from "../main/services/FileSaverService";
 import ProductList from "./components/list/ProductList";
 import ProductDetails from "./components/details/ProductDetails";
 import DownloadReportData from "./components/downloadReport/DownloadReportData";
-
 import EthereumService from "../ethereum/services/EthereumService";
 import RetailersEthereumService from "../ethereum/services/EthereumRetailersService";
-
 import ProductController from "./controllers/ProductController";
 
 const warranty = 'app.product';
