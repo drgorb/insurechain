@@ -85,7 +85,7 @@ export default angular.module(appModule, [
     }])
     .config(($mdThemingProvider) => {
         $mdThemingProvider.theme('default')
-            .primaryPalette('brown')
+            .primaryPalette('blue')
             .accentPalette('red');
     })
     .config(['$qProvider', function ($qProvider) {

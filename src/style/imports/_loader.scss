@@ -1,0 +1,16 @@
+main-loader {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  background: rgba(33,33,33,.48);
+  .info-progress {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 40px;
+    color: white;
+  }
+  .progress {
+    width: 60%;
+  }
+}
