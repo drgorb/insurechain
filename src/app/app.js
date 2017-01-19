@@ -1,34 +1,42 @@
-import angular from "angular";
-import uirouter from "angular-ui-router";
-import ngMaterial from "angular-material";
-import ngMdIcons from "angular-material-icons";
-import ngMaterialSidemenu from "angular-material-sidemenu";
-import ngMessages from "angular-messages";
-import ngAnimate from "angular-animate";
-import ngAria from "angular-aria";
-import {permission, uiPermission} from "angular-permission";
-import "!style!css!angular-material-sidemenu/dest/angular-material-sidemenu.css";
-import "../style/app.scss";
-import resolvers from "./resolvers";
-import AppController from "./main/controllers/AppController";
-import UserService from "./shared/services/UserService";
-import NameService from "./shared/services/NameService";
-import TransactionService from "./shared/services/TransactionService";
-import PermissionService from "./main/services/PermissionService";
+import angular from 'angular';
+import uirouter from 'angular-ui-router';
+import ngMaterial from 'angular-material';
+import ngMdIcons from 'angular-material-icons';
+import ngMaterialSidemenu from 'angular-material-sidemenu';
+import ngMessages from 'angular-messages';
+import ngAnimate from 'angular-animate';
+import ngAria from 'angular-aria';
+import {permission, uiPermission} from 'angular-permission';
+
+import '!style!css!angular-material-sidemenu/dest/angular-material-sidemenu.css';
+import '../style/app.scss';
+
+import resolvers from './resolvers';
+
+import AppController from './main/controllers/AppController';
+
+import UserService from './shared/services/UserService';
+import NameService from './shared/services/NameService';
+import TransactionService from './shared/services/TransactionService';
+
+import PermissionService from './main/services/PermissionService';
 import FileSaverService from "./main/services/FileSaverService";
 import SolidityCoderService from "./main/services/SolidityCoderService";
-import EthereumHelperService from "./ethereum/services/EthereumHelperService";
-import EthereumRoleService from "./ethereum/services/EthereumRoleService";
-import EthereumWarrantyService from "./ethereum/services/EthereumWarrantyService";
-import EthereumBalancesService from "./ethereum/services/EthereumBalancesService";
-import LoaderComponent from "./shared/components/loader/LoaderComponent";
-import MenuComponent from "./main/components/menu/MenuComponent";
-import homeModule from "./home/Home";
-import warrantyModule from "./warranty/Warranty";
-import retailerModule from "./retailer/Retailer";
-import insuranceModule from "./insurance/Insurance";
-import productModule from "./product/Product";
 
+import EthereumHelperService from './ethereum/services/EthereumHelperService';
+import EthereumRoleService from './ethereum/services/EthereumRoleService';
+import EthereumWarrantyService from './ethereum/services/EthereumWarrantyService';
+import EthereumBalancesService from './ethereum/services/EthereumBalancesService';
+import EthereumEventService from './ethereum/services/EthereumEventService'
+
+import LoaderComponent from './shared/components/loader/LoaderComponent';
+import MenuComponent from "./main/components/menu/MenuComponent";
+
+import homeModule from './home/Home';
+import warrantyModule from './warranty/Warranty';
+import retailerModule from './retailer/Retailer';
+import insuranceModule from './insurance/Insurance';
+import eventModule from './event/Event';
 
 const appModule = 'app';
 
@@ -45,13 +53,14 @@ export default angular.module(appModule, [
     homeModule,
     insuranceModule,
     retailerModule,
-    productModule,
-    warrantyModule
+    warrantyModule,
+    eventModule
 ])
     .factory('EthereumHelperService', EthereumHelperService)
     .factory('EthereumRoleService', EthereumRoleService)
     .factory('EthereumWarrantyService', EthereumWarrantyService)
     .factory('EthereumBalancesService', EthereumBalancesService)
+    .factory('EthereumEventService', EthereumEventService)
 
     .factory('TransactionService', TransactionService)
     .factory('PermissionService', PermissionService)

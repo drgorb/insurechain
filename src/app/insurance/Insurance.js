@@ -23,8 +23,7 @@ angular.module(insurance, [
 
     .factory('EthereumInsuranceService', EthereumInsuranceService)
 
-    .config(['$stateProvider', '$urlRouterProvider', '$mdToastProvider', function($stateProvider, $urlRouterProvider) {
-        $urlRouterProvider.when('insurance', 'insurance.create');
+    .config(['$stateProvider', function($stateProvider) {
         $stateProvider
             .state({
                 name: insurance,
