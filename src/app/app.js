@@ -18,7 +18,10 @@ import AppController from './main/controllers/AppController';
 import UserService from './shared/services/UserService';
 import NameService from './shared/services/NameService';
 import TransactionService from './shared/services/TransactionService';
+
 import PermissionService from './main/services/PermissionService';
+import FileSaverService from "./main/services/FileSaverService";
+import SolidityCoderService from "./main/services/SolidityCoderService";
 
 import EthereumHelperService from './ethereum/services/EthereumHelperService';
 import EthereumRoleService from './ethereum/services/EthereumRoleService';
@@ -62,6 +65,9 @@ export default angular.module(appModule, [
     .factory('PermissionService', PermissionService)
     .factory('UserService', UserService)
     .factory('NameService', NameService)
+
+    .service('FileSaverService', FileSaverService)
+    .service('SolidityCoderService', SolidityCoderService)
 
     .component(LoaderComponent.name, LoaderComponent.config)
 

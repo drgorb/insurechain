@@ -6,6 +6,10 @@ function EthereumHelperService ($q, UserService) {
     this.insuranceManager = web3.eth.contract(insuranceManager.abi).at(insuranceManager.address);
     this.retailerManager = web3.eth.contract(retailerManager.abi).at(retailerManager.address);
 
+    this.insurechain.functionHashes = getFunctionHashes(insureChain.abi);
+    this.insuranceManager.functionHashes = getFunctionHashes(insuranceManager.abi);
+    this.retailerManager.functionHashes = getFunctionHashes(retailerManager.abi);
+
     this.toPromise = function(contractFunc) {
         const defer = $q.defer();
         let args = Array.from(arguments).slice(1);
@@ -24,6 +28,22 @@ function EthereumHelperService ($q, UserService) {
         } else {
             defer.resolve(result);
         }
+    };
+
+    function getFunctionHashes (abi) {
+        let hashes = {};
+        for (let i = 0; i < abi.length; i++) {
+            let item = abi[i];
+            if (item.type != "function") continue;
+            let inputs = item.inputs.map (function (input) {
+                return input.type;
+            });
+            let signature = item.name + "(" + inputs.join (",") + ")";
+            let hash = web3.sha3 (signature);
+            console.log (item.name + ' = ' + hash.substring(0, 10));
+            hashes[hash.substring(0, 10)] = {name: item.name, inputs: inputs};
+        }
+        return hashes;
     };
 
     this.getStatusName = status => {
