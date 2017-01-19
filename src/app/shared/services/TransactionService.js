@@ -53,7 +53,7 @@ function TransactionService ($rootScope, $mdDialog, $compile, $state, $interval)
                 web3.eth.getTransactionReceipt(info, function(err,res) {
                     if(err){
                         $interval.cancel(stopVerify);
-                        showInfo(`Error while executing the transaction ${info}: ${err}`);
+                        actionsTranasction(`Error while executing the transaction ${info}: ${err}`, false, info);
                     }else {
                         if(res) {
                             actionsTranasction(`transaction ${info} successful`, true, log);

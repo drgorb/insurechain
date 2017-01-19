@@ -1,0 +1,20 @@
+.sidenav-toolbar {
+  &__name {
+    color: white;
+    font-size: 20px;
+    margin-top: 10px;
+  }
+  &__role {
+    color: white;
+    font-size: 13px;
+  }
+}
+
+md-toolbar:not(.md-hue-1),
+.md-fab {
+  fill: #fff;
+}
+
+md-sidenav {
+  fill: #737373;
+}
