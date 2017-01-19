@@ -327,6 +327,9 @@ contract Insurechain is mortal, stateful{
         uint claimCount;
     }
 
+    event WarrantyCreated(string productId, string serialNumber,address retailer, address insurance);
+    event WarrantyCanceled(string productId, string serialNumber, address retailer, address insurance, string policyNumber);
+
     // mapping of insurance -> productId -> serialNumber -> Warranty
     mapping (address=>mapping( string=>mapping( string=>uint ))) warranties;
     uint public warrantyCount;
@@ -391,6 +394,8 @@ contract Insurechain is mortal, stateful{
         warranties[insurance][productId][serialNumber] = warrantyCount;
         retailerManager.increaseSalesBalance(msg.sender, insurance, warranty.warrantyPrice);
         insuranceManager.increaseSalesBalance(insurance, warranty.warrantyPrice);
+
+        WarrantyCreated(productId,serialNumber,msg.sender,insurance);
     }
 
     /**
@@ -423,6 +428,8 @@ contract Insurechain is mortal, stateful{
         warranty.status = WarrantyStatus.Canceled;
         retailerManager.decreaseSalesBalance(msg.sender, insuranceAddress, warranty.warrantyPrice);
         insuranceManager.decreaseSalesBalance(insuranceAddress, warranty.warrantyPrice);
+
+        WarrantyCanceled(productId, serialNumber, msg.sender, insuranceAddress, warranty.policyNumber);
     }
 
     function getWarranty(string productId, string serialNumber, address insurance) constant returns (

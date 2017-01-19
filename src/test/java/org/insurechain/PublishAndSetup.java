@@ -105,18 +105,6 @@ public class PublishAndSetup {
     public void before() {
         provider.extendConfig().fastSync(false);
         ethereum = provider.create();
-/*
-        ethereum = new PrivateEthereumFacadeProvider().create(PrivateNetworkConfig.config()
-                .reset(true)
-                .initialBalance(owner, ether(100))
-                .initialBalance(alianz, ether(100))
-                .initialBalance(zurich, ether(100))
-                .initialBalance(mobiliere, ether(100))
-                .initialBalance(digitec, ether(100))
-                .initialBalance(interdiscount, ether(100))
-                .initialBalance(melectronics, ether(100))
-        );
-*/
     }
 
     private void createWarranties() throws ExecutionException, InterruptedException {
