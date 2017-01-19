@@ -77,7 +77,7 @@ export default angular.module(appModule, [
     .config(($mdThemingProvider) => {
         $mdThemingProvider.theme('default')
             .primaryPalette('blue')
-            .accentPalette('green');
+            .accentPalette('red');
     })
     .config(['$qProvider', function ($qProvider) {
         $qProvider.errorOnUnhandledRejections(false);
