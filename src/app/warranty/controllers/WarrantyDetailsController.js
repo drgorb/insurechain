@@ -2,6 +2,7 @@ function WarrantyDetailsController(
     $scope,
     $rootScope,
     $stateParams,
+    $q,
     TransactionService,
     EthereumWarrantyService,
     NameService
@@ -19,11 +20,11 @@ function WarrantyDetailsController(
         .then(function (warranty) {
             $scope.warranty = warranty;
             $scope.allowCancelWarranty = ($rootScope.user === warranty.retailer);
-            return NameService.getUserEntity(1, warranty.retailer);
+            return $q.when(NameService.getUserEntity(1, warranty.retailer));
         })
         .then(entity => {
             $scope.warranty.retailerEntity = entity;
-            return NameService.getUserEntity(2,  $scope.warranty.insurance);
+            return $q.when(NameService.getUserEntity(2,  $scope.warranty.insurance));
         })
         .then(entity => {
             $scope.warranty.insuranceEntity = entity;
@@ -53,6 +54,7 @@ export default [
     '$scope',
     '$rootScope',
     '$stateParams',
+    '$q',
     'TransactionService',
     'EthereumWarrantyService',
     'NameService',

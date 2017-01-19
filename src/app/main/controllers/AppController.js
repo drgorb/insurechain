@@ -26,7 +26,7 @@ function AppController(
     self.$http = $http;
     self.fileSaver = FileSaverService;
 
-    NameService.getUserEntity(userRole, userAddress).then((entity) => {
+    $q.when(NameService.getUserEntity(userRole, userAddress)).then((entity) => {
         $rootScope.entity = entity;
     });
 
