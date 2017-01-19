@@ -37,7 +37,7 @@ function WarrantyDetailsController(
     $scope.createClaim = (warranty, claim) => {
         TransactionService.startTransaction();
         EthereumWarrantyService
-            .cancelWarranty(warranty.productInfo.ean, warranty.serial, warranty.insurance, claim.amount, claim.description)
+            .createClaim(warranty.productInfo.ean, warranty.serial, warranty.insurance, claim.amount, claim.description)
             .then((info) => TransactionService.finishTransaction(info, true))
             .catch((err) => TransactionService.finishTransaction(err))
     };
