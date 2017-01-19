@@ -22,22 +22,6 @@ function EthereumEventService ($q, EthereumHelperService, EthereumInsuranceServi
         return defer.promise;
     };
 
-    this.retailerStatusChanged = () => {
-        let retailerStatusChangedEvt = retailerManager.RetailerStatusChanged();
-        retailerStatusChangedEvt.watch(function(error, result){
-            if (!error)
-                console.log(result);
-        });
-    };
-
-    this.retailerRequest = () => {
-        let retailerRequestEvt = retailerManager.RetailerRequest();
-        retailerRequestEvt.watch(function(error, result){
-            if (!error)
-                console.log(result);
-        });
-    };
-
     return this;
 }
 
