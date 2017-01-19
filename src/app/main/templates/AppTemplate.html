@@ -17,11 +17,6 @@
                 </md-button>
                 <md-menu-content width="4" >
                     <md-menu-item>
-                        <md-button>
-                            <div layout="row" flex>
-                                <p flex>Option 1</p>
-                            </div>
-                        </md-button>
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
@@ -49,24 +44,7 @@
                     <div class="sidenav-toolbar__role">Role: {{userRoleName}}</div>
                 </div>
             </md-toolbar>
-            <md-sidemenu locked="true">
-                <md-sidemenu-group>
-                    <md-subheader class="md-no-sticky">Menu</md-subheader>
-                    <md-sidemenu-button
-                            ng-repeat="item in menu"
-                            ui-sref-active="md-active"
-                            ui-sref="{{item.link}}"
-                            ui-sref-opts="{reload: true}"
-                            permission
-                            permission-only="item.permissionRoles">
-                        {{item.title}}
-                    </md-sidemenu-button>
-                </md-sidemenu-group>
-                <md-sidemenu-group>
-                    <md-divider></md-divider>
-                    <md-subheader class="md-no-sticky">Settings</md-subheader>
-                </md-sidemenu-group>
-            </md-sidemenu>
+            <main-menu></main-menu>
             <footer layout="column" layout-align=" center">
                 <img src="img/epam.png" alt="Managination" width="100">
                 <copy>Made with support of Epam</copy>

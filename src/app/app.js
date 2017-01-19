@@ -22,6 +22,7 @@ import EthereumRoleService from "./ethereum/services/EthereumRoleService";
 import EthereumWarrantyService from "./ethereum/services/EthereumWarrantyService";
 import EthereumBalancesService from "./ethereum/services/EthereumBalancesService";
 import LoaderComponent from "./shared/components/loader/LoaderComponent";
+import MenuComponent from "./main/components/menu/MenuComponent";
 import homeModule from "./home/Home";
 import warrantyModule from "./warranty/Warranty";
 import retailerModule from "./retailer/Retailer";
@@ -61,6 +62,7 @@ export default angular.module(appModule, [
     .service('SolidityCoderService', SolidityCoderService)
 
     .component(LoaderComponent.name, LoaderComponent.config)
+    .component(MenuComponent.name, MenuComponent.config)
 
     .config(['$locationProvider', '$urlRouterProvider' , '$stateProvider', function($locationProvider, $urlRouterProvider, $stateProvider) {
         $locationProvider.html5Mode(true);
