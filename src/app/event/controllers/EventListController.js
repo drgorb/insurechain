@@ -1,5 +1,9 @@
-function EventListController($scope) {
-
+function EventListController($scope, EthereumEventService) {
+    EthereumEventService
+        .getInsuranceStatusChanged()
+        .then(events => {
+            $scope.events = events;
+        });
 }
 
-export default ['$scope', EventListController]
+export default ['$scope', 'EthereumEventService', EventListController]

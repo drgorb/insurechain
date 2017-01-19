@@ -4,12 +4,22 @@ function EthereumEventService ($q, EthereumHelperService, EthereumInsuranceServi
 
     const self = this;
 
-    this.insuranceStatusChanged = () => {
-        let insuranceStatusChangedEvt = insuranceManager.InsuranceStatusChanged();
-        insuranceStatusChangedEvt.watch(function(error, result){
-            if (!error)
-                console.log(result);
+    const insuranceStatusChangedEvt = insuranceManager.InsuranceStatusChanged({}, { fromBlock: 0, toBlock: 'latest' });
+
+    this.watchInsuranceStatusChanged = (fn) => {
+        insuranceStatusChangedEvt.watch(fn);
+    };
+
+    this.getInsuranceStatusChanged = () => {
+        let defer = $q.defer();
+        insuranceStatusChangedEvt.get(function(error, result){
+            if (!error) {
+                defer.resolve(result);
+            } else {
+                defer.reject(err);
+            }
         });
+        return defer.promise;
     };
 
     this.retailerStatusChanged = () => {
@@ -25,31 +35,6 @@ function EthereumEventService ($q, EthereumHelperService, EthereumInsuranceServi
         retailerRequestEvt.watch(function(error, result){
             if (!error)
                 console.log(result);
-        });
-    };
-
-    this.getAllEvents = () => {
-        let retailerManagerAll = retailerManager.allEvents();
-        let insuranceManagerAll = insuranceManager.allEvents();
-
-        retailerManagerAll.watch(function(error, event){
-            if (!error)
-                console.log(event);
-        });
-
-        retailerManagerAll.get(function(error, event){
-            if (!error)
-                console.log(event, 'retailerManagerAll');
-        });
-
-        insuranceManagerAll.watch(function(error, event){
-            if (!error)
-                console.log(event);
-        });
-
-        insuranceManagerAll.get(function(error, event){
-            if (!error)
-                console.log(event, 'insuranceManagerAll');
         });
     };
 

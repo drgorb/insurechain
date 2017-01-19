@@ -34,11 +34,6 @@ import retailerModule from './retailer/Retailer';
 import insuranceModule from './insurance/Insurance';
 import eventModule from './event/Event';
 
-// TODO remove after finish Warranty page
-import productModule from './product/Product';
-
-
-
 const appModule = 'app';
 
 export default angular.module(appModule, [
@@ -54,7 +49,6 @@ export default angular.module(appModule, [
     homeModule,
     insuranceModule,
     retailerModule,
-    productModule,
     warrantyModule,
     eventModule
 ])
@@ -84,9 +78,9 @@ export default angular.module(appModule, [
         $urlRouterProvider.otherwise('/');
     }])
     .config(($mdThemingProvider) => {
-        $mdThemingProvider.theme('default');
-            // .primaryPalette('brown')
-            // .accentPalette('red');
+        $mdThemingProvider.theme('default')
+            .primaryPalette('brown')
+            .accentPalette('red');
     })
     .config(['$qProvider', function ($qProvider) {
         $qProvider.errorOnUnhandledRejections(false);
