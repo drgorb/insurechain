@@ -23,7 +23,7 @@ function TransactionService ($rootScope, $mdDialog, $compile, $state, $interval)
             showInfo(info, reload);
         }
         if(log) {
-            consoel.log(log)
+            console.log(log)
         }
     };
 
