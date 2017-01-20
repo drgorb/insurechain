@@ -196,10 +196,6 @@ public class PublishAndSetup {
         contract.put(owner, new Contracts(icContractBuilder.forAccount(owner),
                 imContractBuilder.forAccount(owner),
                 rmContractBuilder.forAccount(owner)));
-        /*
-        contract.get(owner).ic.setSubContractAddresses(imContractAddress, rmContractAddress).get();
-        contract.get(owner).rm.setSubContractAddresses(imContractAddress).get();
-        */
 
         insurances.forEach(insurance -> contract.put(insurance, new Contracts(icContractBuilder.forAccount(insurance),
                 imContractBuilder.forAccount(insurance),

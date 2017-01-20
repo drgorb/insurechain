@@ -7,6 +7,7 @@ import org.adridadou.ethereum.values.CompiledContract;
 import org.adridadou.ethereum.values.EthAccount;
 import org.adridadou.ethereum.values.EthAddress;
 import org.adridadou.ethereum.values.SoliditySource;
+import org.adridadou.ethereum.values.config.DatabaseDirectory;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -41,12 +42,15 @@ public class InsuranceOracle {
         String first = lines.get(0);
         int firstQuote = first.indexOf("\"");
         int secondQuote = first.indexOf("\"", firstQuote + 1);
-        String address = first.substring(firstQuote + 1, secondQuote);
+        final String address = first.substring(firstQuote + 1, secondQuote);
         final EthAddress retailerManagerAddress = EthAddress.of(address);
         final SoliditySource soliditySource = SoliditySource.from(new File("contracts/ContractDefinitions.sol"));
         final EthereumFacadeProvider.Builder provider = EthereumFacadeProvider
                 .forNetwork(EthereumJConfigs.ropsten());
-        provider.extendConfig().fastSync(true);
+        provider.extendConfig()
+                .listenPort(55555)
+                .dbDirectory(DatabaseDirectory.db("ropsten-oracle"))
+                .fastSync(true);
         writeInLog("test to see if it persists or not");
 
         EthereumFacade ethereum = provider.create();
@@ -91,6 +95,10 @@ public class InsuranceOracle {
         ethereum.observeEvents(insurechain.getAbi(),retailerManagerAddress,"WarrantyCanceled", WarrantyCanceled.class)
                 .filter(event -> event.getInsurance().equals(mobiliere.getAddress()))
                 .forEach(event -> writeInLog("New warranty canceled:" + event.toString()));
+
+        ethereum.events().onReady().get();
+
+        log.info("*********** sync done!");
 
         while(true) {
             Thread.sleep(500);
