@@ -1,5 +1,5 @@
-import {productList} from '../../warranty/mock/mockData';
-import _ from 'underscore';
+import {productList} from "../../warranty/mock/mockData";
+import _ from "underscore";
 
 function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceService, EthereumRetailersService, $q, $http) {
     const insureChain = EthereumHelperService.insurechain;
@@ -63,8 +63,8 @@ function EthereumWarrantyService (EthereumHelperService, EthereumInsuranceServic
                 warranty.productId,
                 warranty.productSerialNumber,
                 warranty.insurance,
-                warranty.startDate.getTime(),
-                warranty.endDate.getTime(),
+                parseInt(warranty.startDate.getTime() / 1000),
+                parseInt(warranty.endDate.getTime() / 1000),
                 warranty.price
             );
     };

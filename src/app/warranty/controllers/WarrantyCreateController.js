@@ -24,7 +24,7 @@ function WarrantyCreateController($scope, TransactionService, EthereumWarrantySe
         TransactionService.startTransaction();
         EthereumWarrantyService
             .createWarranty(warranty)
-            .then(info => TransactionService.finishTransaction(info))
+            .then(info => TransactionService.finishTransaction(info, true))
             .catch(err => TransactionService.finishTransaction(err))
     };
 }
