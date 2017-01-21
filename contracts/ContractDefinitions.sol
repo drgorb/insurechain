@@ -423,7 +423,7 @@ contract Insurechain is mortal, stateful{
         uint idx = warranties[insuranceAddress][productId][serialNumber];
         Warranty warranty = warrantyList[idx];
         /*a warranty can only be canceled if it exists and no claims have been made*/
-        if(warranty.status == WarrantyStatus.Undefined || warranty.claimCount > 0) throw;
+        if(warranty.status == WarrantyStatus.Undefined || warranty.status == WarrantyStatus.Canceled || warranty.claimCount > 0) throw;
 
         warranty.status = WarrantyStatus.Canceled;
         retailerManager.decreaseSalesBalance(msg.sender, insuranceAddress, warranty.warrantyPrice);

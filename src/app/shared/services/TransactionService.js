@@ -45,7 +45,7 @@ function TransactionService ($rootScope, $mdDialog, $compile, $state, $interval)
     };
 
     this.finishTransaction = (info = false, reload = false, log = false) => {
-        if(reload) {
+        if(reload || ( info instanceof String && info.indexOf('0x') === 0)) {
             let attempts = 0;
             let stopVerify = null;
             const verifyTx = () => {
@@ -56,6 +56,7 @@ function TransactionService ($rootScope, $mdDialog, $compile, $state, $interval)
                         actionsTranasction(`Error while executing the transaction ${info}: ${err}`, false, info);
                     }else {
                         if(res) {
+                            console.log(res, err);
                             actionsTranasction(`transaction ${info} successful`, true, log);
                             $interval.cancel(stopVerify);
                         } else if(attempts > 600) {

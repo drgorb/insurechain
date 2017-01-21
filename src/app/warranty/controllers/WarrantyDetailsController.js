@@ -19,7 +19,7 @@ function WarrantyDetailsController(
         .getWarranty($stateParams.id)
         .then(function (warranty) {
             $scope.warranty = warranty;
-            $scope.allowCancelWarranty = ($rootScope.user === warranty.retailer);
+            $scope.allowCancelWarranty = ($rootScope.user === warranty.retailer && warranty.claimCount === 0);
             return $q.when(NameService.getUserEntity(1, warranty.retailer));
         })
         .then(entity => {

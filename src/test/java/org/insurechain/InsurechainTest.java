@@ -215,12 +215,10 @@ public class InsurechainTest {
                         "productId", "serialNumber", warrantyPrice, 1),
                 insureChainAdmin.getWarranty("productId", "serialNumber", insuranceAccountA));
 
-        try{
-            insureChainRetailer.cancelWarranty("productId", "serialNumber", insuranceAccountA).get();
-            fail("no exception for canceled warranty");
-        } catch (Exception e){
-            /*everything OK*/
-        }
+
+        insureChainRetailer.cancelWarranty("productId", "serialNumber2", insuranceAccountA).get();
+        assertEquals(new Warranty(retailerAccount.getAddress(), insuranceAccountA.getAddress(), startDate, endDate, WarrantyStatus.Canceled, "policyNumber2",
+                "productId", "serialNumber2", warrantyPrice, 0), insureChainRetailer.getWarranty("productId", "serialNumber2", insuranceAccountA));
 
     }
 }
