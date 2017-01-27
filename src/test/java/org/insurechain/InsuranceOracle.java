@@ -55,7 +55,7 @@ public class InsuranceOracle {
 
         EthereumFacade ethereum = provider.create();
 
-        CompiledContract insurechain = ethereum.compile(soliditySource, "Insurechain");
+        CompiledContract insurechain = ethereum.compile(soliditySource, "Insurechain").get();
 
         Insurechain alianzRetailerManager = ethereum.createContractProxy(insurechain.getAbi(), retailerManagerAddress, alianz, Insurechain.class);
         Insurechain zurichRetailerManager = ethereum.createContractProxy(insurechain.getAbi(), retailerManagerAddress, zurich, Insurechain.class);
@@ -65,7 +65,11 @@ public class InsuranceOracle {
         .filter(event -> event.getInsurance().equals(alianz.getAddress()))
         .forEach(event -> {
             writeInLog("warranty created:" + event.toString());
-
+            try {
+                Thread.sleep(100000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             alianzRetailerManager.confirmWarranty(event.getProductId(), event.getSerialNumber(),"alianz-" + System.currentTimeMillis());
         });
 

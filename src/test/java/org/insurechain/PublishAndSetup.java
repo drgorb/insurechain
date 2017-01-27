@@ -103,7 +103,7 @@ public class PublishAndSetup {
 
     @Before
     public void before() {
-        provider.extendConfig().fastSync(false);
+        provider.extendConfig().fastSync(true);
         ethereum = provider.create();
     }
 
@@ -165,10 +165,10 @@ public class PublishAndSetup {
     }
 
     private void initContractInterfaces() throws InterruptedException, ExecutionException, IOException {
-        CompiledContract insuranceManager = ethereum.compile(soliditySource,"InsuranceManager");
-        CompiledContract retailerManager = ethereum.compile(soliditySource, "RetailerManager");
-        CompiledContract insurechain = ethereum.compile(soliditySource,"Insurechain");
-        CompiledContract priceCalculator = ethereum.compile(soliditySource,"PriceCalculator");
+        CompiledContract insuranceManager = ethereum.compile(soliditySource,"InsuranceManager").get();
+        CompiledContract retailerManager = ethereum.compile(soliditySource, "RetailerManager").get();
+        CompiledContract insurechain = ethereum.compile(soliditySource,"Insurechain").get();
+        CompiledContract priceCalculator = ethereum.compile(soliditySource,"PriceCalculator").get();
 
         EthAddress imContractAddress = ethereum.publishContract(insuranceManager,
                 owner).get();
